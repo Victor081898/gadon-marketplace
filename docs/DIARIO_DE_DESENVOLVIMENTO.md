@@ -426,3 +426,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP da aplicação e do novo asset, além de verificação estática do controle, persistência e atributos acessíveis do tema.
 - O que falta: Victor validar o enquadramento da foto e o contraste das telas em claro/escuro; `@ecossystem2` deverá considerar o tema no contrato de preferências quando houver persistência remota; `@ricardopablo1914-create` deverá testar a alternância, recarga e responsividade.
 - Próximo responsável: Victor valida a experiência visual; `@ecossystem2` avalia persistência futura; `@ricardopablo1914-create` automatiza os cenários de tema.
+
+### 2026-07-28 — Refinamento visual das telas internas
+- Responsável: IA: Codex
+- Objetivo: aproximar o restante do sistema do acabamento circular da página de login, com menos pontas retas e mais detalhes laranja interativos.
+- Alterações: criada uma camada visual compartilhada para as telas autenticadas, arredondando cards, painéis, navegação, campos, botões e modais; adicionadas sombras suaves, barras de destaque laranja, estados de hover e cápsulas para status e links. A camada inclui ajustes específicos para claro e escuro e mantém o layout responsivo.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e interação visual do front-end; sem alteração em APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP da aplicação e verificação estática dos novos raios, acentos laranja e regras de modo escuro.
+- O que falta: Victor revisar a direção de arte nas telas de início, busca, mensagens, fretes, perfil e favoritos; `@ricardopablo1914-create` testar hover, foco, mobile e contraste nos dois temas.
+- Próximo responsável: Victor valida a identidade visual; `@ecossystem2` acompanha eventual necessidade de tokens compartilhados; `@ricardopablo1914-create` automatiza os estados interativos.
