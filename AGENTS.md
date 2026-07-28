@@ -6,6 +6,10 @@ Estas instruções valem para qualquer pessoa ou agente que altere este reposit�
 
 Ao trabalhar neste repositório, carregue `.agents/skills/gadon-colaboracao/SKILL.md`. Essa skill é exclusiva do GadOn, acompanha o código pelo Git e não deve ser instalada globalmente nem aplicada a outros projetos.
 
+## Agente construtor externo
+
+O repositório `https://github.com/Ecossystem2/agent-mod.git` fornece agentes especializados para apoiar a construção do sistema. Consulte `docs/AGENTE_CONSTRUTOR_AGENT_MOD.md` para o mapa de responsabilidades e a ordem de uso. As regras do GadOn têm prioridade sobre as regras genéricas do agente externo.
+
 ## Responsabilidades
 
 - **Victor — Front-end e produto:** desenha as telas, fluxos e regras de interação do front-end. Sempre que uma função depender de dados, API, autenticação ou persistência, deve abrir uma tarefa de integração.

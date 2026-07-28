@@ -2,6 +2,8 @@
 
 > Skill local: `.agents/skills/gadon-colaboracao/SKILL.md`. Ela acompanha este repositório e só deve ser aplicada ao GadOn.
 
+O apoio técnico especializado vem do agente construtor externo `Ecossystem2/agent-mod`, conforme o mapa em `docs/AGENTE_CONSTRUTOR_AGENT_MOD.md`.
+
 ## Objetivo
 
 Manter o front-end, back-end, automações, testes e documentação alinhados desde o planejamento até a entrega.

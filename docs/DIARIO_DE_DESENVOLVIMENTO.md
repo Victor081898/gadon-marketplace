@@ -59,3 +59,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: a skill usa instruções de início, alinhamento com `origin/main`, roteamento de tasks, atualização do diário e finalização da demanda.
 - O que falta: cada colaborador deve clonar o repositório e usar um agente compatível com instruções locais; os nomes de usuário GitHub de Claiton e Pablo ainda precisam ser informados para atribuições automáticas.
 - Próximo responsável: Victor deve confirmar a adoção da skill pela equipe; Claiton e Pablo devem revisar as partes de back-end, automação e testes.
+
+### 2026-07-28 — Definição do agente construtor externo
+- Responsável: IA: Codex
+- Objetivo: registrar que `Ecossystem2/agent-mod` será o agente de apoio à construção do sistema, com especialistas para tarefas e processos técnicos.
+- Alterações: criado `docs/AGENTE_CONSTRUTOR_AGENT_MOD.md` com a relação entre os repositórios, ordem de uso, mapa de agentes especializados e limites de instalação/execução; `AGENTS.md`, README e processo de colaboração foram vinculados a esse mapa.
+- Fonte consultada: `https://github.com/Ecossystem2/agent-mod.git`, branch `main`, template público NestJS + DDD + React com agentes do Claude Code.
+- Validação: integração documentada sem copiar agentes nem alterar configurações globais.
+- O que falta: disponibilizar o `agent-mod` no ambiente compatível de cada colaborador e registrar o commit/versão consultado quando uma task utilizar um agente externo.
+- Próximo responsável: Victor encaminha demandas de front-end; Claiton seleciona os agentes de back-end; Pablo e Claiton selecionam os agentes de automação e testes.

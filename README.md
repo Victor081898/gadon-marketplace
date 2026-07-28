@@ -37,6 +37,8 @@ As regras para alterações, commits, validação e atualização do histórico 
 
 A skill local de colaboração fica em `.agents/skills/gadon-colaboracao/SKILL.md`. Ela é carregada somente por agentes que trabalham neste repositório; não instala regras globalmente em outras pastas.
 
+O agente construtor especializado está documentado em [docs/AGENTE_CONSTRUTOR_AGENT_MOD.md](docs/AGENTE_CONSTRUTOR_AGENT_MOD.md) e tem origem no repositório [`Ecossystem2/agent-mod`](https://github.com/Ecossystem2/agent-mod).
+
 Toda alteração feita por uma pessoa ou pela IA deve atualizar o diário no mesmo commit, indicando data, responsável, resumo, arquivos afetados e validação realizada.
 
 ## Status
