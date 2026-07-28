@@ -194,3 +194,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build`, `git diff --check`, teste HTTP local com resposta 200 e verificação estrutural do SVG concluídos; inspeção visual automática não foi possível devido à falha do navegador embutido.
 - O que falta: substituir a geometria de referência por dados cartográficos oficiais quando a fonte de geolocalização for definida.
 - Próximo responsável: Victor valida a semelhança visual; `@ecossystem2` define a fonte cartográfica oficial; `@ricardopablo1914-create` testa filtros, rotas e marcadores sobre as divisões estaduais.
+
+### 2026-07-28 — Adaptação do mapa interativo do componente anexado
+- Responsável: IA: Codex
+- Objetivo: incorporar à tela de rotas e regiões os comportamentos apresentados no componente MapLibre/React enviado no prompt.
+- Alterações: como o GadOn é um Vite vanilla sem React, Tailwind ou TypeScript, o comportamento foi portado para a implementação atual sem migrar o projeto; o mapa ganhou controles funcionais de localizar, ampliar e reduzir, seleção de marcadores, popup com detalhes da carga e ação de solicitar retorno.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build`, `git diff --check`, teste HTTP local com resposta 200 e verificação estrutural dos hooks de interação concluídos.
+- O que falta: integrar uma fonte cartográfica oficial/MapLibre quando a dependência e os tiles forem aprovados para o ambiente; manter a geometria local como fallback offline.
+- Próximo responsável: Victor valida o fluxo visual; `@ecossystem2` define fonte, licença e contrato cartográfico; `@ricardopablo1914-create` testa zoom, popup, filtros e solicitação de retorno.
