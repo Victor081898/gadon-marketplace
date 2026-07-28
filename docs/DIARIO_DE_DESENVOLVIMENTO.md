@@ -396,3 +396,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP dos dois assets e checagem de transparência nos cantos da cabeça bovina.
 - O que falta: Victor atualizar a tela com `Ctrl + F5` e validar o tamanho/contraste do selo e do “G” em desktop e mobile.
 - Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva e o carregamento dos assets.
+
+### 2026-07-28 — Login por e-mail ou nome de usuário
+- Responsável: IA: Codex
+- Objetivo: permitir que o usuário entre pela opção de e-mail usando tanto o e-mail cadastrado quanto o nome de usuário.
+- Alterações: o campo de identificação das telas de login passou a aceitar texto livre, com rótulo e placeholder indicando “E-mail ou nome de usuário”; a validação mantém o formato obrigatório para e-mails quando o identificador contém `@`, aceita nomes de usuário e preserva o identificador informado no perfil local da demonstração.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente o fluxo de autenticação local do front-end; não houve alteração de API, persistência remota ou contrato back-end. Não é necessária task de integração nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, verificação estática dos dois formulários de login e teste HTTP da aplicação.
+- O que falta: Victor validar os dois formatos no navegador; `@ecossystem2` deverá definir o contrato de autenticação quando o back-end for conectado; `@ricardopablo1914-create` deverá adicionar casos de teste para e-mail, nome de usuário e identificador inválido.
+- Próximo responsável: Victor valida a experiência; `@ecossystem2` define a autenticação de produção; `@ricardopablo1914-create` automatiza os cenários.
