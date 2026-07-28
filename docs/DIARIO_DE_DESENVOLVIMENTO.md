@@ -95,3 +95,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: será executado `npm run build` e revisada a submissão/reset do formulário de filtros.
 - O que falta: substituir os dados de demonstração pelos campos do catálogo/API real e cobrir combinações de filtros com testes automatizados.
 - Próximo responsável: Victor valida a usabilidade; Claiton define os campos equivalentes no contrato de busca; Pablo cria testes de filtros combinados.
+
+### 2026-07-27 — Visão completa da gestão de documentos de frete
+- Responsável: IA: Codex
+- Objetivo: permitir a visualização centralizada dos documentos emitidos e pendentes relacionados às viagens de frete.
+- Alterações: adicionado o botão “Ver todos” no painel de Gestão de Documentos e criado um modal de consulta com contadores de total, emitidos e pendentes; a listagem pode ser filtrada por status e exibe tipo, identificação, viagem, arquivo, data de inclusão, validade e observações. Novos arquivos anexados passam a entrar como pendentes de conferência.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build`, verificação de diff e teste HTTP local concluídos com sucesso. A inspeção automática no navegador permanece indisponível pelo erro do runtime embutido.
+- O que falta: conectar a consulta a um serviço persistente de documentos, permitir download/visualização do arquivo e criar permissões por perfil.
+- Próximo responsável: Victor valida a experiência de consulta; Claiton define o contrato de documentos e status; Pablo cobre filtros, contadores e anexos com testes automatizados.
