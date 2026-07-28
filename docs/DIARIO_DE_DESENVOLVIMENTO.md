@@ -240,3 +240,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação do estado vazio e do ícone de carrinho.
 - O que falta: definir, com o contrato de conta/favoritos, a mensagem remota e o estado vazio sincronizado entre dispositivos.
 - Próximo responsável: Victor valida a apresentação; `@ecossystem2` define o estado oficial de favoritos; `@ricardopablo1914-create` testa a abertura do menu Favoritos sem itens.
+
+### 2026-07-28 — Correção da alternância entre Favoritos e Meu perfil
+- Responsável: IA: Codex
+- Objetivo: garantir que os dois botões de conta continuem acessíveis e interativos em qualquer uma das telas selecionadas.
+- Alterações: adicionados handlers explícitos para `data-account-page` no ciclo de binding das telas de perfil e favoritos; a delegação global foi preservada somente para os menus legados, evitando conflito ou perda de clique ao alternar entre as páginas.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação dos handlers de alternância.
+- O que falta: cobrir a navegação com testes automatizados de navegador e substituir o estado local por autenticação/sessão de conta.
+- Próximo responsável: Victor valida a troca entre as telas; `@ecossystem2` define a navegação de conta no contrato de sessão; `@ricardopablo1914-create` automatiza os cliques em Favoritos e Meu perfil nos dois sentidos.

@@ -309,6 +309,7 @@ function favoritesTemplate() {
 
 function bindAccountNavigation() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; if (el.dataset.nav === 'Mensagens') state.page = 'messages'; else if (el.dataset.nav === 'Fretes') state.page = 'freight'; else if (el.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight'; else if (el.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else state.page = 'home'; render(); }));
+  document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.accountPage === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = el.dataset.accountPage; render(); }));
   document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
   bindNotificationEvents();
 }
@@ -915,6 +916,7 @@ function showToast(message) { state.toast = message; render(); setTimeout(() => 
 document.addEventListener('click', (event) => {
   const button = event.target.closest('button');
   if (!button) return;
+  if (button.dataset.accountPage) return;
   const accountPage = button.dataset.accountPage || (button.textContent || '').trim();
   if (!accountPage || (!accountPage.startsWith('Favoritos') && !accountPage.startsWith('Meu perfil'))) return;
   state.activeNav = accountPage.startsWith('Favoritos') ? 'Favoritos' : 'Meu perfil';
