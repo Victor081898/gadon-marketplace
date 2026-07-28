@@ -376,3 +376,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural da cor branca no SVG do selo.
 - O que falta: Victor confirmar o contraste final do ícone sobre o azul em desktop e tablet.
 - Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva.
+
+### 2026-07-28 — Reforço visual do ícone bovino branco
+- Responsável: IA: Codex
+- Objetivo: garantir que o ícone do selo seja exibido em branco mesmo quando houver cor herdada ou cache de estilos anteriores.
+- Alterações: adicionados `stroke` e `fill` com prioridade máxima e filtro de conversão para branco diretamente no SVG do selo da divisória.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a renderização do selo da divisória; sem alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e confirmação da regra reforçada no CSS servido pelo Vite.
+- O que falta: Victor atualizar a tela com `Ctrl + F5` e confirmar a visualização final.
+- Próximo responsável: Victor valida o resultado; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva.

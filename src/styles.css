@@ -457,7 +457,7 @@ button { cursor:pointer; }
 .register-reference-divider path { fill:none; stroke:#ff8500; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:9 9; filter:drop-shadow(0 0 5px rgba(255,133,0,.72)); }
 .register-reference-cow-badge { position:absolute; z-index:5; top:50%; left:18px; display:grid; place-items:center; width:59px; height:59px; border:3px solid #ff8500; border-radius:50%; color:#fff; background:#116fb3; box-shadow:0 0 0 7px rgba(17,23,34,.74),0 0 16px rgba(255,133,0,.35); transform:translateY(-50%); }
 .register-reference-divider .register-reference-cow-badge { z-index:2; top:37%; left:110px; transform:translate(-50%,-50%); }
-.register-reference-divider .register-reference-cow-badge svg { color:#fff !important; stroke:#fff; fill:none; }
+.register-reference-divider .register-reference-cow-badge svg { color:#fff !important; stroke:#fff !important; fill:none !important; filter:brightness(0) invert(1); }
 .register-reference-visual-logo { position:absolute; z-index:4; right:55px; bottom:54px; display:grid; gap:0; text-align:left; }
 .register-reference-visual-logo strong { font-size:36px; text-shadow:0 3px 10px rgba(0,0,0,.4); }
 .register-reference-visual-logo small { font-size:12px; text-shadow:0 2px 5px rgba(0,0,0,.7); }
