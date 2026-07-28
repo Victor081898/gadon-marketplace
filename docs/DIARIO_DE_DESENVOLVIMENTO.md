@@ -108,11 +108,11 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 ### 2026-07-28 — Identificação GitHub dos responsáveis
 - Responsável: IA: Codex
 - Objetivo: completar o encaminhamento das tarefas de colaboração com os usuários oficiais do GitHub.
-- Alterações: Claiton foi registrado como `@ecossystem2` para back-end, APIs, contratos e persistência; Pablo foi registrado como `@ricardopablo1914` para automações e testes, trabalhando em conjunto com Claiton nas integrações. As regras, o processo e a skill local agora orientam as atribuições correspondentes em issues.
+- Alterações: Claiton foi registrado como `@ecossystem2` para back-end, APIs, contratos e persistência; Pablo foi registrado como `@ricardopablo1914-create` para automações e testes, trabalhando em conjunto com Claiton nas integrações. As regras, o processo e a skill local agora orientam as atribuições correspondentes em issues.
 - Arquivos: `AGENTS.md`, `.agents/skills/gadon-colaboracao/SKILL.md`, `docs/PROCESSO_DE_COLABORACAO.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
 - Validação: revisão estática das menções e dos fluxos de atribuição; será executado `npm run build` antes do commit.
 - O que falta: abrir e atribuir as primeiras issues específicas de integração quando Victor definir as próximas demandas de produto.
-- Próximo responsável: Victor abre as tasks de front-end; `@ecossystem2` registra os contratos de back-end; `@ricardopablo1914` estrutura os testes e automações com apoio de `@ecossystem2`.
+- Próximo responsável: Victor abre as tasks de front-end; `@ecossystem2` registra os contratos de back-end; `@ricardopablo1914-create` estrutura os testes e automações com apoio de `@ecossystem2`.
 
 ### 2026-07-28 — Publicação obrigatória de todas as alterações
 - Responsável: IA: Codex
@@ -121,7 +121,7 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Arquivos: `AGENTS.md`, `.agents/skills/gadon-colaboracao/SKILL.md`, `docs/PROCESSO_DE_COLABORACAO.md`, `CONTRIBUTING.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
 - Validação: revisão estática das regras e `npm run build` executado antes do commit.
 - O que falta: aplicar esse fluxo em todas as próximas tasks e criar/atualizar issues quando uma demanda atravessar front-end, back-end, automações ou testes.
-- Próximo responsável: todos os colaboradores; Victor coordena o front-end, `@ecossystem2` o back-end e `@ricardopablo1914` as automações e testes.
+- Próximo responsável: todos os colaboradores; Victor coordena o front-end, `@ecossystem2` o back-end e `@ricardopablo1914-create` as automações e testes.
 
 ### 2026-07-28 — Sincronização da branch main
 - Responsável: IA: Codex
@@ -130,7 +130,7 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Arquivos: o merge incorpora os arquivos já registrados nas entradas anteriores deste diário.
 - Validação: referências remotas conferidas; `codex/nova-demanda` está 9 commits à frente da `main`; o build será executado antes do merge e o push da `main` será confirmado.
 - O que falta: abrir novas tasks específicas para as próximas integrações entre front-end, back-end, automações e testes.
-- Próximo responsável: Victor coordena a próxima demanda; `@ecossystem2` e `@ricardopablo1914` assumem os contratos e testes quando as tasks forem abertas.
+- Próximo responsável: Victor coordena a próxima demanda; `@ecossystem2` e `@ricardopablo1914-create` assumem os contratos e testes quando as tasks forem abertas.
 
 ### 2026-07-28 — Tabela completa de rotas contratadas
 - Responsável: IA: Codex
@@ -139,7 +139,7 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
 - Validação: `npm run build`, `git diff --check` e teste HTTP local concluídos com sucesso; a inspeção visual automática não foi possível porque o navegador embutido apresentou falha de conexão no runtime.
 - O que falta: substituir os dados demonstrativos por rotas persistidas pela API de fretes e permitir atualização dos preços após novas contratações.
-- Próximo responsável: Victor valida a experiência visual; `@ecossystem2` define o contrato de rotas contratadas; `@ricardopablo1914` cobre a abertura, fechamento e renderização da tabela nos testes.
+- Próximo responsável: Victor valida a experiência visual; `@ecossystem2` define o contrato de rotas contratadas; `@ricardopablo1914-create` cobre a abertura, fechamento e renderização da tabela nos testes.
 
 ### 2026-07-28 — Exportação do relatório consolidado de fretes
 - Responsável: IA: Codex
@@ -148,4 +148,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
 - Validação: o CSV é gerado no navegador com codificação UTF-8 e separador compatível com planilhas; serão executados `npm run build`, `git diff --check` e teste HTTP local antes da publicação.
 - O que falta: disponibilizar exportação em PDF/XLSX e conectar o conteúdo a dados persistidos pela API.
-- Próximo responsável: Victor valida o arquivo exportado; `@ecossystem2` define os dados oficiais do relatório; `@ricardopablo1914` testa o download e a integridade das seções exportadas.
+- Próximo responsável: Victor valida o arquivo exportado; `@ecossystem2` define os dados oficiais do relatório; `@ricardopablo1914-create` testa o download e a integridade das seções exportadas.
+
+### 2026-07-28 — Correção do pseudônimo GitHub do Pablo
+- Responsável: IA: Codex
+- Objetivo: corrigir o identificador usado para encaminhar tasks e testes ao responsável por automações.
+- Alterações: substituído o pseudônimo incorreto pelo identificador oficial `@ricardopablo1914-create` em `AGENTS.md`, na skill local e no processo de colaboração; os registros históricos do diário também foram corrigidos para manter as referências atuais.
+- Arquivos: `AGENTS.md`, `.agents/skills/gadon-colaboracao/SKILL.md`, `docs/PROCESSO_DE_COLABORACAO.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: revisão das ocorrências do usuário e `git diff --check`; build será executado antes do commit e publicação na `main`.
+- O que falta: usar o novo pseudônimo nas próximas issues e tasks de automação e testes.
+- Próximo responsável: Victor encaminha as demandas; `@ecossystem2` apoia integrações; `@ricardopablo1914-create` recebe automações e testes.

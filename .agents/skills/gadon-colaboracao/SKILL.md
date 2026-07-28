@@ -20,7 +20,7 @@ Antes de alterar arquivos:
 
 - Victor cuida do front-end e descreve as necessidades de produto.
 - Claiton (`@ecossystem2`) cuida da arquitetura back-end, APIs, persistência e contratos de comunicação.
-- Pablo (`@ricardopablo1914`), em conjunto com Claiton, cuida de automações, testes de API e testes de integração.
+- Pablo (`@ricardopablo1914-create`), em conjunto com Claiton, cuida de automações, testes de API e testes de integração.
 
 Quando uma mudança atravessar camadas, crie ou atualize uma issue com responsável principal, responsáveis de apoio, contrato de dados, critérios de aceite, dependências e validações.
 
