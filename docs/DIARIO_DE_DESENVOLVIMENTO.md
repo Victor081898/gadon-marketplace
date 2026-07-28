@@ -386,3 +386,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e confirmação da regra reforçada no CSS servido pelo Vite.
 - O que falta: Victor atualizar a tela com `Ctrl + F5` e confirmar a visualização final.
 - Próximo responsável: Victor valida o resultado; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva.
+
+### 2026-07-28 — Ícone bovino da referência e marca oficial do Google
+- Responsável: IA: Codex
+- Objetivo: usar a cabeça de gado branca enviada pelo usuário dentro do círculo azul da divisória e corrigir o ícone do botão de autenticação com a marca multicolorida do Google.
+- Alterações: criada uma versão com fundo transparente da cabeça bovina (`public/cattle-head-transparent.png`) a partir da imagem de referência; o asset passou a substituir o SVG anterior dentro do selo. Criado `public/google-g.svg` com o “G” multicolorido e aplicado visualmente nos botões “Entrar com Google” e “Criar com Google”, preservando o texto e os fluxos atuais.
+- Arquivos: `public/cattle-head-source.png`, `public/cattle-head-transparent.png`, `public/google-g.svg`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a identidade visual da autenticação; sem alteração em autenticação, dados, APIs ou contratos entre equipes.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP dos dois assets e checagem de transparência nos cantos da cabeça bovina.
+- O que falta: Victor atualizar a tela com `Ctrl + F5` e validar o tamanho/contraste do selo e do “G” em desktop e mobile.
+- Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva e o carregamento dos assets.
