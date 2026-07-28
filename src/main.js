@@ -52,6 +52,7 @@ const icon = (name, size = 18) => {
     check: '<path d="m5 12 4 4L19 6"/>',
     cart: '<path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/>',
     bag: '<path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+    logout: '<path d="M10 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5"/><path d="m14 16 4-4-4-4m4 4H8"/>',
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.home}</svg>`;
 };
@@ -64,6 +65,7 @@ const freightDocumentStorageKey = 'gadon.freight-documents.v1';
 const favoritesStorageKey = 'gadon.favorites.v1';
 const historyStorageKey = 'gadon.lot-history.v1';
 const profileStorageKey = 'gadon.profile.v1';
+const authStorageKey = 'gadon.auth.v1';
 let audioRecorder = null;
 let audioChunks = [];
 let audioStream = null;
@@ -112,6 +114,8 @@ const loadFavorites = () => { try { const parsed = JSON.parse(localStorage.getIt
 const loadLotHistory = () => { try { const parsed = JSON.parse(localStorage.getItem(historyStorageKey) || '[]'); return Array.isArray(parsed) ? parsed.map(Number) : []; } catch { return []; } };
 const defaultProfile = () => ({ name: 'João Pecuarista', email: 'joao@pecuarista.com.br', phone: '(65) 99999-1234', avatar: '', passwordChangedAt: null });
 const loadProfile = () => { try { const parsed = JSON.parse(localStorage.getItem(profileStorageKey) || 'null'); return { ...defaultProfile(), ...(parsed && typeof parsed === 'object' ? parsed : {}) }; } catch { return defaultProfile(); } };
+const loadAuth = () => { try { return localStorage.getItem(authStorageKey) === 'true'; } catch { return false; } };
+const saveAuth = (authenticated) => { try { localStorage.setItem(authStorageKey, authenticated ? 'true' : 'false'); } catch { /* sessão local indisponível */ } };
 const notificationStorageKey = 'gadon.notifications.v1';
 const defaultNotifications = () => ([
   { id: 1, type: 'message', title: 'Nova mensagem', source: 'Fazenda Santa Rita', body: 'Você recebeu uma nova mensagem sobre o lote Nelore selecionado.', time: '14:20', unread: true },
@@ -121,7 +125,8 @@ const defaultNotifications = () => ([
 ]);
 const loadNotifications = () => { try { const parsed = JSON.parse(localStorage.getItem(notificationStorageKey) || 'null'); return Array.isArray(parsed) ? parsed : defaultNotifications(); } catch { return defaultNotifications(); } };
 const defaultAdvancedFilters = () => ({ region: 'Todos', sex: 'Todos', farm: 'Todos', location: 'Todos', purpose: 'Todos', minWeight: '', maxWeight: '', minAge: '', maxAge: '' });
-const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: 'home', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
+const initialAuthenticated = loadAuth();
+const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), authenticated: initialAuthenticated, authError: '', modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: initialAuthenticated ? 'home' : 'login', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
 let returnMapInstance = null;
 
 function saveMessages() {
@@ -291,6 +296,39 @@ function bindAnnouncementsEvents() {
   document.querySelectorAll('[data-announcement-protocol]').forEach((el) => el.addEventListener('click', () => showToast(`Registro ${el.dataset.announcementProtocol || 'do anúncio'} disponível no diário de verificação.`)));
 }
 
+function authBrandTemplate() {
+  return `<div class="auth-brand"><div class="auth-brand-logo"><img src="/gadon.jpeg" alt="Logo GadOn" /></div><p class="eyebrow">GADON · O MERCADO DO GADO</p><h1>Compra, venda e frete inteligente em um só lugar.</h1><p>Entre para acompanhar seus lotes, negociações, favoritos e operações de transporte.</p><div class="auth-brand-points"><span>${icon('shield', 15)} Ambiente de negociação protegido</span><span>${icon('cow', 15)} Marketplace especializado em gado</span><span>${icon('truck', 15)} Fretes parceiros para sua operação</span></div></div>`;
+}
+
+function loginTemplate() {
+  return `<div class="auth-shell"><section class="auth-brand-panel">${authBrandTemplate()}</section><main class="auth-main"><div class="auth-card"><div class="auth-card-heading"><p class="eyebrow">BEM-VINDO AO GADON</p><h1>Entrar na sua conta</h1><p>Acesse seu painel para continuar sua operação.</p></div>${state.authError ? `<div class="auth-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="login-form" class="auth-form"><label><span>E-mail</span><div class="auth-input">${icon('user', 17)}<input name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required /></div></label><label><span>Senha</span><div class="auth-input">${icon('lock', 17)}<input name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" minlength="6" required /></div></label><div class="auth-form-options"><label class="auth-check"><input type="checkbox" /> <span>Lembrar de mim</span></label><button type="button" class="auth-link" data-auth-action="forgot">Esqueci minha senha</button></div><button type="submit" class="primary-button auth-submit">Entrar ${icon('arrow', 16)}</button></form><div class="auth-divider"><span>ou</span></div><button type="button" class="secondary-button auth-create-button" data-auth-action="register">Criar uma nova conta ${icon('plus', 15)}</button><small class="auth-demo-note">Protótipo local: use um e-mail válido e uma senha com pelo menos 6 caracteres.</small></div><p class="auth-footer">${icon('shield', 13)} Seus dados serão tratados conforme as regras de segurança da plataforma.</p></main></div>`;
+}
+
+function accountRegistrationTemplate() {
+  return `<div class="auth-shell auth-register-shell"><section class="auth-brand-panel">${authBrandTemplate()}</section><main class="auth-main"><div class="auth-card auth-register-card"><button type="button" class="auth-back-link" data-auth-action="back-login">${icon('back', 15)} Voltar para o login</button><div class="auth-card-heading"><p class="eyebrow">PRIMEIRO ACESSO</p><h1>Criar uma nova conta</h1><p>Preencha seus dados para começar a usar o GadOn.</p></div>${state.authError ? `<div class="auth-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="account-registration-form" class="auth-form"><div class="auth-form-grid"><label><span>Nome completo <b>*</b></span><div class="auth-input">${icon('user', 17)}<input name="name" autocomplete="name" placeholder="João Pecuarista" required maxlength="80" /></div></label><label><span>E-mail <b>*</b></span><div class="auth-input">${icon('mail', 17)}<input name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required /></div></label><label><span>Número de celular</span><div class="auth-input">${icon('phone', 17)}<input name="phone" type="tel" autocomplete="tel" placeholder="(00) 00000-0000" /></div></label><label><span>Senha <b>*</b></span><div class="auth-input">${icon('lock', 17)}<input name="password" type="password" autocomplete="new-password" placeholder="Mínimo de 6 caracteres" minlength="6" required /></div></label><label class="auth-field-full"><span>Confirmar senha <b>*</b></span><div class="auth-input">${icon('lock', 17)}<input name="confirmation" type="password" autocomplete="new-password" placeholder="Digite a senha novamente" minlength="6" required /></div></label></div><label class="auth-check auth-terms"><input name="terms" type="checkbox" required /> <span>Li e concordo com os termos de uso e a política de privacidade do GadOn.</span></label><button type="submit" class="primary-button auth-submit">Criar conta ${icon('arrow', 16)}</button></form></div><p class="auth-footer">${icon('shield', 13)} O cadastro de conta é uma etapa separada do cadastro de lotes.</p></main></div>`;
+}
+
+function logout() {
+  state.authenticated = false;
+  state.authError = '';
+  state.toast = '';
+  state.page = 'login';
+  state.notificationsOpen = false;
+  saveAuth(false);
+  render();
+}
+
+function bindLoginEvents() {
+  document.querySelector('#login-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (!data.email || data.password.length < 6) { state.authError = 'Informe um e-mail válido e uma senha com pelo menos 6 caracteres.'; render(); return; } state.profile = { ...state.profile, email: data.email.trim() }; saveProfile(); state.authenticated = true; state.authError = ''; state.page = 'home'; saveAuth(true); render(); });
+  document.querySelectorAll('[data-auth-action="register"]').forEach((el) => el.addEventListener('click', () => { state.authError = ''; state.page = 'accountRegister'; render(); }));
+  document.querySelector('[data-auth-action="forgot"]')?.addEventListener('click', () => { state.authError = 'A recuperação de senha será conectada ao serviço de autenticação.'; render(); });
+}
+
+function bindAccountRegistrationEvents() {
+  document.querySelector('[data-auth-action="back-login"]')?.addEventListener('click', () => { state.authError = ''; state.page = 'login'; render(); });
+  document.querySelector('#account-registration-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (data.password.length < 6) { state.authError = 'A senha precisa ter pelo menos 6 caracteres.'; render(); return; } if (data.password !== data.confirmation) { state.authError = 'A confirmação da senha não confere.'; render(); return; } state.profile = { ...state.profile, name: data.name.trim(), email: data.email.trim(), phone: (data.phone || '').trim(), avatar: '', passwordChangedAt: null }; saveProfile(); state.authenticated = true; state.authError = ''; state.page = 'home'; saveAuth(true); render(); });
+}
+
 function accountSidebarTemplate(activePage) {
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   const navItems = ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
@@ -304,7 +342,7 @@ function accountTopbarTemplate(crumb) {
 }
 
 function accountShellTemplate(activePage, crumb, content) {
-  return `<div class="app-shell account-shell">${accountSidebarTemplate(activePage)}<main class="main-content">${accountTopbarTemplate(crumb)}${content}</main></div>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
+  return `<div class="app-shell account-shell">${accountSidebarTemplate(activePage)}<main class="main-content">${accountTopbarTemplate(crumb)}${content}</main></div><button type="button" class="account-logout-button" data-action="logout">${icon('logout', 15)} Sair da conta</button>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
 function profileTemplate() {
@@ -326,6 +364,7 @@ function favoritesTemplate() {
 function bindAccountNavigation() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; if (el.dataset.nav === 'Mensagens') state.page = 'messages'; else if (el.dataset.nav === 'Fretes') state.page = 'freight'; else if (el.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight'; else if (el.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else state.page = 'home'; render(); }));
   document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.accountPage === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = el.dataset.accountPage; render(); }));
+  document.querySelectorAll('[data-action="logout"]').forEach((el) => el.addEventListener('click', logout));
   document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
   bindNotificationEvents();
 }
@@ -360,6 +399,12 @@ function destroyReturnMap() {
 
 function render() {
   destroyReturnMap();
+  if (!state.authenticated) {
+    document.querySelector('#app').innerHTML = state.page === 'accountRegister' ? accountRegistrationTemplate() : loginTemplate();
+    if (state.page === 'accountRegister') bindAccountRegistrationEvents();
+    else bindLoginEvents();
+    return;
+  }
   if (state.page === 'register') {
     document.querySelector('#app').innerHTML = registrationTemplate();
     bindRegistrationEvents();

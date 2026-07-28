@@ -268,3 +268,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais do estado vazio, listagem e rota de navegação.
 - O que falta: persistir os anúncios em API, permitir edição/pausa/publicação e sincronizar o status de verificação com o back-end.
 - Próximo responsável: Victor valida a tela e os textos; `@ecossystem2` define o contrato de anúncios e status; `@ricardopablo1914-create` testa cadastro, navegação, estado vazio e listagem.
+
+### 2026-07-28 — Login, criação de conta e logout
+- Responsável: IA: Codex
+- Objetivo: criar uma porta de entrada para o sistema e permitir que o usuário crie conta, entre e encerre a sessão.
+- Alterações: adicionadas as telas iniciais de login e criação de conta, validação de e-mail/senha no protótipo, persistência local da sessão, atualização do perfil ao criar a conta e botão “Sair da conta” nas telas autenticadas. O fluxo de autenticação permanece separado do cadastro de gado.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: estado `authenticated`, armazenamento local `gadon.auth.v1`, rotas de tela `login` e `accountRegister`; não houve chamada de API.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais dos formulários e handlers de login/logout.
+- O que falta: integrar autenticação real, hash de senha, recuperação de acesso, verificação de e-mail, sessão segura e autorização no back-end.
+- Próximo responsável: Victor valida a experiência inicial; `@ecossystem2` define o contrato de autenticação/sessão; `@ricardopablo1914-create` automatiza criação de conta, login, logout, validações e recuperação futura.
