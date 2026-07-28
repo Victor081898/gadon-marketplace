@@ -336,3 +336,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais do SVG, do z-index e do comportamento responsivo.
 - O que falta: Victor validar a curva em diferentes proporções de tela e confirmar se o ponto do selo coincide com a referência final.
 - Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa desktop, tablet e mobile.
+
+### 2026-07-28 — Máscaras de fundo alinhadas à divisória em “S”
+- Responsável: IA: Codex
+- Objetivo: impedir que o fundo escuro e a foto do gado ultrapassem o limite visual definido pela linha laranja.
+- Alterações: o fundo escuro passou a ser a base do cartão; a foto Nelore foi movida para uma camada recortada por `clip-path` com o mesmo contorno em “S” da divisória; os fundos individuais dos painéis ficaram transparentes para evitar vazamentos e a máscara é desativada no mobile junto com a foto.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a composição visual das telas de login e criação de conta; sem alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais da máscara, da camada SVG e do modo responsivo.
+- O que falta: Victor validar visualmente o encaixe da máscara em diferentes larguras e confirmar se o recorte acompanha exatamente o traçado aprovado.
+- Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa as larguras desktop, tablet e mobile.
