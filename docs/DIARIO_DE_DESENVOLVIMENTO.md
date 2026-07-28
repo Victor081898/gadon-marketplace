@@ -416,3 +416,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP do asset `/gadon-logo-transparent.png` e verificação estática de que a marca lateral referencia o asset novo.
 - O que falta: Victor validar o tamanho e o enquadramento da logo em desktop e mobile; não há task de back-end nesta alteração.
 - Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva.
+
+### 2026-07-28 — Foto Nelore no painel inicial e modo escuro
+- Responsável: IA: Codex
+- Objetivo: substituir a ilustração do painel principal pela foto de gado enviada e disponibilizar uma opção de modo escuro no sistema.
+- Alterações: adicionada `public/home-hero-nelore.png` com a foto da imagem 2 e aplicada como imagem de fundo do hero inicial, mantendo o texto, o CTA e o indicador de lotes. Criado o botão global `#theme-toggle`, com rótulo, ícone, estado acessível e preferência persistida em `localStorage`; adicionados tokens e ajustes de contraste para as principais telas, cartões, formulários, modais e áreas de operação no modo escuro.
+- Arquivos: `public/home-hero-nelore.png`, `index.html`, `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e preferência local do front-end; sem alteração em APIs, autenticação, dados de negócio ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP da aplicação e do novo asset, além de verificação estática do controle, persistência e atributos acessíveis do tema.
+- O que falta: Victor validar o enquadramento da foto e o contraste das telas em claro/escuro; `@ecossystem2` deverá considerar o tema no contrato de preferências quando houver persistência remota; `@ricardopablo1914-create` deverá testar a alternância, recarga e responsividade.
+- Próximo responsável: Victor valida a experiência visual; `@ecossystem2` avalia persistência futura; `@ricardopablo1914-create` automatiza os cenários de tema.

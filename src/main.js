@@ -54,6 +54,8 @@ const icon = (name, size = 18) => {
     bag: '<path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
     logout: '<path d="M10 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5"/><path d="m14 16 4-4-4-4m4 4H8"/>',
     eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>',
+    moon: '<path d="M20.5 15.3A8.5 8.5 0 0 1 8.7 3.5 8.5 8.5 0 1 0 20.5 15.3Z"/>',
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.home}</svg>`;
 };
@@ -67,6 +69,7 @@ const favoritesStorageKey = 'gadon.favorites.v1';
 const historyStorageKey = 'gadon.lot-history.v1';
 const profileStorageKey = 'gadon.profile.v1';
 const authStorageKey = 'gadon.auth.v1';
+const themeStorageKey = 'gadon.theme.v1';
 let audioRecorder = null;
 let audioChunks = [];
 let audioStream = null;
@@ -117,6 +120,8 @@ const defaultProfile = () => ({ name: 'João Pecuarista', email: 'joao@pecuarist
 const loadProfile = () => { try { const parsed = JSON.parse(localStorage.getItem(profileStorageKey) || 'null'); return { ...defaultProfile(), ...(parsed && typeof parsed === 'object' ? parsed : {}) }; } catch { return defaultProfile(); } };
 const loadAuth = () => { try { return localStorage.getItem(authStorageKey) === 'true'; } catch { return false; } };
 const saveAuth = (authenticated) => { try { localStorage.setItem(authStorageKey, authenticated ? 'true' : 'false'); } catch { /* sessão local indisponível */ } };
+const loadDarkMode = () => { try { return localStorage.getItem(themeStorageKey) === 'dark'; } catch { return false; } };
+const saveDarkMode = (enabled) => { try { localStorage.setItem(themeStorageKey, enabled ? 'dark' : 'light'); } catch { /* preferência local indisponível */ } };
 const notificationStorageKey = 'gadon.notifications.v1';
 const defaultNotifications = () => ([
   { id: 1, type: 'message', title: 'Nova mensagem', source: 'Fazenda Santa Rita', body: 'Você recebeu uma nova mensagem sobre o lote Nelore selecionado.', time: '14:20', unread: true },
@@ -127,7 +132,7 @@ const defaultNotifications = () => ([
 const loadNotifications = () => { try { const parsed = JSON.parse(localStorage.getItem(notificationStorageKey) || 'null'); return Array.isArray(parsed) ? parsed : defaultNotifications(); } catch { return defaultNotifications(); } };
 const defaultAdvancedFilters = () => ({ region: 'Todos', sex: 'Todos', farm: 'Todos', location: 'Todos', purpose: 'Todos', minWeight: '', maxWeight: '', minAge: '', maxAge: '' });
 const initialAuthenticated = loadAuth();
-const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), authenticated: initialAuthenticated, authError: '', modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: initialAuthenticated ? 'home' : 'login', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
+const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), authenticated: initialAuthenticated, darkMode: loadDarkMode(), authError: '', modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: initialAuthenticated ? 'home' : 'login', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
 let returnMapInstance = null;
 
 function saveMessages() {
@@ -417,6 +422,15 @@ function destroyReturnMap() {
   }
 }
 
+function applyTheme() {
+  document.documentElement.dataset.theme = state.darkMode ? 'dark' : 'light';
+  const toggle = document.querySelector('#theme-toggle');
+  if (!toggle) return;
+  toggle.innerHTML = `${icon(state.darkMode ? 'sun' : 'moon', 16)}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span>`;
+  toggle.setAttribute('aria-label', state.darkMode ? 'Ativar modo claro' : 'Ativar modo escuro');
+  toggle.setAttribute('aria-pressed', String(state.darkMode));
+}
+
 function render() {
   destroyReturnMap();
   if (!state.authenticated) {
@@ -492,7 +506,7 @@ function render() {
         <header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> ${state.activeNav}</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header>
         <div class="page-body">
           <section class="welcome-row"><div><p class="eyebrow">DOMINGO, 26 DE JULHO DE 2026</p><h1>Encontre seu próximo lote.</h1><p class="welcome-sub">Negocie direto com produtores de todo o Brasil.</p></div><div class="location-pill">${icon('pin', 16)} <span>Campo Verde, MT</span><span class="down">⌄</span></div></section>
-          <section class="hero-card"><div class="hero-copy"><span class="hero-kicker">GADON MARKETPLACE</span><h2>O gado certo.<br><em>Do seu jeito.</em></h2><p>Compra, venda e frete inteligente em um só lugar.</p><button class="primary-button" data-scroll="lots">Buscar lotes ${icon('arrow', 16)}</button></div><div class="hero-art"><div class="sun"></div><div class="cow cow-back">🐄</div><div class="cow cow-main">🐂</div><div class="cow cow-front">🐄</div><div class="hill"></div><div class="hero-note"><span class="status-dot"></span> 2.351 lotes ativos agora</div></div></section>
+          <section class="hero-card"><div class="hero-copy"><span class="hero-kicker">GADON MARKETPLACE</span><h2>O gado certo.<br><em>Do seu jeito.</em></h2><p>Compra, venda e frete inteligente em um só lugar.</p><button class="primary-button" data-scroll="lots">Buscar lotes ${icon('arrow', 16)}</button></div><div class="hero-art" role="img" aria-label="Gado Nelore em um pasto ao pôr do sol"><div class="hero-note"><span class="status-dot"></span> 2.351 lotes ativos agora</div></div></section>
           <section class="quick-stats"><div class="quick-stat"><div class="stat-icon blue-bg">${icon('cow', 19)}</div><div><strong>2.351</strong><span>lotes ativos</span></div></div><div class="quick-stat"><div class="stat-icon orange-bg">${icon('message', 19)}</div><div><strong>1.128</strong><span>negociações abertas</span></div></div><div class="quick-stat"><div class="stat-icon green-bg">${icon('truck', 19)}</div><div><strong>843</strong><span>fretes realizados</span></div></div><div class="quick-stat highlight"><div class="stat-icon purple-bg">${icon('repeat', 19)}</div><div><strong>Encontre cargas para a viagem de volta</strong><span>Aproveite a viagem de volta</span></div><button data-nav="Fretes de retorno">${icon('arrow', 15)}</button></div></section>
           <section class="section-block" id="lots"><div class="section-heading"><div><p class="eyebrow">PARA VOCÊ</p><h2>${state.collectionView === 'favorites' ? 'Meus favoritos' : state.collectionView === 'history' ? 'Histórico de visualizações' : 'Lotes em destaque'}</h2></div><button class="text-button" data-nav="Buscar gado">Ver todos ${icon('arrow', 15)}</button></div><div class="filter-row"><div class="search-field">${icon('search', 17)}<input id="search" value="${state.query}" placeholder="Busque por raça, cidade ou categoria..." /></div><div class="category-tabs">${['Todos', 'Nelore', 'Angus', 'Cruza', 'Bezerros'].map(c => `<button class="tab ${state.category === c ? 'selected' : ''}" data-category="${c}">${c}</button>`).join('')}</div><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar lotes"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div><div class="lots-grid">${filtered.length ? filtered.slice(0, 4).map(lotCard).join('') : `<div class="empty-state">Nenhum lote encontrado. Tente outra busca.</div>`}</div></section>
           <section class="operations"><div class="operation-panel freight"><div class="operation-icon">${icon('truck', 22)}</div><div><p class="eyebrow">FRETE PARCEIRO</p><h3>Leve seu gado com segurança.</h3><p>Solicite cotações de transportadoras parceiras para sua rota.</p><button class="outline-button" data-nav="Fretes">Cotar frete ${icon('arrow', 15)}</button></div><div class="route-lines"></div></div><div class="operation-panel return"><div class="operation-icon">${icon('repeat', 22)}</div><div><p class="eyebrow">INTELIGÊNCIA LOGÍSTICA</p><h3>Encontre cargas para a viagem de volta</h3><p>Aproveite o trajeto de retorno e reduza o custo do frete.</p><button class="outline-button" data-nav="Fretes de retorno">Ver oportunidades ${icon('arrow', 15)}</button></div><div class="mini-route"><span>GO</span><i></i><span>MT</span></div></div></section>
@@ -1023,4 +1037,6 @@ document.addEventListener('click', (event) => {
   render();
 });
 
+document.querySelector('#theme-toggle')?.addEventListener('click', () => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); applyTheme(); });
+applyTheme();
 render();
