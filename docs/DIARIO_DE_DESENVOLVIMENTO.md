@@ -406,3 +406,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, verificação estática dos dois formulários de login e teste HTTP da aplicação.
 - O que falta: Victor validar os dois formatos no navegador; `@ecossystem2` deverá definir o contrato de autenticação quando o back-end for conectado; `@ricardopablo1914-create` deverá adicionar casos de teste para e-mail, nome de usuário e identificador inválido.
 - Próximo responsável: Victor valida a experiência; `@ecossystem2` define a autenticação de produção; `@ricardopablo1914-create` automatiza os cenários.
+
+### 2026-07-28 — Atualização da logo do menu lateral
+- Responsável: IA: Codex
+- Objetivo: substituir somente a logo compacta exibida no menu lateral pela nova logo GadOn da imagem de referência, mantendo os demais elementos da interface.
+- Alterações: a marca lateral passou a usar `public/gadon-logo-transparent.png`, com o lettering GadOn colorido e o slogan branco da nova referência; o bloco textual antigo e o recorte circular anterior foram removidos apenas dessa composição visual, sem alterar navegação, perfil ou outros logos da autenticação.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente identidade visual do menu lateral e do cabeçalho de cadastro que reutiliza a classe de marca; sem alteração em autenticação, dados ou APIs.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP do asset `/gadon-logo-transparent.png` e verificação estática de que a marca lateral referencia o asset novo.
+- O que falta: Victor validar o tamanho e o enquadramento da logo em desktop e mobile; não há task de back-end nesta alteração.
+- Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva.
