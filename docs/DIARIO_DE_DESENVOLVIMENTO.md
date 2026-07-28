@@ -51,3 +51,11 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: será executado `npm run build`; o diff e o status Git serão conferidos antes do push.
 - O que falta: definir os nomes de usuário GitHub de Claiton e Pablo para atribuições automáticas de issues e criar as primeiras tasks específicas de integração.
 - Próximo responsável: Victor deve abrir as demandas de front-end; Claiton deve registrar os contratos de back-end; Pablo e Claiton devem registrar os cenários de automação e testes.
+
+### 2026-07-27 — Skill local exclusiva do projeto
+- Responsável: IA: Codex
+- Objetivo: fazer com que as regras de colaboração acompanhem o clone do GadOn sem alterar as configurações globais de quem instalar o projeto.
+- Alterações: criada `.agents/skills/gadon-colaboracao/SKILL.md` e vinculada sua leitura ao `AGENTS.md`; README e processo de colaboração agora explicam o escopo exclusivamente local da skill.
+- Validação: a skill usa instruções de início, alinhamento com `origin/main`, roteamento de tasks, atualização do diário e finalização da demanda.
+- O que falta: cada colaborador deve clonar o repositório e usar um agente compatível com instruções locais; os nomes de usuário GitHub de Claiton e Pablo ainda precisam ser informados para atribuições automáticas.
+- Próximo responsável: Victor deve confirmar a adoção da skill pela equipe; Claiton e Pablo devem revisar as partes de back-end, automação e testes.

@@ -1,5 +1,7 @@
 # Processo de compartilhamento de trabalho e demandas
 
+> Skill local: `.agents/skills/gadon-colaboracao/SKILL.md`. Ela acompanha este repositório e só deve ser aplicada ao GadOn.
+
 ## Objetivo
 
 Manter o front-end, back-end, automações, testes e documentação alinhados desde o planejamento até a entrega.

@@ -2,6 +2,10 @@
 
 Estas instruções valem para qualquer pessoa ou agente que altere este repositório.
 
+## Skill local do projeto
+
+Ao trabalhar neste repositório, carregue `.agents/skills/gadon-colaboracao/SKILL.md`. Essa skill é exclusiva do GadOn, acompanha o código pelo Git e não deve ser instalada globalmente nem aplicada a outros projetos.
+
 ## Responsabilidades
 
 - **Victor — Front-end e produto:** desenha as telas, fluxos e regras de interação do front-end. Sempre que uma função depender de dados, API, autenticação ou persistência, deve abrir uma tarefa de integração.

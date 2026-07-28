@@ -35,6 +35,8 @@ O projeto é uma aplicação Vite com JavaScript vanilla e CSS. Os dados de demo
 
 As regras para alterações, commits, validação e atualização do histórico estão em [CONTRIBUTING.md](CONTRIBUTING.md). O registro contínuo de decisões e modificações fica em [docs/DIARIO_DE_DESENVOLVIMENTO.md](docs/DIARIO_DE_DESENVOLVIMENTO.md).
 
+A skill local de colaboração fica em `.agents/skills/gadon-colaboracao/SKILL.md`. Ela é carregada somente por agentes que trabalham neste repositório; não instala regras globalmente em outras pastas.
+
 Toda alteração feita por uma pessoa ou pela IA deve atualizar o diário no mesmo commit, indicando data, responsável, resumo, arquivos afetados e validação realizada.
 
 ## Status
