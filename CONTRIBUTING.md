@@ -3,11 +3,14 @@
 ## Fluxo de trabalho
 
 1. Atualize sua cópia local a partir de `main`.
-2. Crie uma branch com um nome descritivo, por exemplo `feature/gestao-documentos`, `fix/modal-lote` ou `docs/diario`.
-3. Faça alterações pequenas e relacionadas ao mesmo objetivo.
-4. Atualize `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit da alteração.
-5. Rode `npm run build` antes de abrir o pull request.
-6. Abra um pull request descrevendo o que mudou, como foi validado e quais pontos ainda precisam de atenção.
+2. Confira o alinhamento local com `origin/main` usando `git fetch origin`, `git status -sb` e `git diff main...origin/main`.
+3. Leia `AGENTS.md` e `docs/PROCESSO_DE_COLABORACAO.md` antes de iniciar.
+4. Crie ou atualize a issue, encaminhando as partes de front-end, back-end e automação/testes aos responsáveis.
+5. Crie uma branch com um nome descritivo, por exemplo `feature/gestao-documentos`, `fix/modal-lote` ou `docs/diario`.
+6. Faça alterações pequenas e relacionadas ao mesmo objetivo.
+7. Atualize `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit da alteração.
+8. Rode `npm run build` e os testes aplicáveis antes de abrir o pull request.
+9. Abra um pull request descrevendo o que mudou, como foi validado, o que falta e quais tasks dependentes foram criadas.
 
 ## Commits
 
