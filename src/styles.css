@@ -133,3 +133,31 @@ button { cursor:pointer; }
 .document-manager-row .doc-badge { margin-top:2px; }
 .document-manager-empty { padding:30px 12px; text-align:center; color:var(--muted); font-size:10px; }
 @media (max-width:720px) { .document-panel-actions { gap:7px; }.document-manager-backdrop { padding:10px; }.document-manager-head { padding:19px 17px 15px; }.document-manager-summary { grid-template-columns:1fr; padding:15px 17px 3px; }.document-manager-toolbar { align-items:stretch; flex-direction:column; padding:15px 17px 12px; }.document-manager-toolbar .primary-button { width:100%; }.document-manager-list { margin:0 17px 19px; }.document-manager-row { flex-wrap:wrap; }.document-manager-row .doc-badge { margin-left:45px; } }
+
+/* Tabela completa de rotas contratadas */
+.route-table-backdrop { position:fixed; inset:0; z-index:17; display:grid; place-items:center; padding:18px; background:rgba(4,22,39,.58); }
+.route-table-modal { width:min(1120px,100%); max-height:calc(100vh - 36px); overflow:auto; border-radius:12px; background:#fff; box-shadow:0 25px 70px rgba(0,0,0,.28); }
+.route-table-modal-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:23px 25px 18px; border-bottom:1px solid var(--line); }
+.route-table-modal-head h2 { margin:0; color:var(--navy); font:800 21px 'Plus Jakarta Sans',sans-serif; }
+.route-table-modal-head p:not(.eyebrow) { margin:6px 0 0; color:var(--muted); font-size:9px; line-height:1.45; }
+.route-table-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; padding:18px 25px 5px; }
+.route-table-summary > div { display:flex; align-items:center; gap:10px; padding:13px; border:1px solid #e2edf3; border-radius:8px; background:#f7fbfd; }
+.route-table-summary > div > span { display:grid; place-items:center; width:34px; height:34px; border-radius:8px; color:var(--blue); background:#e5f1f8; }
+.route-table-summary strong,.route-table-summary small { display:block; }
+.route-table-summary strong { color:var(--navy); font-size:16px; line-height:1; }
+.route-table-summary small { margin-top:4px; color:var(--muted); font-size:8px; }
+.route-table-scroll { overflow-x:auto; margin:18px 25px 0; border-top:1px solid #edf2f5; }
+.full-route-table { width:100%; min-width:820px; border-collapse:collapse; color:var(--muted); font-size:9px; }
+.full-route-table th { padding:11px 9px; color:#9aabb6; text-align:left; font-size:8px; font-weight:800; white-space:nowrap; }
+.full-route-table td { padding:13px 9px; border-top:1px solid #edf2f5; vertical-align:middle; white-space:nowrap; }
+.full-route-table td:first-child,.full-route-table td:nth-child(2) { color:var(--ink); }
+.full-route-table td:first-child,.full-route-table td:nth-child(2) { display:table-cell; }
+.full-route-table td svg { margin-right:4px; color:var(--blue); vertical-align:-2px; }
+.full-route-table td strong { font-size:9px; }
+.full-route-table td small { display:block; margin-top:4px; color:#8799a5; font-size:8px; }
+.full-route-table .route-price { color:var(--blue); font-size:10px; font-weight:800; }
+.route-status-badge { display:inline-block; border-radius:99px; padding:5px 7px; font-size:8px; font-style:normal; font-weight:800; }
+.route-status-badge.underway { color:#208c5c; background:#e8f7ef; }.route-status-badge.scheduled { color:var(--blue); background:#eaf3fb; }.route-status-badge.contracted { color:#a4621e; background:#fff1dd; }
+.route-table-empty { padding:25px!important; text-align:center; color:var(--muted)!important; }
+.route-table-note { margin:14px 25px 22px; padding:10px 11px; border:1px solid #f5d8ae; border-radius:7px; color:#8c6339; background:#fff8ef; font-size:8px; line-height:1.45; }
+@media (max-width:720px) { .route-table-backdrop { padding:10px; }.route-table-modal-head { padding:19px 17px 15px; }.route-table-summary { grid-template-columns:1fr; padding:15px 17px 3px; }.route-table-scroll { margin:15px 17px 0; }.route-table-note { margin:13px 17px 18px; } }

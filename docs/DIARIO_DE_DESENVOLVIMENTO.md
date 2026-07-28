@@ -131,3 +131,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: referências remotas conferidas; `codex/nova-demanda` está 9 commits à frente da `main`; o build será executado antes do merge e o push da `main` será confirmado.
 - O que falta: abrir novas tasks específicas para as próximas integrações entre front-end, back-end, automações e testes.
 - Próximo responsável: Victor coordena a próxima demanda; `@ecossystem2` e `@ricardopablo1914` assumem os contratos e testes quando as tasks forem abertas.
+
+### 2026-07-28 — Tabela completa de rotas contratadas
+- Responsável: IA: Codex
+- Objetivo: permitir a consulta detalhada de todas as rotas de frete contratadas no módulo Tabela de Distância.
+- Alterações: o botão “Ver tabela completa” agora abre uma visão consolidada com origem, destino, distância, preço contratado, transportadora, status e data da contratação; foram adicionados indicadores de quantidade de rotas, quilômetros totais e valor total contratado, com layout responsivo para leitura em telas menores.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build`, `git diff --check` e teste HTTP local concluídos com sucesso; a inspeção visual automática não foi possível porque o navegador embutido apresentou falha de conexão no runtime.
+- O que falta: substituir os dados demonstrativos por rotas persistidas pela API de fretes e permitir atualização dos preços após novas contratações.
+- Próximo responsável: Victor valida a experiência visual; `@ecossystem2` define o contrato de rotas contratadas; `@ricardopablo1914` cobre a abertura, fechamento e renderização da tabela nos testes.
