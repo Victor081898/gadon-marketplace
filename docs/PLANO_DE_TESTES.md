@@ -30,6 +30,20 @@ Infra: `vitest.config.js` (ambiente jsdom), `tests/setup.js` (isolamento por tes
 | `tests/documentos-frete.spec.js` | Gestão de documentos: listagem, contadores (total/emitidos/pendentes), abas de status, anexos entrando como pendentes, limite de 10 MB, persistência | Diário: "cobre filtros, contadores e anexos" |
 | `tests/tabela-rotas.spec.js` | Tabela completa de rotas: abertura, fechamento, renderização, somatórios (km e R$), badges de status | Diário: "cobre a abertura, fechamento e renderização da tabela" |
 
+## Backlog imediato (não depende do back-end)
+
+Fluxos do protótipo ainda sem cobertura, em ordem de prioridade:
+
+| # | Automação | Escopo |
+| --- | --- | --- |
+| 1 | Teste da exportação CSV de relatórios | Botão "Exportar" do módulo Relatórios: download gerado, seções (resumo, rotas, viagens, documentos), codificação UTF-8 |
+| 2 | Testes do chat/mensagens | Enviar mensagem, buscar conversa, anexos (limite 10 MB), zerar não-lidas ao abrir, conversa criada a partir do lote |
+| 3 | Testes do cadastro de gado | Formulário "Habilitar lote", geração do log de auditoria com etapas, persistência em `gadon.audit-log.v1` |
+| 4 | Testes das notificações | Popover, contagem de não-lidas, "marcar como lidas", navegação por tipo (mensagem → Mensagens, demais → Fretes) |
+| 5 | Testes do calendário de fretes | Agendar viagem, ordenação por data, feriados nacionais (algoritmo da Páscoa), navegação entre meses |
+| 6 | Testes da cotação de frete | Formulário "Solicitar cotações" — base do futuro Motor de Cotação |
+| 7 | Publicação automática do app (GitHub Pages) | Deploy do protótipo num link público a cada push na main, para o time validar no navegador/celular sem instalar nada |
+
 ## Próximas ondas (dependem de contratos do back-end)
 
 Mapeadas a partir dos módulos do deck. Cada onda vira issue própria quando Claiton publicar o contrato correspondente:

@@ -177,3 +177,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm test` com 61/61 aprovados em execuções repetidas e com ordem embaralhada (sem flakiness, sem dependência de ordem); `npm run build` concluído com sucesso; revisão adversarial da suíte (asserts frouxos apertados após a revisão).
 - O que falta: decidir o destino dos 5 possíveis bugs listados (Victor); cobrir o envio de documento sem viagem selecionada quando houver validação de formulário real; iniciar as ondas A–G do `docs/PLANO_DE_TESTES.md` quando `@ecossystem2` publicar os contratos de API.
 - Próximo responsável: Victor avalia os possíveis bugs e abre as issues de front-end correspondentes; `@ecossystem2` define os primeiros contratos de API para destravar os testes de integração; `@ricardopablo1914-create` mantém a suíte verde e amplia a cobertura conforme os contratos chegarem.
+
+### 2026-07-28 — Backlog imediato de automações e testes
+- Responsável: Humano: Pablo Figueiredo (`@ricardopablo1914-create`), com apoio de IA
+- Objetivo: detalhar, a partir do deck do produto, quais automações a área de testes cria em seguida sem depender do back-end.
+- Alterações: adicionada a seção "Backlog imediato" ao `docs/PLANO_DE_TESTES.md` com 7 itens priorizados: exportação CSV de relatórios, chat/mensagens, cadastro de gado com log de auditoria, notificações, calendário de fretes, formulário de cotação e publicação automática do protótipo (GitHub Pages).
+- Arquivos: `docs/PLANO_DE_TESTES.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm test` (61/61) segue verde; alteração é somente de documentação.
+- O que falta: executar os itens do backlog na ordem definida; ondas A–G continuam aguardando os contratos de API.
+- Próximo responsável: `@ricardopablo1914-create` executa o backlog; Victor decide se quer o link público do item 7; `@ecossystem2` publica os primeiros contratos.
