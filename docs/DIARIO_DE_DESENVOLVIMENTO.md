@@ -176,3 +176,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check` e teste HTTP local; inspeção visual automática pode ficar indisponível pelo erro do navegador embutido.
 - O que falta: substituir o mapa demonstrativo por geolocalização/API de cargas reais e persistir solicitações de retorno.
 - Próximo responsável: Victor valida a usabilidade do mapa; `@ecossystem2` define o contrato de cargas de retorno/localização; `@ricardopablo1914-create` cobre filtros, marcadores e solicitação de retorno.
+
+### 2026-07-28 — Correção do contorno do mapa do Brasil
+- Responsável: IA: Codex
+- Objetivo: corrigir o mapa de rotas e regiões para que a representação visual corresponda ao território brasileiro.
+- Alterações: substituído o contorno genérico por um SVG com silhueta brasileira mais detalhada, costa recortada, divisões regionais sutis e rótulos reposicionados; os marcadores, rotas, filtros e áreas de demanda continuam interativos.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check` e teste HTTP local; a inspeção visual automática permanece limitada pela falha do navegador embutido.
+- O que falta: trocar a geometria demonstrativa por uma malha geográfica oficial/persistida quando o contrato de localização for definido.
+- Próximo responsável: Victor valida a aderência visual; `@ecossystem2` define a fonte oficial de geolocalização; `@ricardopablo1914-create` cobre marcadores, filtros e rotas no mapa.
