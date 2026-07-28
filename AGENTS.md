@@ -13,10 +13,10 @@ O repositório `https://github.com/Ecossystem2/agent-mod.git` fornece agentes es
 ## Responsabilidades
 
 - **Victor — Front-end e produto:** desenha as telas, fluxos e regras de interação do front-end. Sempre que uma função depender de dados, API, autenticação ou persistência, deve abrir uma tarefa de integração.
-- **Claiton — Back-end:** define a arquitetura de comunicação, contratos de API, serviços, persistência e regras necessárias para o front-end operar de forma funcional.
-- **Pablo — Automações e testes:** trabalha com Claiton na automação, testes de integração, testes de API, validações e recursos relacionados à comunicação entre front-end e back-end.
+- **Claiton — Back-end (`@ecossystem2`):** define a arquitetura de comunicação, contratos de API, serviços, persistência e regras necessárias para o front-end operar de forma funcional.
+- **Pablo — Automações e testes (`@ricardopablo1914`):** trabalha com Claiton na automação, testes de integração, testes de API, validações e recursos relacionados à comunicação entre front-end e back-end.
 
-Se uma tarefa envolver mais de uma camada, ela deve indicar claramente o responsável principal e os responsáveis de apoio.
+Se uma tarefa envolver mais de uma camada, ela deve indicar claramente o responsável principal e os responsáveis de apoio. Ao abrir ou atualizar uma issue, use `@ecossystem2` para demandas de back-end e `@ricardopablo1914` para automações e testes.
 
 ## Antes de iniciar qualquer trabalho
 
@@ -44,7 +44,7 @@ Toda função do front-end que exigir back-end deve conter na issue:
 - necessidade de automação/teste para Pablo;
 - dependências, riscos e definição de pronto.
 
-Use os marcadores `front-end`, `back-end`, `automação` e `testes` para tornar o encaminhamento visível. Não atribua uma tarefa a uma pessoa sem confirmar o nome de usuário GitHub correto.
+Use os marcadores `front-end`, `back-end`, `automação` e `testes` para tornar o encaminhamento visível. Os usuários GitHub de Claiton e Pablo estão confirmados nesta regra e devem ser usados nas atribuições correspondentes.
 
 ## Durante o desenvolvimento
 

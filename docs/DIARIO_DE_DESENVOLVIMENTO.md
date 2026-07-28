@@ -104,3 +104,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build`, verificação de diff e teste HTTP local concluídos com sucesso. A inspeção automática no navegador permanece indisponível pelo erro do runtime embutido.
 - O que falta: conectar a consulta a um serviço persistente de documentos, permitir download/visualização do arquivo e criar permissões por perfil.
 - Próximo responsável: Victor valida a experiência de consulta; Claiton define o contrato de documentos e status; Pablo cobre filtros, contadores e anexos com testes automatizados.
+
+### 2026-07-28 — Identificação GitHub dos responsáveis
+- Responsável: IA: Codex
+- Objetivo: completar o encaminhamento das tarefas de colaboração com os usuários oficiais do GitHub.
+- Alterações: Claiton foi registrado como `@ecossystem2` para back-end, APIs, contratos e persistência; Pablo foi registrado como `@ricardopablo1914` para automações e testes, trabalhando em conjunto com Claiton nas integrações. As regras, o processo e a skill local agora orientam as atribuições correspondentes em issues.
+- Arquivos: `AGENTS.md`, `.agents/skills/gadon-colaboracao/SKILL.md`, `docs/PROCESSO_DE_COLABORACAO.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: revisão estática das menções e dos fluxos de atribuição; será executado `npm run build` antes do commit.
+- O que falta: abrir e atribuir as primeiras issues específicas de integração quando Victor definir as próximas demandas de produto.
+- Próximo responsável: Victor abre as tasks de front-end; `@ecossystem2` registra os contratos de back-end; `@ricardopablo1914` estrutura os testes e automações com apoio de `@ecossystem2`.
