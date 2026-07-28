@@ -346,3 +346,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais da máscara, da camada SVG e do modo responsivo.
 - O que falta: Victor validar visualmente o encaixe da máscara em diferentes larguras e confirmar se o recorte acompanha exatamente o traçado aprovado.
 - Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa as larguras desktop, tablet e mobile.
+
+### 2026-07-28 — Refinamento do contorno da máscara em “S”
+- Responsável: IA: Codex
+- Objetivo: eliminar os vazamentos laterais entre a foto do gado, o fundo escuro e a linha tracejada laranja.
+- Alterações: substituída a aproximação com poucos segmentos por uma sequência densa de pontos baseada na mesma curva Bézier do SVG da divisória; o `clip-path` agora acompanha o contorno em toda a altura do cartão.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: apenas as camadas visuais do cadastro/login; sem alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural da coincidência entre o `clip-path` refinado e o caminho SVG.
+- O que falta: Victor confirmar visualmente o recorte final em desktop e tablet.
+- Próximo responsável: Victor valida o acabamento; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa diferentes larguras.
