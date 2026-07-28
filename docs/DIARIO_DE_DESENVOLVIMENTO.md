@@ -158,3 +158,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: revisão das ocorrências do usuário e `git diff --check`; build será executado antes do commit e publicação na `main`.
 - O que falta: usar o novo pseudônimo nas próximas issues e tasks de automação e testes.
 - Próximo responsável: Victor encaminha as demandas; `@ecossystem2` apoia integrações; `@ricardopablo1914-create` recebe automações e testes.
+
+### 2026-07-28 — Clareza no módulo de fretes de retorno
+- Responsável: IA: Codex
+- Objetivo: substituir a nomenclatura ambígua “Carga de retorno” por uma comunicação mais clara para o usuário.
+- Alterações: o menu passou a usar “Fretes de retorno”; os cards e oportunidades agora destacam “Encontre cargas para a viagem de volta”, com a explicação de que o trajeto de retorno pode reduzir o custo do frete.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check` e teste HTTP local antes da publicação.
+- O que falta: conectar as oportunidades de retorno a cargas e transportadoras reais por API.
+- Próximo responsável: Victor valida o texto na interface; `@ecossystem2` define os dados do frete de retorno; `@ricardopablo1914-create` cobre a navegação e o fluxo com testes.
