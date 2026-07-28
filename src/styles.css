@@ -404,7 +404,7 @@ button { cursor:pointer; }
 @media (max-width:560px) { .auth-form-grid { grid-template-columns:1fr; }.auth-field-full { grid-column:auto; }.auth-card-heading h1 { font-size:22px; }.auth-form-options { align-items:flex-start; flex-direction:column; }.auth-link { padding:0; } }
 
 .register-reference-shell { min-height:100vh; display:grid; place-items:center; padding:45px; box-sizing:border-box; background:radial-gradient(circle at 10% 10%,#596272,#2e3542 65%,#252c37); }
-.register-reference-card { display:grid; grid-template-columns:minmax(540px,1fr) minmax(420px,1fr); width:min(1400px,100%); min-height:810px; overflow:hidden; border-radius:23px; background:#111722; box-shadow:0 24px 60px rgba(0,0,0,.35); }
+.register-reference-card { position:relative; display:grid; grid-template-columns:minmax(540px,1fr) minmax(420px,1fr); width:min(1400px,100%); min-height:810px; overflow:hidden; border-radius:23px; background:#111722; box-shadow:0 24px 60px rgba(0,0,0,.35); }
 .register-reference-form-panel { position:relative; z-index:2; padding:50px 78px 46px; color:#fff; background:linear-gradient(145deg,#101621,#141a27 70%,#0d131e); }
 .register-reference-header { display:flex; align-items:flex-start; justify-content:space-between; gap:30px; }
 .register-reference-brand { display:grid; gap:0; color:#fff; line-height:.9; }
@@ -449,11 +449,16 @@ button { cursor:pointer; }
 .register-reference-forgot { padding:0; border:0; color:#159eff; background:transparent; font-size:10px; cursor:pointer; }
 .register-reference-visual { position:relative; z-index:3; overflow:hidden; min-height:100%; background-image:linear-gradient(90deg,rgba(4,10,15,.83),rgba(5,11,16,.23)),var(--reference-cattle-image); background-position:center; background-size:cover; }
 .register-reference-visual::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,13,17,.45),transparent 35%,rgba(4,8,12,.26)); pointer-events:none; }
-.register-reference-curve { position:absolute; z-index:4; top:-8%; left:-205px; width:260px; height:116%; border:3px dashed #ff8500; border-left-color:transparent; border-radius:50%; transform:rotate(-3deg); filter:drop-shadow(0 0 5px rgba(255,133,0,.72)); pointer-events:none; }
+.register-reference-visual > .register-reference-curve,.register-reference-visual > .register-reference-cow-badge { display:none; }
+.register-reference-divider { position:absolute; z-index:8; top:0; bottom:0; left:calc(50% - 110px); width:220px; pointer-events:none; }
+.register-reference-divider svg { display:block; width:100%; height:100%; overflow:visible; }
+.register-reference-divider path { fill:none; stroke:#ff8500; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:9 9; filter:drop-shadow(0 0 5px rgba(255,133,0,.72)); }
 .register-reference-cow-badge { position:absolute; z-index:5; top:50%; left:18px; display:grid; place-items:center; width:59px; height:59px; border:3px solid #ff8500; border-radius:50%; color:#fff; background:#116fb3; box-shadow:0 0 0 7px rgba(17,23,34,.74),0 0 16px rgba(255,133,0,.35); transform:translateY(-50%); }
+.register-reference-divider .register-reference-cow-badge { z-index:2; top:37%; left:110px; transform:translate(-50%,-50%); }
 .register-reference-visual-logo { position:absolute; z-index:4; right:55px; bottom:54px; display:grid; gap:0; text-align:left; }
 .register-reference-visual-logo strong { font-size:36px; text-shadow:0 3px 10px rgba(0,0,0,.4); }
 .register-reference-visual-logo small { font-size:12px; text-shadow:0 2px 5px rgba(0,0,0,.7); }
 @media (max-width:1050px) { .register-reference-shell { padding:25px; }.register-reference-card { grid-template-columns:minmax(480px,1fr) minmax(330px,.8fr); }.register-reference-form-panel { padding:38px 45px; }.register-reference-copy h1 { font-size:35px; }.register-reference-header nav { gap:26px; } }
 @media (max-width:780px) { .register-reference-shell { display:block; padding:0; background:#111722; }.register-reference-card { display:block; min-height:100vh; border-radius:0; }.register-reference-form-panel { min-height:100vh; padding:28px 24px 36px; }.register-reference-header nav { gap:20px; }.register-reference-copy { margin-top:46px; }.register-reference-copy h1 { font-size:32px; }.register-reference-visual { display:none; }.register-reference-actions { grid-template-columns:1fr; gap:11px; }.register-reference-form { max-width:none; } }
 @media (max-width:480px) { .register-reference-header { align-items:flex-start; }.register-reference-brand strong { font-size:27px; }.register-reference-brand small { font-size:8px; }.register-reference-header nav { padding-top:4px; gap:14px; }.register-reference-nav { font-size:11px; }.register-reference-copy { margin-top:52px; }.register-reference-copy h1 { font-size:29px; }.register-reference-fields { grid-template-columns:1fr; gap:15px; }.register-reference-full { grid-column:auto; }.register-reference-fields label > div { min-height:49px; }.register-reference-terms { font-size:10px; }.google-button,.register-reference-submit { min-height:50px; } }
+@media (max-width:780px) { .register-reference-divider { display:none; } }

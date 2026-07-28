@@ -326,3 +326,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural do posicionamento da curva e do selo.
 - O que falta: Victor validar visualmente a posição em desktop e confirmar o comportamento responsivo, pois o painel fotográfico é ocultado abaixo de 780px.
 - Próximo responsável: Victor valida a aderência à referência; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa as larguras responsivas.
+
+### 2026-07-28 — Divisória em “S” sobre as duas colunas
+- Responsável: IA: Codex
+- Objetivo: reproduzir a divisória curva da referência, fazendo o traço laranja atravessar visualmente o painel de cadastro e a foto do gado.
+- Alterações: criada uma camada SVG independente das colunas com caminho tracejado em “S”, sobreposição central e selo bovino posicionado sobre a curva; a antiga curva restrita ao painel fotográfico foi ocultada. Em telas menores, o divisor é ocultado junto com a foto para preservar o fluxo de uma coluna.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a composição visual das telas de login e criação de conta; sem alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais do SVG, do z-index e do comportamento responsivo.
+- O que falta: Victor validar a curva em diferentes proporções de tela e confirmar se o ponto do selo coincide com a referência final.
+- Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa desktop, tablet e mobile.
