@@ -288,3 +288,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais dos elementos da referência.
 - O que falta: substituir a imagem demonstrativa por um asset/licença aprovado, integrar Google OAuth, termos reais e autenticação de produção.
 - Próximo responsável: Victor valida aderência visual; `@ecossystem2` define OAuth e contrato de conta; `@ricardopablo1914-create` testa responsividade, validação e submissão do novo formulário.
+
+### 2026-07-28 — Correção do fluxo visual de autenticação
+- Responsável: IA: Codex
+- Objetivo: garantir que o novo layout de referência seja exibido de forma consistente ao entrar e ao criar uma conta.
+- Alterações: a tela de login também passou a usar o painel visual em duas colunas; o fluxo agora diferencia claramente “Entrar” e “Criar nova conta”, inclui alternância de senha e não utiliza mais a apresentação antiga no render inicial.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação dos templates de login/cadastro servidos pelo endereço local.
+- O que falta: integrar autenticação de produção, Google OAuth e validação visual automatizada no navegador.
+- Próximo responsável: Victor confirma o fluxo exibido no navegador; `@ecossystem2` define a sessão oficial; `@ricardopablo1914-create` testa a alternância entre login e cadastro.

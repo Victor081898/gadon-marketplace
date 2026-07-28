@@ -444,6 +444,9 @@ button { cursor:pointer; }
 .register-reference-submit:hover { background:#f17000; }
 .register-reference-security { display:flex; align-items:center; gap:11px; margin-top:28px; color:#aeb7c5; font-size:11px; }
 .register-reference-security svg { color:#159eff; flex:none; }
+.register-reference-login-options { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:20px; }
+.register-reference-login-options .register-reference-terms { margin:0; }
+.register-reference-forgot { padding:0; border:0; color:#159eff; background:transparent; font-size:10px; cursor:pointer; }
 .register-reference-visual { position:relative; overflow:hidden; min-height:100%; background-image:linear-gradient(90deg,rgba(4,10,15,.83),rgba(5,11,16,.23)),var(--reference-cattle-image); background-position:center; background-size:cover; }
 .register-reference-visual::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,13,17,.45),transparent 35%,rgba(4,8,12,.26)); pointer-events:none; }
 .register-reference-curve { position:absolute; z-index:2; top:-8%; left:-132px; width:255px; height:116%; border:2px dashed #ff8500; border-right:0; border-radius:50%; transform:rotate(-3deg); }
