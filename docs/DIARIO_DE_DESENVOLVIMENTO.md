@@ -33,3 +33,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Arquivos: `README.md`, `CONTRIBUTING.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`, `.gitignore`, `.github/workflows/build.yml`, `.github/pull_request_template.md`.
 - Validação: será executado `npm run build` antes do primeiro commit.
 - Próximos passos: criar o repositório privado no GitHub, publicar a branch `main` e compartilhar o endereço com a equipe.
+
+### 2026-07-27 — Publicação no GitHub
+- Responsável: IA: Codex
+- Objetivo: disponibilizar o código para colaboração da equipe.
+- Alterações: configurado o remoto `https://github.com/Victor081898/gadon-marketplace.git`, reautenticado o GitHub CLI e publicado o commit inicial `b5f2f43` na branch `main`.
+- Repositório: [Victor081898/gadon-marketplace](https://github.com/Victor081898/gadon-marketplace).
+- Validação: push concluído e `README.md` confirmado no branch remoto `main`.
+- Observação: o repositório foi criado como público no GitHub. A visibilidade pode ser alterada pelo proprietário caso o projeto precise ficar privado.
+- Próximos passos: compartilhar o repositório com a equipe, criar branches por funcionalidade e atualizar este diário no mesmo commit de cada alteração.
