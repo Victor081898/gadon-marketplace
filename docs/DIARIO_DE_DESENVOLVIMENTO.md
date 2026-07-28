@@ -140,3 +140,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build`, `git diff --check` e teste HTTP local concluídos com sucesso; a inspeção visual automática não foi possível porque o navegador embutido apresentou falha de conexão no runtime.
 - O que falta: substituir os dados demonstrativos por rotas persistidas pela API de fretes e permitir atualização dos preços após novas contratações.
 - Próximo responsável: Victor valida a experiência visual; `@ecossystem2` define o contrato de rotas contratadas; `@ricardopablo1914` cobre a abertura, fechamento e renderização da tabela nos testes.
+
+### 2026-07-28 — Exportação do relatório consolidado de fretes
+- Responsável: IA: Codex
+- Objetivo: permitir que o usuário gere um documento com as informações operacionais do módulo Relatórios.
+- Alterações: o botão “Exportar” agora baixa um CSV com resumo operacional, rotas contratadas, viagens registradas e documentos de frete, incluindo origem, destino, distância, preços, status, transportadoras, datas e observações.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: o CSV é gerado no navegador com codificação UTF-8 e separador compatível com planilhas; serão executados `npm run build`, `git diff --check` e teste HTTP local antes da publicação.
+- O que falta: disponibilizar exportação em PDF/XLSX e conectar o conteúdo a dados persistidos pela API.
+- Próximo responsável: Victor valida o arquivo exportado; `@ecossystem2` define os dados oficiais do relatório; `@ricardopablo1914` testa o download e a integridade das seções exportadas.

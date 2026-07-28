@@ -565,6 +565,52 @@ function freightRoutesFullTemplate() {
   return `<div class="route-table-backdrop"><section class="route-table-modal" role="dialog" aria-modal="true" aria-label="Tabela completa de rotas contratadas"><div class="route-table-modal-head"><div><p class="eyebrow">TABELA DE DISTÂNCIA</p><h2>Rotas contratadas</h2><p>Consulte todas as operações registradas, com origem, destino, distância e preço contratado.</p></div><button type="button" class="modal-close" data-freight-action="close-routes">${icon('close', 19)}</button></div><div class="route-table-summary"><div><span>${icon('route', 16)}</span><strong>${routes.length}</strong><small>Rotas contratadas</small></div><div><span>${icon('pin', 16)}</span><strong>${totalDistance.toLocaleString('pt-BR')} km</strong><small>Distância total</small></div><div><span>${icon('file', 16)}</span><strong>${formatPrice(totalPrice)}</strong><small>Valor contratado</small></div></div><div class="route-table-scroll"><table class="full-route-table"><thead><tr><th>Origem</th><th>Destino</th><th>Distância</th><th>Preço contratado</th><th>Transportadora</th><th>Status</th></tr></thead><tbody>${routes.length ? routes.map((route) => { const statusClass = route.status === 'Em andamento' ? 'underway' : route.status === 'Contratada' ? 'contracted' : 'scheduled'; return `<tr><td>${icon('pin', 13)}<strong>${escapeHtml(route.origin)}</strong></td><td>${icon('pin', 13)}<strong>${escapeHtml(route.destination)}</strong></td><td>${Number(route.distanceKm || 0).toLocaleString('pt-BR')} km</td><td class="route-price">${formatPrice(Number(route.price || 0))}</td><td>${escapeHtml(route.carrier || 'Transportadora a selecionar')}<small>Contratada em ${escapeHtml(route.contractedAt || 'data não informada')}</small></td><td><em class="route-status-badge ${statusClass}">${escapeHtml(route.status || 'Contratada')}</em></td></tr>`; }).join('') : '<tr><td colspan="6" class="route-table-empty">Nenhuma rota contratada registrada.</td></tr>'}</tbody></table></div><div class="route-table-note">Os valores exibidos correspondem às contratações registradas no sistema e devem ser conferidos no contrato do frete.</div></section></div>`;
 }
 
+function csvRow(values) {
+  return values.map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(';');
+}
+
+function downloadFreightReport() {
+  const generatedAt = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
+  const totalDistance = state.freightRoutes.reduce((sum, route) => sum + Number(route.distanceKm || 0), 0);
+  const totalPrice = state.freightRoutes.reduce((sum, route) => sum + Number(route.price || 0), 0);
+  const rows = [
+    ['RELATÓRIO CONSOLIDADO DE FRETES'],
+    ['Gerado em', generatedAt],
+    [],
+    ['RESUMO OPERACIONAL'],
+    ['Indicador', 'Valor'],
+    ['Rotas contratadas', state.freightRoutes.length],
+    ['Distância total', `${totalDistance.toLocaleString('pt-BR')} km`],
+    ['Valor contratado', new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPrice)],
+    ['Viagens registradas', state.freightTrips.length],
+    ['Documentos registrados', state.freightDocuments.length],
+    ['Documentos pendentes', state.freightDocuments.filter((document) => document.statusClass !== 'issued').length],
+    [],
+    ['ROTAS CONTRATADAS'],
+    ['Origem', 'Destino', 'Distância', 'Preço contratado', 'Transportadora', 'Status', 'Data da contratação'],
+    ...state.freightRoutes.map((route) => [route.origin, route.destination, `${route.distanceKm} km`, new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(route.price || 0)), route.carrier, route.status, route.contractedAt]),
+    [],
+    ['VIAGENS REGISTRADAS'],
+    ['Data', 'Horário', 'Origem', 'Destino', 'Animais', 'Transportadora', 'Status'],
+    ...state.freightTrips.map((trip) => [trip.date, trip.time, trip.origin, trip.destination, trip.animals, trip.carrier, trip.status]),
+    [],
+    ['DOCUMENTOS DE FRETE'],
+    ['Tipo', 'Identificação', 'Viagem', 'Status', 'Arquivo', 'Adicionado em', 'Validade', 'Observações'],
+    ...state.freightDocuments.map((document) => [document.type, document.name, document.trip, document.status || 'Pendente', document.fileName, document.uploadedAt, document.expiresAt, document.notes]),
+  ];
+  const csv = `\uFEFF${rows.map(csvRow).join('\r\n')}`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `relatorio-fretes-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast('Relatório completo exportado em CSV.');
+}
+
 function freightTemplate() {
   const navItems = ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Carga de retorno'];
   const navIcons = ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
@@ -591,7 +637,7 @@ function bindFreightEvents() {
   document.querySelectorAll('[data-freight-action="close-document"]').forEach((el) => el.addEventListener('click', () => { state.freightDocumentsOpen = false; render(); }));
   document.querySelector('#freight-document-file')?.addEventListener('change', (event) => { const file = event.target.files?.[0]; const label = document.querySelector('#freight-document-file-name'); if (file && label) label.textContent = `${file.name} · ${(file.size / (1024 * 1024)).toFixed(1)} MB`; });
   document.querySelector('#freight-document-form')?.addEventListener('submit', (event) => { event.preventDefault(); const file = document.querySelector('#freight-document-file')?.files?.[0]; if (!file) return; if (file.size > 10 * 1024 * 1024) { showToast('O documento deve ter no máximo 10 MB.'); return; } const data = Object.fromEntries(new FormData(event.currentTarget).entries()); const reference = data.reference || file.name.replace(/\.[^.]+$/, ''); state.freightDocuments.unshift({ id: Date.now(), type: data.type, name: reference, trip: data.trip, status: 'Pendente', statusClass: 'pending', fileName: file.name, fileType: file.type || 'application/octet-stream', size: file.size, expiresAt: data.expiresAt || '', notes: data.notes || '', uploadedAt: new Intl.DateTimeFormat('pt-BR').format(new Date()) }); saveFreightDocuments(); state.freightDocumentsOpen = false; showToast('Documento adicionado e marcado como pendente de conferência.'); });
-  document.querySelector('[data-freight-action="report"]')?.addEventListener('click', () => showToast('Relatório preparado para exportação.'));
+  document.querySelector('[data-freight-action="report"]')?.addEventListener('click', downloadFreightReport);
   bindNotificationEvents();
 }
 
