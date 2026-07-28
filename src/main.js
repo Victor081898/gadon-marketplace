@@ -396,7 +396,6 @@ function render() {
           ${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0) ? `<b>${state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0)}</b>` : ''}</button>`).join('')}
           <p class="nav-label nav-spacer">CONTA</p>
           <button class="nav-item ${state.collectionView === 'favorites' ? 'active' : ''}" data-account-view="favorites">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button>
-          <button class="nav-item ${state.collectionView === 'history' ? 'active' : ''}" data-account-view="history">${icon('clock')}<span>Histórico</span>${state.lotHistory.length ? `<b>${state.lotHistory.length}</b>` : ''}</button>
           <button class="nav-item">${icon('user')}<span>Meu perfil</span></button>
         </nav>
         <div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div>

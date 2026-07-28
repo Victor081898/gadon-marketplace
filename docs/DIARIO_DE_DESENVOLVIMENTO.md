@@ -249,3 +249,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação dos handlers de alternância.
 - O que falta: cobrir a navegação com testes automatizados de navegador e substituir o estado local por autenticação/sessão de conta.
 - Próximo responsável: Victor valida a troca entre as telas; `@ecossystem2` define a navegação de conta no contrato de sessão; `@ricardopablo1914-create` automatiza os cliques em Favoritos e Meu perfil nos dois sentidos.
+
+### 2026-07-28 — Remoção do botão Histórico da conta
+- Responsável: IA: Codex
+- Objetivo: simplificar a seção “Conta” exibida na tela inicial e remover a opção “Histórico” conforme a decisão de produto.
+- Alterações: removido o botão “Histórico” do menu de conta da página inicial, mantendo “Favoritos” e “Meu perfil” como opções disponíveis.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação da ausência do botão no template inicial.
+- O que falta: decidir posteriormente se o histórico deve ser reintroduzido em outra área do produto ou descontinuado também no estado interno.
+- Próximo responsável: Victor valida a navegação da tela inicial; `@ecossystem2` avalia o contrato de histórico; `@ricardopablo1914-create` testa o menu de conta sem o botão removido.
