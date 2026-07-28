@@ -449,8 +449,8 @@ button { cursor:pointer; }
 .register-reference-forgot { padding:0; border:0; color:#159eff; background:transparent; font-size:10px; cursor:pointer; }
 .register-reference-visual { position:relative; overflow:hidden; min-height:100%; background-image:linear-gradient(90deg,rgba(4,10,15,.83),rgba(5,11,16,.23)),var(--reference-cattle-image); background-position:center; background-size:cover; }
 .register-reference-visual::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,13,17,.45),transparent 35%,rgba(4,8,12,.26)); pointer-events:none; }
-.register-reference-curve { position:absolute; z-index:2; top:-8%; left:-132px; width:255px; height:116%; border:2px dashed #ff8500; border-right:0; border-radius:50%; transform:rotate(-3deg); }
-.register-reference-cow-badge { position:absolute; z-index:4; top:50%; left:-32px; display:grid; place-items:center; width:59px; height:59px; border:3px solid #ff8500; border-radius:50%; color:#fff; background:#116fb3; box-shadow:0 0 0 7px rgba(17,23,34,.74); transform:translateY(-50%); }
+.register-reference-curve { position:absolute; z-index:3; top:-8%; left:-160px; width:280px; height:116%; border:3px dashed #ff8500; border-left-color:transparent; border-radius:50%; transform:rotate(-3deg); filter:drop-shadow(0 0 5px rgba(255,133,0,.72)); pointer-events:none; }
+.register-reference-cow-badge { position:absolute; z-index:4; top:50%; left:90px; display:grid; place-items:center; width:59px; height:59px; border:3px solid #ff8500; border-radius:50%; color:#fff; background:#116fb3; box-shadow:0 0 0 7px rgba(17,23,34,.74),0 0 16px rgba(255,133,0,.35); transform:translateY(-50%); }
 .register-reference-visual-logo { position:absolute; z-index:4; right:55px; bottom:54px; display:grid; gap:0; text-align:left; }
 .register-reference-visual-logo strong { font-size:36px; text-shadow:0 3px 10px rgba(0,0,0,.4); }
 .register-reference-visual-logo small { font-size:12px; text-shadow:0 2px 5px rgba(0,0,0,.7); }

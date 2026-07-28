@@ -297,3 +297,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação dos templates de login/cadastro servidos pelo endereço local.
 - O que falta: integrar autenticação de produção, Google OAuth e validação visual automatizada no navegador.
 - Próximo responsável: Victor confirma o fluxo exibido no navegador; `@ecossystem2` define a sessão oficial; `@ricardopablo1914-create` testa a alternância entre login e cadastro.
+
+### 2026-07-28 — Reforço do separador visual do cadastro
+- Responsável: IA: Codex
+- Objetivo: tornar evidente a divisão entre o formulário de cadastro à esquerda e a imagem do animal à direita, conforme a referência enviada.
+- Alterações: a curva tracejada laranja deixou de ocultar sua borda direita; a linha ganhou espessura, brilho e reposicionamento para funcionar como separador visual, e o selo bovino foi alinhado sobre a divisão.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural da borda direita tracejada.
+- O que falta: validar a composição visual diretamente no navegador em diferentes larguras e substituir a imagem demonstrativa por asset/licença aprovado.
+- Próximo responsável: Victor valida a aderência visual; `@ecossystem2` apoia a identidade visual; `@ricardopablo1914-create` cobre a validação responsiva.
