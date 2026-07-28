@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "vite": "latest"
+  },
+  "dependencies": {
+    "maplibre-gl": "^6.0.0"
   }
 }

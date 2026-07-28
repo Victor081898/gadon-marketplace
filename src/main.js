@@ -1,4 +1,6 @@
 import './styles.css';
+import * as maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 const lots = [
   { id: 1, name: 'Nelore selecionado', meta: '80 machos · 12@', weight: 12, price: 'R$ 28.000', unit: 'R$ 2.333,33 / cabeça', place: 'Campo Verde - MT', category: 'Nelore', sex: 'Machos', age: '18 a 24 meses', ageMonths: 21, purpose: 'Engorda', seller: 'Fazenda Santa Rita', image: 'https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?auto=format&fit=crop&w=900&q=85', accent: 'blue' },
@@ -79,11 +81,11 @@ const defaultFreightRoutes = () => ([
 ]);
 const loadFreightRoutes = () => { try { const parsed = JSON.parse(localStorage.getItem('gadon.freight.routes.v1') || 'null'); return Array.isArray(parsed) && parsed.length ? parsed : defaultFreightRoutes(); } catch { return defaultFreightRoutes(); } };
 const defaultReturnLoads = () => ([
-  { id: 1, region: 'Centro-Oeste', cargoType: 'Gado de corte', origin: 'Goiânia - GO', destination: 'Campo Grande - MS', carrier: 'Transportadora Boiadeiro', capacity: '80 cabeças', price: 3850, eta: 'Finaliza em 2h 30', availableAt: 'Hoje, 18:30', demand: 'Alta', x: 435, y: 165 },
-  { id: 2, region: 'Sudeste', cargoType: 'Gado leiteiro', origin: 'Uberaba - MG', destination: 'Ribeirão Preto - SP', carrier: 'AgroFrete Logística', capacity: '42 cabeças', price: 2480, eta: 'Finaliza em 4h', availableAt: 'Hoje, 20:00', demand: 'Média', x: 508, y: 244 },
-  { id: 3, region: 'Sul', cargoType: 'Bezerros', origin: 'Curitiba - PR', destination: 'Campo Grande - MS', carrier: 'Boiadeiro Express', capacity: '36 cabeças', price: 3160, eta: 'Finaliza em 6h', availableAt: 'Amanhã, 07:00', demand: 'Média', x: 435, y: 355 },
-  { id: 4, region: 'Centro-Oeste', cargoType: 'Insumos agropecuários', origin: 'Rondonópolis - MT', destination: 'Dourados - MS', carrier: 'Rota Sul Transportes', capacity: '12 toneladas', price: 2740, eta: 'Finaliza em 1h 45', availableAt: 'Hoje, 17:45', demand: 'Alta', x: 355, y: 218 },
-  { id: 5, region: 'Nordeste', cargoType: 'Gado de corte', origin: 'Barreiras - BA', destination: 'Goiânia - GO', carrier: 'Expresso Pecuário', capacity: '55 cabeças', price: 4210, eta: 'Finaliza em 8h', availableAt: 'Amanhã, 09:30', demand: 'Baixa', x: 365, y: 126 },
+  { id: 1, region: 'Centro-Oeste', cargoType: 'Gado de corte', origin: 'Goiânia - GO', destination: 'Campo Grande - MS', carrier: 'Transportadora Boiadeiro', capacity: '80 cabeças', price: 3850, eta: 'Finaliza em 2h 30', availableAt: 'Hoje, 18:30', demand: 'Alta', x: 435, y: 165, lng: -49.25, lat: -16.68, destinationLng: -54.65, destinationLat: -20.47 },
+  { id: 2, region: 'Sudeste', cargoType: 'Gado leiteiro', origin: 'Uberaba - MG', destination: 'Ribeirão Preto - SP', carrier: 'AgroFrete Logística', capacity: '42 cabeças', price: 2480, eta: 'Finaliza em 4h', availableAt: 'Hoje, 20:00', demand: 'Média', x: 508, y: 244, lng: -47.93, lat: -19.75, destinationLng: -47.81, destinationLat: -21.17 },
+  { id: 3, region: 'Sul', cargoType: 'Bezerros', origin: 'Curitiba - PR', destination: 'Campo Grande - MS', carrier: 'Boiadeiro Express', capacity: '36 cabeças', price: 3160, eta: 'Finaliza em 6h', availableAt: 'Amanhã, 07:00', demand: 'Média', x: 435, y: 355, lng: -49.27, lat: -25.43, destinationLng: -54.65, destinationLat: -20.47 },
+  { id: 4, region: 'Centro-Oeste', cargoType: 'Insumos agropecuários', origin: 'Rondonópolis - MT', destination: 'Dourados - MS', carrier: 'Rota Sul Transportes', capacity: '12 toneladas', price: 2740, eta: 'Finaliza em 1h 45', availableAt: 'Hoje, 17:45', demand: 'Alta', x: 355, y: 218, lng: -54.64, lat: -16.47, destinationLng: -54.81, destinationLat: -22.22 },
+  { id: 5, region: 'Nordeste', cargoType: 'Gado de corte', origin: 'Barreiras - BA', destination: 'Goiânia - GO', carrier: 'Expresso Pecuário', capacity: '55 cabeças', price: 4210, eta: 'Finaliza em 8h', availableAt: 'Amanhã, 09:30', demand: 'Baixa', x: 365, y: 126, lng: -45.0, lat: -12.15, destinationLng: -49.25, destinationLat: -16.68 },
 ]);
 const returnRegions = ['Todas', 'Centro-Oeste', 'Sudeste', 'Sul', 'Nordeste', 'Norte'];
 const returnCargoTypes = ['Todos', 'Gado de corte', 'Gado leiteiro', 'Bezerros', 'Insumos agropecuários'];
@@ -106,7 +108,8 @@ const defaultNotifications = () => ([
 ]);
 const loadNotifications = () => { try { const parsed = JSON.parse(localStorage.getItem(notificationStorageKey) || 'null'); return Array.isArray(parsed) ? parsed : defaultNotifications(); } catch { return defaultNotifications(); } };
 const defaultAdvancedFilters = () => ({ region: 'Todos', sex: 'Todos', farm: 'Todos', location: 'Todos', purpose: 'Todos', minWeight: '', maxWeight: '', minAge: '', maxAge: '' });
-const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: 'home', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnMapZoom: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
+const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: 'home', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
+let returnMapInstance = null;
 
 function saveMessages() {
   try { localStorage.setItem(messageStorageKey, JSON.stringify(state.messages)); } catch { /* armazenamento local indisponível */ }
@@ -256,7 +259,15 @@ function searchPageTemplate() {
   return `<div class="app-shell search-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Buscar gado</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="search-page ${!state.query.trim() && state.category === 'Todos' && activeFilterCount() === 0 ? 'search-page-empty' : ''}"><div class="search-page-heading"><div><p class="eyebrow">PESQUISA DE GADO</p><h1>Encontre a raça ideal para sua compra.</h1><p>Pesquise pelo nome da raça, veja os lotes disponíveis e selecione os animais para iniciar uma negociação.</p></div><span class="search-result-pill">${results.length} ${results.length === 1 ? 'lote encontrado' : 'lotes encontrados'}</span></div><section class="breed-search-panel"><div class="search-empty-hero">${icon('search', 48)}<p class="eyebrow">BUSCAR GADO</p><h2>Qual raça você procura?</h2><p>Digite o nome de uma raça para começar a pesquisa.</p></div><form id="breed-search-form" class="breed-search-form"><div class="breed-search-input">${icon('search', 19)}<input id="breed-search" value="${escapeHtml(state.query)}" placeholder="Digite o nome da raça: Nelore, Angus..." autocomplete="off" /><button type="button" data-action="search-clear" aria-label="Limpar pesquisa">${icon('close', 15)}</button></div><button type="submit" class="primary-button">Buscar gado ${icon('arrow', 15)}</button></form><div class="search-suggestions"><span>Raças populares</span>${breeds.map((breed) => `<button type="button" class="breed-chip ${state.category === breed && !state.query ? 'selected' : ''}" data-search-category="${escapeHtml(breed)}">${escapeHtml(breed)} <small>${lots.filter((lot) => lot.category === breed).length}</small></button>`).join('')}</div></section><div class="search-results-heading"><div><p class="eyebrow">CATÁLOGO DISPONÍVEL</p><h2>${state.query ? `Resultados para “${escapeHtml(state.query)}”` : 'Todos os lotes'}</h2></div><div class="search-results-actions"><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar resultados"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div></div><div class="lots-grid search-results-grid">${results.length ? results.map(lotCard).join('') : `<div class="empty-state search-empty-state">Nenhum lote encontrado para essa pesquisa.<br><button type="button" class="secondary-button" data-action="search-clear">Limpar pesquisa</button></div>`}</div></div></main></div>${selectionBarTemplate()}${state.modalLot ? marketplaceModalTemplate(state.modalLot) : ''}${state.filterOpen ? filterDrawerTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
+function destroyReturnMap() {
+  if (returnMapInstance) {
+    returnMapInstance.remove();
+    returnMapInstance = null;
+  }
+}
+
 function render() {
+  destroyReturnMap();
   if (state.page === 'register') {
     document.querySelector('#app').innerHTML = registrationTemplate();
     bindRegistrationEvents();
@@ -591,26 +602,56 @@ function bindReturnFreightEvents() {
 }
 
 function enhanceReturnMap() {
-  const map = document.querySelector('.return-brazil-map');
   const stage = document.querySelector('.return-map-stage');
-  if (!map || !stage) return;
+  if (!stage) return;
+  const loads = getReturnLoads();
+  stage.innerHTML = '<div id="return-map-canvas" class="return-map-canvas" aria-label="Mapa interativo de rotas e regiões do Brasil"></div><div class="return-map-zoom"><button type="button" aria-label="Centralizar mapa">' + icon('target', 17) + '</button><button type="button" aria-label="Aumentar zoom">+</button><button type="button" aria-label="Diminuir zoom">−</button></div><div class="return-map-caption"><span><i class="map-route-dot"></i> Rota disponível para aproveitamento</span><span><i class="map-load-dot"></i> Carga próxima de finalizar</span></div>';
 
-  map.style.transform = `scale(${state.returnMapZoom})`;
-  map.style.transformOrigin = 'center center';
-  const [locateButton, zoomInButton, zoomOutButton] = document.querySelectorAll('.return-map-zoom button');
-  locateButton?.addEventListener('click', () => { state.returnMapZoom = 1; render(); });
-  zoomInButton?.addEventListener('click', () => { state.returnMapZoom = Math.min(1.35, Number((state.returnMapZoom + 0.15).toFixed(2))); render(); });
-  zoomOutButton?.addEventListener('click', () => { state.returnMapZoom = Math.max(.85, Number((state.returnMapZoom - 0.15).toFixed(2))); render(); });
+  const map = new maplibregl.Map({
+    container: 'return-map-canvas',
+    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    center: [-53.5, -15.5],
+    zoom: 3.25,
+    minZoom: 2.3,
+    maxZoom: 9,
+    renderWorldCopies: false,
+    attributionControl: { compact: true },
+  });
+  returnMapInstance = map;
 
-  document.querySelectorAll('[data-return-marker]').forEach((marker) => marker.addEventListener('click', () => {
-    state.returnPopupLoad = Number(marker.dataset.returnMarker);
-  }, true));
+  const [locateButton, zoomInButton, zoomOutButton] = stage.querySelectorAll('.return-map-zoom button');
+  locateButton?.addEventListener('click', () => map.easeTo({ center: [-53.5, -15.5], zoom: 3.25 }));
+  zoomInButton?.addEventListener('click', () => map.zoomIn());
+  zoomOutButton?.addEventListener('click', () => map.zoomOut());
 
-  const popupLoad = state.returnLoads.find((load) => load.id === state.returnPopupLoad);
-  if (!popupLoad) return;
-  stage.insertAdjacentHTML('beforeend', returnMapPopupTemplate(popupLoad));
-  stage.querySelector('[data-return-map-popup-close]')?.addEventListener('click', () => { state.returnPopupLoad = null; render(); });
-  stage.querySelector('[data-return-action="request"]')?.addEventListener('click', () => showToast(`Solicitação enviada para ${popupLoad.carrier}.`));
+  map.on('load', () => {
+    const routeFeatures = loads.map((load) => ({ type: 'Feature', properties: { id: load.id, demand: load.demand }, geometry: { type: 'LineString', coordinates: [[load.lng, load.lat], [load.destinationLng, load.destinationLat]] } }));
+    map.addSource('return-routes', { type: 'geojson', data: { type: 'FeatureCollection', features: routeFeatures } });
+    map.addLayer({ id: 'return-routes-line', type: 'line', source: 'return-routes', paint: { 'line-color': '#43b58d', 'line-width': 3, 'line-opacity': .86, 'line-dasharray': [2, 1.5] }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
+    map.addSource('return-load-points', { type: 'geojson', data: { type: 'FeatureCollection', features: loads.map((load) => ({ type: 'Feature', properties: { id: load.id, demand: load.demand }, geometry: { type: 'Point', coordinates: [load.lng, load.lat] } })) } });
+    map.addLayer({ id: 'return-load-points-circle', type: 'circle', source: 'return-load-points', paint: { 'circle-color': ['match', ['get', 'demand'], 'Alta', '#5b2de1', 'Média', '#8d77e9', '#c5bdf5'], 'circle-radius': 13, 'circle-opacity': .3, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1 } });
+  });
+
+  loads.forEach((load) => {
+    const marker = document.createElement('button');
+    marker.type = 'button';
+    marker.className = `maplibre-return-marker ${state.returnSelectedLoad === load.id ? 'selected' : ''}`;
+    marker.setAttribute('aria-label', `${load.origin} para ${load.destination}`);
+    marker.innerHTML = '<span></span>';
+    marker.addEventListener('click', () => {
+      state.returnSelectedLoad = load.id;
+      state.returnPopupLoad = load.id;
+      const popup = new maplibregl.Popup({ closeButton: false, offset: 18, maxWidth: '260px' }).setLngLat([load.lng, load.lat]).setHTML(returnMapPopupTemplate(load)).addTo(map);
+      popup.getElement()?.querySelector('[data-return-map-popup-close]')?.addEventListener('click', () => popup.remove());
+      popup.getElement()?.querySelector('[data-return-action="request"]')?.addEventListener('click', () => showToast(`Solicitação enviada para ${load.carrier}.`));
+    });
+    new maplibregl.Marker({ element: marker, anchor: 'bottom' }).setLngLat([load.lng, load.lat]).addTo(map);
+  });
+
+  const popupLoad = loads.find((load) => load.id === state.returnPopupLoad);
+  if (popupLoad) {
+    map.once('load', () => new maplibregl.Popup({ closeButton: false, offset: 18, maxWidth: '260px' }).setLngLat([popupLoad.lng, popupLoad.lat]).setHTML(returnMapPopupTemplate(popupLoad)).addTo(map));
+  }
 }
 
 function freightDocumentListTemplate() {

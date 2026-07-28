@@ -203,3 +203,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build`, `git diff --check`, teste HTTP local com resposta 200 e verificação estrutural dos hooks de interação concluídos.
 - O que falta: integrar uma fonte cartográfica oficial/MapLibre quando a dependência e os tiles forem aprovados para o ambiente; manter a geometria local como fallback offline.
 - Próximo responsável: Victor valida o fluxo visual; `@ecossystem2` define fonte, licença e contrato cartográfico; `@ricardopablo1914-create` testa zoom, popup, filtros e solicitação de retorno.
+
+### 2026-07-28 — Integração do mapa MapLibre do código anexado
+- Responsável: IA: Codex
+- Objetivo: substituir o mapa local da seção “Mapa de rotas e regiões” por uma implementação MapLibre compatível com o componente fornecido.
+- Alterações: adicionada a dependência `maplibre-gl`; a tela agora inicializa um mapa navegável com estilo Carto claro, controles de zoom/localização, marcadores nativos, popups, pontos de demanda e rotas GeoJSON entre origem e destino das cargas filtradas.
+- Arquivos: `package.json`, `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build`, `git diff --check` e teste HTTP local com resposta 200 concluídos; o build gera alerta informativo de chunk maior por causa do MapLibre.
+- O que falta: configurar a fonte de tiles aprovada para produção, atribuição/licença definitiva e contrato de coordenadas vindo da API de fretes.
+- Próximo responsável: Victor valida a experiência visual; `@ecossystem2` define tiles, geolocalização e contrato de rotas; `@ricardopablo1914-create` testa marcadores, popups, zoom, filtros e falhas de carregamento.
