@@ -122,3 +122,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: revisão estática das regras e `npm run build` executado antes do commit.
 - O que falta: aplicar esse fluxo em todas as próximas tasks e criar/atualizar issues quando uma demanda atravessar front-end, back-end, automações ou testes.
 - Próximo responsável: todos os colaboradores; Victor coordena o front-end, `@ecossystem2` o back-end e `@ricardopablo1914` as automações e testes.
+
+### 2026-07-28 — Sincronização da branch main
+- Responsável: IA: Codex
+- Objetivo: incorporar na branch principal o conjunto de funcionalidades e regras já revisado na branch `codex/nova-demanda`.
+- Alterações: preparada a integração dos nove commits de colaboração, funcionalidades de marketplace, frete, documentos e regras de publicação para a `main` por fast-forward.
+- Arquivos: o merge incorpora os arquivos já registrados nas entradas anteriores deste diário.
+- Validação: referências remotas conferidas; `codex/nova-demanda` está 9 commits à frente da `main`; o build será executado antes do merge e o push da `main` será confirmado.
+- O que falta: abrir novas tasks específicas para as próximas integrações entre front-end, back-end, automações e testes.
+- Próximo responsável: Victor coordena a próxima demanda; `@ecossystem2` e `@ricardopablo1914` assumem os contratos e testes quando as tasks forem abertas.
