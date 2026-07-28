@@ -258,3 +258,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação da ausência do botão no template inicial.
 - O que falta: decidir posteriormente se o histórico deve ser reintroduzido em outra área do produto ou descontinuado também no estado interno.
 - Próximo responsável: Victor valida a navegação da tela inicial; `@ecossystem2` avalia o contrato de histórico; `@ricardopablo1914-create` testa o menu de conta sem o botão removido.
+
+### 2026-07-28 — Tela Meus anúncios e estado vazio de produtos
+- Responsável: IA: Codex
+- Objetivo: habilitar o botão “Meus anúncios” para exibir os produtos cadastrados pelo usuário.
+- Alterações: criada a página `announcements`, alimentada pelos registros `LOTE_HABILITADO` do diário de auditoria; quando não há cadastro, a interface mostra uma tela limpa com ícone de sacola e a frase “Nenhum Produto cadastrado!”. Quando existem registros, são exibidos cards com nome do lote, raça, quantidade, origem, finalidade, preço, status e protocolo do cadastro.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: navegação `data-nav="Meus anúncios"` e leitura local de `state.auditLog`; não houve chamada de API.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais do estado vazio, listagem e rota de navegação.
+- O que falta: persistir os anúncios em API, permitir edição/pausa/publicação e sincronizar o status de verificação com o back-end.
+- Próximo responsável: Victor valida a tela e os textos; `@ecossystem2` define o contrato de anúncios e status; `@ricardopablo1914-create` testa cadastro, navegação, estado vazio e listagem.

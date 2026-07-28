@@ -51,6 +51,7 @@ const icon = (name, size = 18) => {
     camera: '<path d="M4 7h3l1.5-2h7L17 7h3v12H4Z"/><circle cx="12" cy="13" r="3.5"/>',
     check: '<path d="m5 12 4 4L19 6"/>',
     cart: '<path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/>',
+    bag: '<path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.home}</svg>`;
 };
@@ -275,6 +276,21 @@ function searchPageTemplate() {
   return `<div class="app-shell search-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Buscar gado</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="search-page ${!state.query.trim() && state.category === 'Todos' && activeFilterCount() === 0 ? 'search-page-empty' : ''}"><div class="search-page-heading"><div><p class="eyebrow">PESQUISA DE GADO</p><h1>Encontre a raça ideal para sua compra.</h1><p>Pesquise pelo nome da raça, veja os lotes disponíveis e selecione os animais para iniciar uma negociação.</p></div><span class="search-result-pill">${results.length} ${results.length === 1 ? 'lote encontrado' : 'lotes encontrados'}</span></div><section class="breed-search-panel"><div class="search-empty-hero">${icon('search', 48)}<p class="eyebrow">BUSCAR GADO</p><h2>Qual raça você procura?</h2><p>Digite o nome de uma raça para começar a pesquisa.</p></div><form id="breed-search-form" class="breed-search-form"><div class="breed-search-input">${icon('search', 19)}<input id="breed-search" value="${escapeHtml(state.query)}" placeholder="Digite o nome da raça: Nelore, Angus..." autocomplete="off" /><button type="button" data-action="search-clear" aria-label="Limpar pesquisa">${icon('close', 15)}</button></div><button type="submit" class="primary-button">Buscar gado ${icon('arrow', 15)}</button></form><div class="search-suggestions"><span>Raças populares</span>${breeds.map((breed) => `<button type="button" class="breed-chip ${state.category === breed && !state.query ? 'selected' : ''}" data-search-category="${escapeHtml(breed)}">${escapeHtml(breed)} <small>${lots.filter((lot) => lot.category === breed).length}</small></button>`).join('')}</div></section><div class="search-results-heading"><div><p class="eyebrow">CATÁLOGO DISPONÍVEL</p><h2>${state.query ? `Resultados para “${escapeHtml(state.query)}”` : 'Todos os lotes'}</h2></div><div class="search-results-actions"><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar resultados"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div></div><div class="lots-grid search-results-grid">${results.length ? results.map(lotCard).join('') : `<div class="empty-state search-empty-state">Nenhum lote encontrado para essa pesquisa.<br><button type="button" class="secondary-button" data-action="search-clear">Limpar pesquisa</button></div>`}</div></div></main></div>${selectionBarTemplate()}${state.modalLot ? marketplaceModalTemplate(state.modalLot) : ''}${state.filterOpen ? filterDrawerTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
+function getUserAnnouncements() {
+  return state.auditLog.filter((record) => record.event === 'LOTE_HABILITADO' && record.lot).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function announcementsTemplate() {
+  const announcements = getUserAnnouncements();
+  if (!announcements.length) return accountShellTemplate(null, 'Meus anúncios', `<div class="announcements-empty-page"><div class="announcements-empty-content"><div class="announcements-empty-bag">${icon('bag', 46)}</div><h1>Nenhum Produto cadastrado!</h1></div></div>`);
+  return accountShellTemplate(null, 'Meus anúncios', `<div class="announcements-page"><div class="announcements-heading"><div><p class="eyebrow">MEUS ANÚNCIOS</p><h1>Produtos cadastrados</h1><p>Acompanhe os lotes que você enviou para análise e publicação no GadOn.</p></div><span class="announcements-count">${announcements.length} ${announcements.length === 1 ? 'produto cadastrado' : 'produtos cadastrados'}</span></div><div class="announcements-grid">${announcements.map((record) => { const lot = record.lot; const status = record.status === 'EM_VERIFICACAO' ? 'Em verificação' : record.status || 'Registrado'; const origin = lot.origin || 'Origem não informada'; return `<article class="announcement-card"><div class="announcement-card-head"><span class="announcement-icon">${icon('bag', 20)}</span><span class="announcement-status">${escapeHtml(status)}</span></div><h2>${escapeHtml(lot.name || 'Lote sem nome')}</h2><p class="announcement-subtitle">${escapeHtml(lot.breed || 'Raça não informada')} · ${escapeHtml(lot.quantity ? `${lot.quantity} cabeças` : 'Quantidade não informada')}</p><div class="announcement-facts"><div><span>Origem</span><strong>${escapeHtml(origin)}</strong></div><div><span>Finalidade</span><strong>${escapeHtml(lot.purpose || 'Não informada')}</strong></div><div><span>Preço total</span><strong>${escapeHtml(lot.price || 'A definir')}</strong></div></div><div class="announcement-card-foot"><small>${record.createdAt ? `Cadastrado em ${escapeHtml(new Intl.DateTimeFormat('pt-BR').format(new Date(record.createdAt)))}` : 'Cadastro registrado'}</small><button type="button" class="secondary-button" data-announcement-protocol="${escapeHtml(record.id || '')}">Ver registro</button></div></article>`; }).join('')}</div></div>`);
+}
+
+function bindAnnouncementsEvents() {
+  bindAccountNavigation();
+  document.querySelectorAll('[data-announcement-protocol]').forEach((el) => el.addEventListener('click', () => showToast(`Registro ${el.dataset.announcementProtocol || 'do anúncio'} disponível no diário de verificação.`)));
+}
+
 function accountSidebarTemplate(activePage) {
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   const navItems = ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
@@ -368,6 +384,11 @@ function render() {
   if (state.page === 'search') {
     document.querySelector('#app').innerHTML = searchPageTemplate();
     bindSearchEvents();
+    return;
+  }
+  if (state.page === 'announcements') {
+    document.querySelector('#app').innerHTML = announcementsTemplate();
+    bindAnnouncementsEvents();
     return;
   }
   if (state.page === 'profile') {
@@ -915,6 +936,17 @@ function showToast(message) { state.toast = message; render(); setTimeout(() => 
 document.addEventListener('click', (event) => {
   const button = event.target.closest('button');
   if (!button) return;
+  if (button.dataset.nav) {
+    state.activeNav = button.dataset.nav;
+    if (button.dataset.nav === 'Mensagens') state.page = 'messages';
+    else if (button.dataset.nav === 'Fretes') state.page = 'freight';
+    else if (button.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight';
+    else if (button.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); }
+    else if (button.dataset.nav === 'Meus anúncios') state.page = 'announcements';
+    else state.page = 'home';
+    render();
+    return;
+  }
   if (button.dataset.accountPage) return;
   const accountPage = button.dataset.accountPage || (button.textContent || '').trim();
   if (!accountPage || (!accountPage.startsWith('Favoritos') && !accountPage.startsWith('Meu perfil'))) return;
