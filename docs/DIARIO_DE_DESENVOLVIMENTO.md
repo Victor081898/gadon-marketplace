@@ -167,3 +167,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check` e teste HTTP local antes da publicação.
 - O que falta: conectar as oportunidades de retorno a cargas e transportadoras reais por API.
 - Próximo responsável: Victor valida o texto na interface; `@ecossystem2` define os dados do frete de retorno; `@ricardopablo1914-create` cobre a navegação e o fluxo com testes.
+
+### 2026-07-28 — Mapa de cargas para fretes de retorno
+- Responsável: IA: Codex
+- Objetivo: criar uma tela dedicada para visualizar cargas próximas de finalizar e oportunidades de retorno em um mapa do Brasil.
+- Alterações: adicionada tela `returnFreight` com mapa SVG estilizado, filtros de região e tipo de carga, alternância de rotas/regiões, marcadores interativos, resumo da oportunidade selecionada e cards com origem, destino, capacidade, transportadora, preço e prazo.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check` e teste HTTP local; inspeção visual automática pode ficar indisponível pelo erro do navegador embutido.
+- O que falta: substituir o mapa demonstrativo por geolocalização/API de cargas reais e persistir solicitações de retorno.
+- Próximo responsável: Victor valida a usabilidade do mapa; `@ecossystem2` define o contrato de cargas de retorno/localização; `@ricardopablo1914-create` cobre filtros, marcadores e solicitação de retorno.
