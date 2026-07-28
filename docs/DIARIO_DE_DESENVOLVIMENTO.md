@@ -316,3 +316,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local, verificação do asset e confirmação de que os dois templates usam `/nelore-cadastro.png`.
 - O que falta: Victor validar o enquadramento visual da imagem em desktop e mobile; substituir o asset somente se houver uma versão oficial/licenciada aprovada.
 - Próximo responsável: Victor valida a composição; `@ecossystem2` acompanha eventual necessidade de CDN; `@ricardopablo1914-create` testa o carregamento do asset nas duas telas.
+
+### 2026-07-28 — Linha tracejada posicionada na divisão do cadastro
+- Responsável: IA: Codex
+- Objetivo: fazer a linha laranja funcionar como divisória central entre a tabela de cadastro e a foto do gado.
+- Alterações: reposicionado o arco para a fronteira das duas colunas, reduzido o deslocamento para dentro da foto, elevado o painel visual apenas para manter o traço sobre a junção e alinhado o selo bovino ao novo eixo da divisão.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a composição visual das telas de login e criação de conta; nenhuma API ou regra de autenticação foi alterada.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural do posicionamento da curva e do selo.
+- O que falta: Victor validar visualmente a posição em desktop e confirmar o comportamento responsivo, pois o painel fotográfico é ocultado abaixo de 780px.
+- Próximo responsável: Victor valida a aderência à referência; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa as larguras responsivas.
