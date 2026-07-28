@@ -436,3 +436,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP da aplicação e verificação estática dos novos raios, acentos laranja e regras de modo escuro.
 - O que falta: Victor revisar a direção de arte nas telas de início, busca, mensagens, fretes, perfil e favoritos; `@ricardopablo1914-create` testar hover, foco, mobile e contraste nos dois temas.
 - Próximo responsável: Victor valida a identidade visual; `@ecossystem2` acompanha eventual necessidade de tokens compartilhados; `@ricardopablo1914-create` automatiza os estados interativos.
+
+### 2026-07-28 — Adaptação responsiva para mobile
+- Responsável: IA: Codex
+- Objetivo: preparar a experiência do marketplace para telas de celular, mantendo navegação intuitiva, leitura confortável e harmonia entre fotos, cards e ações.
+- Alterações: adicionados breakpoints de 720px e 560px para reorganizar o cabeçalho, hero com foto, estatísticas, filtros, lotes, operações e indicadores; cards passam a usar duas colunas em telas intermediárias e uma coluna em telas estreitas. Mensagens, fretes, carga de retorno, perfil, favoritos, anúncios, calendários, tabelas, documentos e modais receberam ajustes de espaçamento, empilhamento, rolagem horizontal controlada e alvos de toque maiores.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e responsividade do front-end; sem alteração em APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP da aplicação e verificação estática das regras mobile; conferir também o comportamento em viewport estreita no navegador.
+- O que falta: Victor validar o enquadramento final das fotos e a navegação em um aparelho real; `@ricardopablo1914-create` testar os fluxos de toque, teclado virtual, rolagem e modais; `@ecossystem2` acompanhar eventuais necessidades de contratos para preferências mobile.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão responsiva; `@ecossystem2` avalia impactos de integração.

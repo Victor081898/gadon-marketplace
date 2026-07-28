@@ -597,3 +597,138 @@ button { cursor:pointer; }
 @media (max-width:780px) { .register-reference-shell { display:block; padding:0; background:#111722; }.register-reference-card { display:block; min-height:100vh; border-radius:0; }.register-reference-form-panel { min-height:100vh; padding:28px 24px 36px; }.register-reference-header nav { gap:20px; }.register-reference-copy { margin-top:46px; }.register-reference-copy h1 { font-size:32px; }.register-reference-visual { display:none; }.register-reference-actions { grid-template-columns:1fr; gap:11px; }.register-reference-form { max-width:none; } }
 @media (max-width:480px) { .register-reference-header { align-items:flex-start; }.register-reference-brand { width:170px; height:76px; }.register-reference-brand strong { font-size:27px; }.register-reference-brand small { font-size:8px; }.register-reference-header nav { padding-top:4px; gap:14px; }.register-reference-nav { font-size:11px; }.register-reference-copy { margin-top:52px; }.register-reference-copy h1 { font-size:29px; }.register-reference-fields { grid-template-columns:1fr; gap:15px; }.register-reference-full { grid-column:auto; }.register-reference-fields label > div { min-height:49px; }.register-reference-terms { font-size:10px; }.google-button,.register-reference-submit { min-height:50px; } }
 @media (max-width:780px) { .register-reference-card::before { display:none; }.register-reference-divider { display:none; } }
+
+/* Mobile system shell: keep the marketplace readable, touch-friendly and free of horizontal overflow. */
+@media (max-width:720px) {
+  .app-shell { overflow-x:hidden; }
+  .main-content { min-width:0; }
+  .topbar { margin:8px 10px 0; min-height:58px; height:auto; padding:10px 12px; gap:8px; }
+  .crumb { min-width:0; max-width:42vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .top-actions { gap:6px; margin-left:auto; }
+  .top-actions .announce-button { width:36px; min-width:36px; height:36px; padding:0; justify-content:center; font-size:0; }
+  .top-actions .announce-button svg { width:17px; height:17px; }
+  .top-actions .circle-action { width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:rgba(21,90,162,.08); }
+  .mobile-menu { width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:rgba(21,90,162,.08); }
+  .page-body { padding:20px 14px 42px; }
+  .welcome-row { gap:14px; margin-bottom:18px; }
+  .welcome-row h1 { font-size:24px; line-height:1.14; }
+  .welcome-sub { font-size:12px; line-height:1.45; }
+  .location-pill { width:100%; min-height:42px; padding:0 12px; border-radius:14px; }
+  .hero-card { min-height:390px; display:flex; flex-direction:column; }
+  .hero-copy { width:100%; min-height:190px; padding:25px 22px 15px; background:linear-gradient(180deg,var(--navy) 0%,rgba(7,29,52,.9) 76%,transparent 100%); }
+  .hero-copy h2 { font-size:29px; line-height:1.05; margin:12px 0 10px; }
+  .hero-copy p { max-width:240px; font-size:12px; margin-bottom:15px; }
+  .hero-copy .primary-button { min-height:42px; }
+  .hero-art { position:relative; inset:auto; flex:1; min-height:200px; opacity:1; background-position:58% center; }
+  .hero-art:before { background:linear-gradient(180deg,rgba(7,29,52,.2),rgba(7,29,52,.04)); }
+  .hero-note { left:14px; bottom:14px; padding:8px 10px; font-size:9px; }
+  .quick-stats { grid-template-columns:1fr 1fr; gap:9px; margin:16px 0 30px; }
+  .quick-stat { min-height:92px; padding:13px 11px; align-items:flex-start; }
+  .quick-stat strong { font-size:15px; line-height:1.2; }
+  .quick-stat span { font-size:9px; line-height:1.3; }
+  .quick-stat.highlight { grid-column:1/-1; min-height:68px; align-items:center; }
+  .filter-row { gap:8px; margin-bottom:16px; }
+  .search-field { min-height:44px; flex-basis:100%; padding:0 12px; }
+  .category-tabs { display:flex; order:2; width:100%; overflow-x:auto; scrollbar-width:none; }
+  .category-tabs .tab { flex:none; min-height:38px; padding:8px 13px; border-radius:999px; }
+  .filter-row .filter-button { order:3; margin-left:auto; flex:1; justify-content:center; }
+  .filter-row .sort-select { order:4; flex:1; min-width:0; }
+  .lots-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .lot-image { height:126px; }
+  .lot-info { padding:11px 10px 10px; }
+  .lot-title-row { display:block; }
+  .lot-title-row h3 { font-size:12px; line-height:1.25; }
+  .lot-title-row p { font-size:9px; }
+  .lot-badge { display:inline-flex; margin-top:7px; }
+  .lot-price { font-size:14px; margin:11px 0 2px; }
+  .lot-price small { font-size:8px; }
+  .lot-meta { font-size:8px; line-height:1.3; }
+  .lot-footer { display:block; margin-top:9px; padding-top:9px; }
+  .lot-footer > span { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:8px; }
+  .lot-actions { display:flex; gap:4px; align-items:center; }
+  .lot-actions .select-lot-button,.lot-actions .view-button { min-height:32px; padding:7px 6px; font-size:8px; }
+  .favorite { width:32px; height:32px; top:8px; right:8px; }
+  .operations { gap:10px; margin-top:28px; }
+  .operation-panel { min-height:190px; padding:20px 18px; }
+  .operation-panel h3 { font-size:15px; line-height:1.15; }
+  .operation-panel p:not(.eyebrow) { font-size:10px; line-height:1.45; }
+  .trust-row { grid-template-columns:1fr 1fr; gap:12px 8px; margin-top:28px; }
+  .trust-row > div { align-items:flex-start; gap:7px; }
+  .trust-row span { font-size:8px; }
+  .selection-bar { left:10px; right:10px; bottom:10px; padding:10px 11px; flex-direction:column; align-items:stretch; gap:9px; }
+  .selection-actions { display:grid; grid-template-columns:1fr 1fr; }
+  .selection-actions button { width:100%; justify-content:center; }
+  .notification-popover { right:-44px; width:min(330px,calc(100vw - 20px)); }
+  .theme-toggle { right:12px; bottom:12px; min-height:36px; padding:0 11px; }
+}
+
+@media (max-width:560px) {
+  .lots-grid { grid-template-columns:1fr; }
+  .lot-image { height:180px; }
+  .quick-stats { grid-template-columns:1fr; }
+  .quick-stat.highlight { grid-column:auto; }
+  .hero-card { min-height:410px; }
+  .hero-copy { min-height:205px; }
+  .hero-art { min-height:205px; }
+  .search-results-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .search-results-actions .filter-button,.search-results-actions .sort-select { width:100%; }
+  .messages-page,.freight-page,.return-freight-page,.profile-page,.favorites-page,.announcements-page { padding-left:12px; padding-right:12px; }
+  .messages-heading h1,.freight-heading h1,.return-freight-heading h1 { font-size:23px; }
+  .chat-actions button:first-child { width:35px; height:35px; display:grid; place-items:center; padding:0; font-size:0; }
+  .chat-actions button:first-child svg { margin:0; }
+  .chat-head { padding:13px 12px; }
+  .chat-messages { padding:18px 12px 10px; }
+  .chat-composer { margin:0 12px; min-height:48px; }
+  .message-bubble { max-width:88%; font-size:10px; }
+  .freight-heading,.return-freight-heading,.profile-heading,.favorites-heading,.announcements-heading { display:block; }
+  .freight-heading > .primary-button { width:100%; margin-top:14px; justify-content:center; }
+  .freight-stats { grid-template-columns:1fr 1fr; gap:8px; }
+  .freight-modules { grid-template-columns:1fr; gap:8px; }
+  .freight-module-card { min-height:66px; padding:12px; }
+  .freight-grid { grid-template-columns:1fr; gap:10px; }
+  .freight-panel { padding:15px 13px; }
+  .freight-panel-heading { align-items:flex-start; gap:8px; }
+  .freight-panel-heading h2 { font-size:16px; line-height:1.2; }
+  .freight-panel-heading .panel-link { font-size:8px; padding:7px 8px; }
+  .quote-form,.document-form-grid,.report-grid { grid-template-columns:1fr; }
+  .quote-form .quote-full { grid-column:auto; }
+  .route-table { overflow-x:auto; }
+  .route-table .route-row { min-width:520px; }
+  .trip-item { grid-template-columns:42px minmax(0,1fr); gap:9px; }
+  .trip-badge { grid-column:2; justify-self:start; }
+  .document-panel-actions { display:grid; grid-template-columns:1fr 1fr; }
+  .document-panel-actions .panel-link { justify-content:center; }
+  .return-filter-panel { padding:14px 13px; }
+  .return-map-panel { padding:14px 11px 11px; }
+  .return-map-stage { min-height:286px; }
+  .return-brazil-map,.return-map-canvas { min-height:255px; height:255px; }
+  .return-map-popup { top:10px; left:10px; width:min(220px,calc(100% - 70px)); padding:11px; }
+  .return-load-card { padding:11px; }
+  .profile-identity-card { display:grid; grid-template-columns:auto minmax(0,1fr); gap:12px; }
+  .profile-avatar-panel { grid-row:span 2; }
+  .password-status .secondary-button { margin-left:0; width:100%; justify-content:center; }
+  .profile-preferences-card .preference-list { display:grid; grid-template-columns:1fr; }
+  .favorites-toolbar { display:flex; align-items:flex-start; flex-direction:column; }
+  .favorites-toolbar .secondary-button { width:100%; justify-content:center; }
+  .favorites-summary-card { padding:16px; }
+  .favorites-empty { min-height:52vh; padding:45px 18px; }
+  .announcements-grid { grid-template-columns:1fr; }
+  .announcement-card { min-height:0; }
+  .modal-backdrop,.document-modal-backdrop,.document-manager-backdrop,.route-table-backdrop { padding:8px; }
+  .modal { grid-template-columns:1fr; max-height:calc(100vh - 16px); }
+  .modal-photo { min-height:180px; max-height:180px; }
+  .modal-body { padding:19px 16px; }
+  .modal-actions { display:grid; grid-template-columns:1fr; gap:8px; }
+  .modal-actions .primary-button,.modal-actions .secondary-button { width:100%; justify-content:center; }
+  .calendar-modal,.route-table-modal,.document-modal,.document-manager { width:100%; max-height:calc(100vh - 16px); }
+  .calendar-grid { gap:4px; }
+  .calendar-day { min-height:54px; padding:5px 3px; }
+  .calendar-day strong { font-size:10px; }
+  .calendar-day small { font-size:7px; }
+  .calendar-legend { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .route-table-scroll { overflow-x:auto; }
+  .route-table-table { min-width:720px; }
+  .document-manager-list { overflow-x:hidden; }
+  .document-manager-row { display:grid; grid-template-columns:auto minmax(0,1fr); gap:8px; }
+  .document-manager-row .doc-badge { margin-left:0; grid-column:2; justify-self:start; }
+}
