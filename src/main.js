@@ -45,6 +45,11 @@ const icon = (name, size = 18) => {
     route: '<circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><path d="M7 18c6 0 3-8 10-12"/>',
     download: '<path d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    phone: '<path d="M7 3h3l1.5 4-2 1.5a14 14 0 0 0 6 6L17 12l4 1.5v3A2.5 2.5 0 0 1 18.5 19C10.5 18.5 5.5 13.5 5 5.5A2.5 2.5 0 0 1 7 3Z"/>',
+    lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+    camera: '<path d="M4 7h3l1.5-2h7L17 7h3v12H4Z"/><circle cx="12" cy="13" r="3.5"/>',
+    check: '<path d="m5 12 4 4L19 6"/>',
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.home}</svg>`;
 };
@@ -56,6 +61,7 @@ const freightTripStorageKey = 'gadon.freight-trips.v1';
 const freightDocumentStorageKey = 'gadon.freight-documents.v1';
 const favoritesStorageKey = 'gadon.favorites.v1';
 const historyStorageKey = 'gadon.lot-history.v1';
+const profileStorageKey = 'gadon.profile.v1';
 let audioRecorder = null;
 let audioChunks = [];
 let audioStream = null;
@@ -102,6 +108,8 @@ const defaultFreightDocuments = () => ([
 const loadFreightDocuments = () => { try { const parsed = JSON.parse(localStorage.getItem(freightDocumentStorageKey) || 'null'); return Array.isArray(parsed) && parsed.length ? parsed : defaultFreightDocuments(); } catch { return defaultFreightDocuments(); } };
 const loadFavorites = () => { try { const parsed = JSON.parse(localStorage.getItem(favoritesStorageKey) || '[]'); return new Set(Array.isArray(parsed) ? parsed.map(Number) : []); } catch { return new Set(); } };
 const loadLotHistory = () => { try { const parsed = JSON.parse(localStorage.getItem(historyStorageKey) || '[]'); return Array.isArray(parsed) ? parsed.map(Number) : []; } catch { return []; } };
+const defaultProfile = () => ({ name: 'João Pecuarista', email: 'joao@pecuarista.com.br', phone: '(65) 99999-1234', avatar: '', passwordChangedAt: null });
+const loadProfile = () => { try { const parsed = JSON.parse(localStorage.getItem(profileStorageKey) || 'null'); return { ...defaultProfile(), ...(parsed && typeof parsed === 'object' ? parsed : {}) }; } catch { return defaultProfile(); } };
 const notificationStorageKey = 'gadon.notifications.v1';
 const defaultNotifications = () => ([
   { id: 1, type: 'message', title: 'Nova mensagem', source: 'Fazenda Santa Rita', body: 'Você recebeu uma nova mensagem sobre o lote Nelore selecionado.', time: '14:20', unread: true },
@@ -111,7 +119,7 @@ const defaultNotifications = () => ([
 ]);
 const loadNotifications = () => { try { const parsed = JSON.parse(localStorage.getItem(notificationStorageKey) || 'null'); return Array.isArray(parsed) ? parsed : defaultNotifications(); } catch { return defaultNotifications(); } };
 const defaultAdvancedFilters = () => ({ region: 'Todos', sex: 'Todos', farm: 'Todos', location: 'Todos', purpose: 'Todos', minWeight: '', maxWeight: '', minAge: '', maxAge: '' });
-const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: 'home', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
+const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), modalLot: null, modalTab: 'description', modalMediaIndex: 0, toast: '', page: 'home', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
 let returnMapInstance = null;
 
 function saveMessages() {
@@ -128,6 +136,10 @@ function saveFreightDocuments() {
 
 function saveFavorites() {
   try { localStorage.setItem(favoritesStorageKey, JSON.stringify([...state.favorites])); } catch { /* armazenamento local indisponível */ }
+}
+
+function saveProfile() {
+  try { localStorage.setItem(profileStorageKey, JSON.stringify(state.profile)); } catch { /* armazenamento local indisponível */ }
 }
 
 function saveLotHistory() {
@@ -262,6 +274,64 @@ function searchPageTemplate() {
   return `<div class="app-shell search-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Buscar gado</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="search-page ${!state.query.trim() && state.category === 'Todos' && activeFilterCount() === 0 ? 'search-page-empty' : ''}"><div class="search-page-heading"><div><p class="eyebrow">PESQUISA DE GADO</p><h1>Encontre a raça ideal para sua compra.</h1><p>Pesquise pelo nome da raça, veja os lotes disponíveis e selecione os animais para iniciar uma negociação.</p></div><span class="search-result-pill">${results.length} ${results.length === 1 ? 'lote encontrado' : 'lotes encontrados'}</span></div><section class="breed-search-panel"><div class="search-empty-hero">${icon('search', 48)}<p class="eyebrow">BUSCAR GADO</p><h2>Qual raça você procura?</h2><p>Digite o nome de uma raça para começar a pesquisa.</p></div><form id="breed-search-form" class="breed-search-form"><div class="breed-search-input">${icon('search', 19)}<input id="breed-search" value="${escapeHtml(state.query)}" placeholder="Digite o nome da raça: Nelore, Angus..." autocomplete="off" /><button type="button" data-action="search-clear" aria-label="Limpar pesquisa">${icon('close', 15)}</button></div><button type="submit" class="primary-button">Buscar gado ${icon('arrow', 15)}</button></form><div class="search-suggestions"><span>Raças populares</span>${breeds.map((breed) => `<button type="button" class="breed-chip ${state.category === breed && !state.query ? 'selected' : ''}" data-search-category="${escapeHtml(breed)}">${escapeHtml(breed)} <small>${lots.filter((lot) => lot.category === breed).length}</small></button>`).join('')}</div></section><div class="search-results-heading"><div><p class="eyebrow">CATÁLOGO DISPONÍVEL</p><h2>${state.query ? `Resultados para “${escapeHtml(state.query)}”` : 'Todos os lotes'}</h2></div><div class="search-results-actions"><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar resultados"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div></div><div class="lots-grid search-results-grid">${results.length ? results.map(lotCard).join('') : `<div class="empty-state search-empty-state">Nenhum lote encontrado para essa pesquisa.<br><button type="button" class="secondary-button" data-action="search-clear">Limpar pesquisa</button></div>`}</div></div></main></div>${selectionBarTemplate()}${state.modalLot ? marketplaceModalTemplate(state.modalLot) : ''}${state.filterOpen ? filterDrawerTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
+function accountSidebarTemplate(activePage) {
+  const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
+  const navItems = ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  return `<aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><button class="profile-mini profile-mini-button" data-account-page="profile"><div class="avatar">${escapeHtml(state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase())}</div><div><strong>${escapeHtml(state.profile.name)}</strong><span>Comprador verificado</span></div><span class="icon-button">${icon('chevron', 15)}</span></button><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${navItems.map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item ${activePage === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item ${activePage === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside>`;
+}
+
+function accountTopbarTemplate(crumb) {
+  const initials = state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+  return `<header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> ${escapeHtml(crumb)}</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><button class="top-avatar" data-account-page="profile">${escapeHtml(initials)}</button><button class="top-user" data-account-page="profile">${escapeHtml(state.profile.name)} <span>⌄</span></button></div></header>`;
+}
+
+function accountShellTemplate(activePage, crumb, content) {
+  return `<div class="app-shell account-shell">${accountSidebarTemplate(activePage)}<main class="main-content">${accountTopbarTemplate(crumb)}${content}</main></div>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
+}
+
+function profileTemplate() {
+  const profile = state.profile;
+  const initials = profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+  const avatar = profile.avatar ? `<img src="${escapeHtml(profile.avatar)}" alt="Foto de perfil de ${escapeHtml(profile.name)}" />` : `<span>${escapeHtml(initials)}</span>`;
+  return accountShellTemplate('profile', 'Meu perfil', `<div class="profile-page"><div class="profile-heading"><div><p class="eyebrow">CONTA E SEGURANÇA</p><h1>Meu perfil</h1><p>Atualize seus dados de contato e preferências de acesso ao GadOn.</p></div><span class="profile-status"><i></i> Conta verificada</span></div><div class="profile-layout"><section class="profile-card profile-identity-card"><div class="profile-avatar-panel"><div class="profile-avatar">${avatar}</div><label class="avatar-upload">${icon('camera', 15)} Alterar foto<input id="profile-avatar-file" type="file" accept="image/*" /></label><small>JPG ou PNG · até 2 MB</small></div><div class="profile-identity-copy"><p class="eyebrow">PERFIL DO USUÁRIO</p><h2>${escapeHtml(profile.name)}</h2><p>Comprador verificado no marketplace</p><div class="profile-trust"><span>${icon('shield', 14)} Perfil protegido</span><span>${icon('check', 14)} Dados atualizados</span></div></div></section><form id="profile-form" class="profile-card profile-form"><div class="profile-card-heading"><div><p class="eyebrow">DADOS DA CONTA</p><h2>Informações pessoais</h2></div><span class="profile-card-icon">${icon('user', 18)}</span></div><div class="profile-form-grid"><label><span>Nome de usuário <b>*</b></span><input name="name" value="${escapeHtml(profile.name)}" required maxlength="80" /></label><label><span>E-mail cadastrado <b>*</b></span><input name="email" type="email" value="${escapeHtml(profile.email)}" required /></label><label><span>Número de celular</span><input name="phone" type="tel" value="${escapeHtml(profile.phone)}" placeholder="(00) 00000-0000" /></label><label><span>Perfil</span><input value="Comprador verificado" disabled /></label></div><div class="profile-form-actions"><span>${icon('shield', 14)} Seus dados ficam salvos neste dispositivo.</span><button type="submit" class="primary-button">Salvar alterações ${icon('check', 15)}</button></div></form><section class="profile-card profile-security-card"><div class="profile-card-heading"><div><p class="eyebrow">ACESSO</p><h2>Segurança da conta</h2><p>Troque sua senha sempre que precisar reforçar a proteção.</p></div><span class="profile-card-icon">${icon('lock', 18)}</span></div><div class="password-status"><div class="password-status-icon">${icon('lock', 18)}</div><div><strong>Senha cadastrada</strong><span>•••••••••••• ${profile.passwordChangedAt ? `· atualizada em ${new Intl.DateTimeFormat('pt-BR').format(new Date(profile.passwordChangedAt))}` : '· protegida'}</span></div><button type="button" class="secondary-button" data-profile-action="toggle-password">Alterar senha</button></div><form id="password-form" class="password-form" hidden><label><span>Nova senha <b>*</b></span><input name="password" type="password" minlength="8" required placeholder="Mínimo de 8 caracteres" /></label><label><span>Confirmar nova senha <b>*</b></span><input name="confirmation" type="password" minlength="8" required placeholder="Repita a nova senha" /></label><div class="password-form-actions"><small>Por segurança, a senha não é armazenada em texto puro nesta demonstração.</small><button type="submit" class="primary-button">Atualizar senha ${icon('check', 15)}</button></div></form></section><section class="profile-card profile-preferences-card"><div><p class="eyebrow">PREFERÊNCIAS</p><h2>Como o GadOn pode ajudar</h2><p>Receba avisos sobre mensagens, favoritos e oportunidades de frete.</p></div><div class="preference-list"><label><input type="checkbox" checked /> <span><strong>Novas mensagens</strong><small>Alertar quando um vendedor responder.</small></span></label><label><input type="checkbox" checked /> <span><strong>Atualizações de favoritos</strong><small>Acompanhar alterações nos lotes salvos.</small></span></label><label><input type="checkbox" checked /> <span><strong>Oportunidades de frete</strong><small>Mostrar cargas compatíveis com suas rotas.</small></span></label></div></section></div></div>`);
+}
+
+function favoritesTemplate() {
+  const favoriteLots = lots.filter((lot) => state.favorites.has(lot.id));
+  const totalValue = favoriteLots.reduce((sum, lot) => sum + (Number(lot.price.replace(/\D/g, '')) || 0), 0);
+  const totalLabel = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalValue);
+  const content = `<div class="favorites-page"><div class="favorites-heading"><div><p class="eyebrow">SUA SELEÇÃO</p><h1>Favoritos</h1><p>Guarde os lotes que despertaram seu interesse e compare antes de negociar.</p></div><span class="favorites-count">${favoriteLots.length} ${favoriteLots.length === 1 ? 'lote salvo' : 'lotes salvos'}</span></div>${favoriteLots.length ? `<div class="favorites-layout"><section><div class="favorites-toolbar"><div><h2>Produtos favoritados</h2><span>Seu carrinho de oportunidades</span></div><button class="secondary-button" data-nav="Buscar gado">${icon('search', 15)} Buscar mais gado</button></div><div class="favorites-grid">${favoriteLots.map(lotCard).join('')}</div></section><aside class="favorites-summary-card"><div class="favorites-summary-icon">${icon('heart', 20)}</div><p class="eyebrow">RESUMO DA SELEÇÃO</p><h2>Pronto para negociar?</h2><p>Revise os lotes salvos e converse diretamente com os vendedores.</p><div class="favorites-summary-lines"><div><span>Lotes salvos</span><strong>${favoriteLots.length}</strong></div><div><span>Valor de referência</span><strong>${totalLabel}</strong></div><div><span>Documentação</span><strong>${favoriteLots.length ? 'Disponível em cada lote' : '—'}</strong></div></div><button class="primary-button favorites-buy-button" data-action="buy-favorites">Negociar seleção ${icon('arrow', 15)}</button><small>${icon('shield', 13)} A compra é combinada diretamente entre as partes.</small></aside></div>` : `<section class="favorites-empty"><div class="favorites-empty-icon">${icon('heart', 28)}</div><h2>Você ainda não favoritou nenhum lote.</h2><p>Use o coração nos cards do catálogo para montar sua seleção de compra.</p><button class="primary-button" data-nav="Buscar gado">Buscar gado ${icon('arrow', 15)}</button></section>`}</div>`;
+  return accountShellTemplate('favorites', 'Favoritos', content);
+}
+
+function bindAccountNavigation() {
+  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; if (el.dataset.nav === 'Mensagens') state.page = 'messages'; else if (el.dataset.nav === 'Fretes') state.page = 'freight'; else if (el.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight'; else if (el.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else state.page = 'home'; render(); }));
+  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
+  bindNotificationEvents();
+}
+
+function bindProfileEvents() {
+  bindAccountNavigation();
+  document.querySelector('#profile-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); state.profile = { ...state.profile, name: data.name.trim(), email: data.email.trim(), phone: data.phone.trim() }; saveProfile(); showToast('Dados do perfil atualizados.'); });
+  document.querySelector('#profile-avatar-file')?.addEventListener('change', async (event) => { const file = event.target.files?.[0]; if (!file) return; if (!file.type.startsWith('image/')) { showToast('Escolha uma imagem para a foto de perfil.'); return; } if (file.size > 2 * 1024 * 1024) { showToast('A foto deve ter no máximo 2 MB.'); return; } state.profile.avatar = await readAsDataUrl(file); saveProfile(); render(); showToast('Foto de perfil atualizada.'); });
+  document.querySelector('[data-profile-action="toggle-password"]')?.addEventListener('click', () => { const form = document.querySelector('#password-form'); if (!form) return; form.hidden = !form.hidden; if (!form.hidden) form.querySelector('input')?.focus(); });
+  document.querySelector('#password-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (data.password.length < 8) { showToast('A nova senha precisa ter pelo menos 8 caracteres.'); return; } if (data.password !== data.confirmation) { showToast('A confirmação da senha não confere.'); return; } state.profile.passwordChangedAt = new Date().toISOString(); saveProfile(); showToast('Senha atualizada com segurança.'); });
+}
+
+function bindFavoritesEvents() {
+  bindAccountNavigation();
+  bindLotEvents();
+  document.querySelector('[data-action="buy-favorites"]')?.addEventListener('click', () => { const selected = lots.filter((lot) => state.favorites.has(lot.id)); if (selected.length) beginLotNegotiation(selected[0], true, selected); });
+  document.querySelectorAll('[data-close-modal]').forEach((el) => el.addEventListener('click', (event) => { if (event.target === el || el.classList.contains('modal-close') || el.classList.contains('secondary-button')) { state.modalLot = null; render(); } }));
+  document.querySelectorAll('[data-modal-tab]').forEach((el) => el.addEventListener('click', () => { state.modalTab = el.dataset.modalTab; render(); }));
+  document.querySelectorAll('[data-modal-media]').forEach((el) => el.addEventListener('click', () => { state.modalMediaIndex = Number(el.dataset.modalMedia); render(); }));
+  document.querySelectorAll('[data-action="favorite-modal"]').forEach((el) => el.addEventListener('click', () => { const id = state.modalLot?.id; if (!id) return; state.favorites.has(id) ? state.favorites.delete(id) : state.favorites.add(id); saveFavorites(); render(); }));
+  document.querySelectorAll('[data-action="share-lot"]').forEach((el) => el.addEventListener('click', async () => { const lot = state.modalLot; if (!lot) return; try { await navigator.clipboard?.writeText(`${lot.name} · ${lot.place}`); showToast('Referência do lote copiada para compartilhar.'); } catch { showToast('Lote pronto para ser compartilhado.'); } }));
+  document.querySelectorAll('[data-action="buy-lot"]').forEach((el) => el.addEventListener('click', () => beginLotNegotiation(state.modalLot, true)));
+  document.querySelectorAll('[data-action="contact"]').forEach((el) => el.addEventListener('click', () => { const lot = state.modalLot; if (!lot) return; state.activeNav = 'Mensagens'; state.page = 'messages'; state.modalLot = null; render(); }));
+}
+
 function destroyReturnMap() {
   if (returnMapInstance) {
     returnMapInstance.remove();
@@ -295,6 +365,16 @@ function render() {
   if (state.page === 'search') {
     document.querySelector('#app').innerHTML = searchPageTemplate();
     bindSearchEvents();
+    return;
+  }
+  if (state.page === 'profile') {
+    document.querySelector('#app').innerHTML = profileTemplate();
+    bindProfileEvents();
+    return;
+  }
+  if (state.page === 'favorites') {
+    document.querySelector('#app').innerHTML = favoritesTemplate();
+    bindFavoritesEvents();
     return;
   }
 
@@ -448,7 +528,7 @@ function bindEvents() {
   document.querySelector('[data-filter-action="reset"]')?.addEventListener('click', () => { state.advancedFilters = defaultAdvancedFilters(); state.filterOpen = false; render(); });
   document.querySelector('#advanced-filters')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); state.advancedFilters = { region: data.region || 'Todos', sex: data.sex || 'Todos', farm: data.farm || 'Todos', location: data.location || 'Todos', purpose: data.purpose || 'Todos', minWeight: data.minWeight || '', maxWeight: data.maxWeight || '', minAge: data.minAge || '', maxAge: data.maxAge || '' }; state.filterOpen = false; render(); });
   document.querySelector('#lot-sort')?.addEventListener('change', (event) => { state.sort = event.target.value; render(); });
-  document.querySelectorAll('[data-account-view]').forEach((el) => el.addEventListener('click', () => { state.collectionView = el.dataset.accountView; state.activeNav = 'Início'; state.page = 'home'; render(); }));
+  document.querySelectorAll('[data-account-view]').forEach((el) => el.addEventListener('click', () => { state.collectionView = el.dataset.accountView; state.activeNav = 'Início'; state.page = el.dataset.accountView === 'favorites' ? 'favorites' : 'home'; render(); }));
   document.querySelectorAll('[data-modal-tab]').forEach((el) => el.addEventListener('click', () => { state.modalTab = el.dataset.modalTab; render(); }));
   document.querySelectorAll('[data-modal-media]').forEach((el) => el.addEventListener('click', () => { state.modalMediaIndex = Number(el.dataset.modalMedia); render(); }));
   document.querySelectorAll('[data-action="favorite-modal"]').forEach((el) => el.addEventListener('click', () => { const id = state.modalLot?.id; if (!id) return; state.favorites.has(id) ? state.favorites.delete(id) : state.favorites.add(id); saveFavorites(); render(); }));
@@ -829,5 +909,17 @@ function bindLotEvents() {
 }
 
 function showToast(message) { state.toast = message; render(); setTimeout(() => { state.toast = ''; render(); }, 3200); }
+
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  const accountPage = button.dataset.accountPage || (button.textContent || '').trim();
+  if (!accountPage || (!accountPage.startsWith('Favoritos') && !accountPage.startsWith('Meu perfil'))) return;
+  state.activeNav = accountPage.startsWith('Favoritos') ? 'Favoritos' : 'Meu perfil';
+  state.collectionView = 'all';
+  state.modalLot = null;
+  state.page = accountPage.startsWith('Favoritos') ? 'favorites' : 'profile';
+  render();
+});
 
 render();

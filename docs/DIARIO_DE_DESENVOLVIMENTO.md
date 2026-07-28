@@ -221,3 +221,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação das fontes/camadas GeoJSON.
 - O que falta: trocar a geometria demonstrativa por cartografia oficial e coordenadas persistidas quando o contrato da API estiver disponível.
 - Próximo responsável: Victor valida a leitura visual; `@ecossystem2` define a fonte geográfica oficial; `@ricardopablo1914-create` testa o carregamento sem rede, rotas, pontos e popups.
+
+### 2026-07-28 — Telas de Meu perfil e Favoritos
+- Responsável: IA: Codex
+- Objetivo: habilitar uma tela própria para gerenciamento da conta e outra para reunir os lotes favoritados como uma seleção de compra.
+- Alterações: adicionadas as páginas `profile` e `favorites`; o perfil permite alterar nome, e-mail, telefone, foto, preferências e iniciar a troca de senha; favoritos exibe os lotes salvos, resumo de quantidade/valor de referência, remoção individual, detalhes do lote e negociação da seleção. Os dados de perfil e a lista de favoritos são mantidos no `localStorage` do navegador; a senha continua mascarada e apenas a data da atualização é registrada nesta demonstração.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: navegação de conta (`page: profile|favorites`), armazenamento local `gadon.profile.v1` e `gadon.favorites.v1`; não houve chamada de API.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais dos seletores/handlers das duas telas.
+- O que falta: integrar autenticação, perfil, foto, preferências, senha com hash e favoritos a uma API; validar permissões, recuperação de senha e sincronização entre dispositivos.
+- Próximo responsável: Victor valida a experiência e os textos; `@ecossystem2` define o contrato de conta/autenticação/favoritos; `@ricardopablo1914-create` automatiza os fluxos de edição, troca de senha, upload e negociação de favoritos.
