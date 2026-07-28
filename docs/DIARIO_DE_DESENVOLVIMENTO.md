@@ -356,3 +356,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural da coincidência entre o `clip-path` refinado e o caminho SVG.
 - O que falta: Victor confirmar visualmente o recorte final em desktop e tablet.
 - Próximo responsável: Victor valida o acabamento; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa diferentes larguras.
+
+### 2026-07-28 — Atualização das logos da tela de autenticação
+- Responsável: IA: Codex
+- Objetivo: substituir as marcas textuais dos cantos superior esquerdo e inferior direito pelo logo GadOn enviado pelo usuário.
+- Alterações: criada a versão transparente `public/gadon-logo-transparent.png`, mantendo o lettering, cores, slogan e silhueta bovina da referência; o mesmo asset passou a compor a marca superior e a marca inferior, sem fundo retangular sobre a foto.
+- Arquivos: `public/gadon-logo-transparent.png`, `public/gadon-logo-reference.png`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a identidade visual das telas de login e criação de conta; sem alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local, verificação de carregamento dos dois assets e validação de transparência nos cantos da imagem.
+- O que falta: Victor validar tamanho e posição finais em desktop/tablet; substituir o asset se houver versão vetorial oficial aprovada.
+- Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa o carregamento das logos em diferentes larguras.
