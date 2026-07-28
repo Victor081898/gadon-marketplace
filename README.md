@@ -23,6 +23,12 @@ npm install
 npm run dev
 ```
 
+Para rodar os testes automatizados (ver [docs/PLANO_DE_TESTES.md](docs/PLANO_DE_TESTES.md)):
+
+```bash
+npm test
+```
+
 Para validar uma entrega de produção:
 
 ```bash
