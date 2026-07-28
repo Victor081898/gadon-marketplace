@@ -86,3 +86,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: build e revisão estática dos eventos de navegação, submissão e limpeza da busca.
 - O que falta: validar a experiência visual no navegador e conectar a consulta ao catálogo real.
 - Próximo responsável: Victor testa a nova tela; Claiton define a consulta de produtos/raças; Pablo cobre o fluxo com testes automatizados.
+
+### 2026-07-28 — Filtros avançados do catálogo
+- Responsável: IA: Codex
+- Objetivo: permitir que a pesquisa encontre lotes com base em características do animal e da fazenda.
+- Alterações: adicionados filtros de sexo, finalidade, nome da fazenda/vendedor, localização da fazenda, região/UF, peso mínimo/máximo e idade mínima/máxima em meses. Os dados de demonstração dos lotes agora carregam sexo, idade numérica e finalidade para alimentar o filtro.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: será executado `npm run build` e revisada a submissão/reset do formulário de filtros.
+- O que falta: substituir os dados de demonstração pelos campos do catálogo/API real e cobrir combinações de filtros com testes automatizados.
+- Próximo responsável: Victor valida a usabilidade; Claiton define os campos equivalentes no contrato de busca; Pablo cria testes de filtros combinados.
