@@ -185,3 +185,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check` e teste HTTP local; a inspeção visual automática permanece limitada pela falha do navegador embutido.
 - O que falta: trocar a geometria demonstrativa por uma malha geográfica oficial/persistida quando o contrato de localização for definido.
 - Próximo responsável: Victor valida a aderência visual; `@ecossystem2` define a fonte oficial de geolocalização; `@ricardopablo1914-create` cobre marcadores, filtros e rotas no mapa.
+
+### 2026-07-28 — Mapa de rotas alinhado à referência do Brasil
+- Responsável: IA: Codex
+- Objetivo: aproximar a tela “Mapa de rotas e regiões” do mapa de referência enviado pelo produto.
+- Alterações: redesenhado o SVG com silhueta mais fiel ao território brasileiro, formato alongado ao sul, recortes da costa e divisões internas em branco inspiradas nos limites estaduais da referência; adicionada máscara para manter as áreas de demanda dentro do território.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build`, `git diff --check`, teste HTTP local com resposta 200 e verificação estrutural do SVG concluídos; inspeção visual automática não foi possível devido à falha do navegador embutido.
+- O que falta: substituir a geometria de referência por dados cartográficos oficiais quando a fonte de geolocalização for definida.
+- Próximo responsável: Victor valida a semelhança visual; `@ecossystem2` define a fonte cartográfica oficial; `@ricardopablo1914-create` testa filtros, rotas e marcadores sobre as divisões estaduais.

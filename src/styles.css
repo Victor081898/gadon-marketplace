@@ -199,7 +199,7 @@ button { cursor:pointer; }
 .return-map-stage { position:relative; overflow:hidden; margin-top:17px; border:1px solid #e8e9f7; border-radius:10px; background:linear-gradient(145deg,#fcfbff,#f4f2ff); }
 .return-brazil-map { display:block; width:100%; min-height:365px; height:auto; }
 .brazil-map-outline { fill:url(#brazilMapGradient); stroke:#7f6cd7; stroke-width:2.6; stroke-linejoin:round; filter:url(#mapShadow); }
-.map-boundaries path { fill:none; stroke:#a69ae8; stroke-width:1.2; stroke-dasharray:4 4; opacity:.74; }
+.map-boundaries path { fill:none; stroke:#fff; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; opacity:.96; }
 .map-region-labels text { fill:#7466bf; font:700 10px 'Manrope',sans-serif; letter-spacing:.12em; opacity:.72; }
 .map-heat { opacity:.32; }
 .map-heat.high { fill:#5b2de1; }.map-heat.medium { fill:#8d77e9; }.map-heat.low { fill:#c5bdf5; }
