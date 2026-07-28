@@ -665,8 +665,14 @@ button { cursor:pointer; }
 @media (max-width:560px) {
   .lots-grid { grid-template-columns:1fr; }
   .lot-image { height:180px; }
-  .quick-stats { grid-template-columns:1fr; }
-  .quick-stat.highlight { grid-column:auto; }
+  .quick-stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .quick-stat { min-height:88px; padding:10px 9px; gap:6px; }
+  .quick-stat .stat-icon { width:30px; height:30px; flex:none; }
+  .quick-stat strong { font-size:13px; }
+  .quick-stat span { font-size:8px; }
+  .quick-stat.highlight { grid-column:auto; min-height:88px; align-items:flex-start; }
+  .quick-stat.highlight strong { font-size:10px; line-height:1.2; }
+  .quick-stat.highlight button { margin-left:auto; align-self:center; padding:0; }
   .hero-card { min-height:410px; }
   .hero-copy { min-height:205px; }
   .hero-art { min-height:205px; }

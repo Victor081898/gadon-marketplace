@@ -446,3 +446,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP da aplicação e verificação estática das regras mobile; conferir também o comportamento em viewport estreita no navegador.
 - O que falta: Victor validar o enquadramento final das fotos e a navegação em um aparelho real; `@ricardopablo1914-create` testar os fluxos de toque, teclado virtual, rolagem e modais; `@ecossystem2` acompanhar eventuais necessidades de contratos para preferências mobile.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão responsiva; `@ecossystem2` avalia impactos de integração.
+
+### 2026-07-28 — Cards de indicadores em grade 2×2 no mobile
+- Responsável: IA: Codex
+- Objetivo: compactar os cards de indicadores na tela pequena sem perder a leitura das informações nem a ação de cargas de retorno.
+- Alterações: a partir de 560px de largura, os quatro cards passam a ocupar uma grade 2×2; ícones, tipografia, espaçamento e chamada de retorno foram reduzidos proporcionalmente para evitar desperdício vertical e manter os alvos interativos acessíveis.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação responsiva do front-end; sem alteração em APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática da grade 2×2 no breakpoint mobile.
+- O que falta: Victor validar a densidade visual em aparelho real; `@ricardopablo1914-create` testar toque, foco e leitura dos quatro cards em telas estreitas.
+- Próximo responsável: Victor valida a composição visual; `@ricardopablo1914-create` automatiza a regressão responsiva.
