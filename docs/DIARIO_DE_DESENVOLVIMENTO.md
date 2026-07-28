@@ -231,3 +231,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais dos seletores/handlers das duas telas.
 - O que falta: integrar autenticação, perfil, foto, preferências, senha com hash e favoritos a uma API; validar permissões, recuperação de senha e sincronização entre dispositivos.
 - Próximo responsável: Victor valida a experiência e os textos; `@ecossystem2` define o contrato de conta/autenticação/favoritos; `@ricardopablo1914-create` automatiza os fluxos de edição, troca de senha, upload e negociação de favoritos.
+
+### 2026-07-28 — Estado vazio do carrinho de favoritos
+- Responsável: IA: Codex
+- Objetivo: deixar clara a situação em que o usuário acessa Favoritos sem ter salvo nenhum lote.
+- Alterações: quando não há favoritos, a tela passa a exibir uma página limpa, centralizada, com ícone de carrinho e a frase “Carrinho vazio”, sem cards ou ações adicionais.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação do estado vazio e do ícone de carrinho.
+- O que falta: definir, com o contrato de conta/favoritos, a mensagem remota e o estado vazio sincronizado entre dispositivos.
+- Próximo responsável: Victor valida a apresentação; `@ecossystem2` define o estado oficial de favoritos; `@ricardopablo1914-create` testa a abertura do menu Favoritos sem itens.
