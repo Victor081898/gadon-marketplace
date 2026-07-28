@@ -306,3 +306,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural da borda direita tracejada.
 - O que falta: validar a composição visual diretamente no navegador em diferentes larguras e substituir a imagem demonstrativa por asset/licença aprovado.
 - Próximo responsável: Victor valida a aderência visual; `@ecossystem2` apoia a identidade visual; `@ricardopablo1914-create` cobre a validação responsiva.
+
+### 2026-07-28 — Substituição da imagem do painel de cadastro
+- Responsável: IA: Codex
+- Objetivo: trocar a imagem externa anterior do painel direito pela foto de gado Nelore enviada para a tela de autenticação.
+- Alterações: adicionada a foto em `public/nelore-cadastro.png` e atualizados os templates de login e criação de conta para carregarem o asset local, mantendo a curva tracejada e a identidade visual do painel.
+- Arquivos: `public/nelore-cadastro.png`, `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: variável visual `--reference-cattle-image`; não houve alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local, verificação do asset e confirmação de que os dois templates usam `/nelore-cadastro.png`.
+- O que falta: Victor validar o enquadramento visual da imagem em desktop e mobile; substituir o asset somente se houver uma versão oficial/licenciada aprovada.
+- Próximo responsável: Victor valida a composição; `@ecossystem2` acompanha eventual necessidade de CDN; `@ricardopablo1914-create` testa o carregamento do asset nas duas telas.
