@@ -366,3 +366,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local, verificação de carregamento dos dois assets e validação de transparência nos cantos da imagem.
 - O que falta: Victor validar tamanho e posição finais em desktop/tablet; substituir o asset se houver versão vetorial oficial aprovada.
 - Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa o carregamento das logos em diferentes larguras.
+
+### 2026-07-28 — Ícone bovino branco no selo da divisória
+- Responsável: IA: Codex
+- Objetivo: substituir visualmente o ícone laranja dentro do círculo azul por uma cabeça de gado branca.
+- Alterações: reforçada a regra específica do selo da divisória para aplicar branco ao traçado do ícone bovino, mantendo o círculo azul e a borda laranja.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: apenas o selo visual da divisória em “S”; sem alteração em autenticação, dados ou APIs.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação estrutural da cor branca no SVG do selo.
+- O que falta: Victor confirmar o contraste final do ícone sobre o azul em desktop e tablet.
+- Próximo responsável: Victor valida a direção de arte; `@ecossystem2` acompanha a identidade visual; `@ricardopablo1914-create` testa a renderização responsiva.
