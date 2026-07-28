@@ -212,3 +212,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build`, `git diff --check` e teste HTTP local com resposta 200 concluídos; o build gera alerta informativo de chunk maior por causa do MapLibre.
 - O que falta: configurar a fonte de tiles aprovada para produção, atribuição/licença definitiva e contrato de coordenadas vindo da API de fretes.
 - Próximo responsável: Victor valida a experiência visual; `@ecossystem2` define tiles, geolocalização e contrato de rotas; `@ricardopablo1914-create` testa marcadores, popups, zoom, filtros e falhas de carregamento.
+
+### 2026-07-28 — Correção da base branca do mapa MapLibre
+- Responsável: IA: Codex
+- Objetivo: corrigir a tela branca exibida quando o estilo remoto do Carto não entrega as marcações de base cartográfica.
+- Alterações: substituído o estilo remoto por um estilo MapLibre local, com GeoJSON do contorno do Brasil, linhas internas de regiões, preenchimento, bordas, rotas e pontos de demanda; os marcadores e popups continuam usando MapLibre.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificação das fontes/camadas GeoJSON.
+- O que falta: trocar a geometria demonstrativa por cartografia oficial e coordenadas persistidas quando o contrato da API estiver disponível.
+- Próximo responsável: Victor valida a leitura visual; `@ecossystem2` define a fonte geográfica oficial; `@ricardopablo1914-create` testa o carregamento sem rede, rotas, pontos e popups.

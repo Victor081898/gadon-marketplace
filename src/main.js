@@ -91,6 +91,9 @@ const returnRegions = ['Todas', 'Centro-Oeste', 'Sudeste', 'Sul', 'Nordeste', 'N
 const returnCargoTypes = ['Todos', 'Gado de corte', 'Gado leiteiro', 'Bezerros', 'Insumos agropecuários'];
 const brazilMapPath = 'M158 17L158 36L122 42L104 61L76 62L77 91L63 98L59 118L16 120L2 137L7 156L0 170L40 170L61 164L85 173L92 188L140 205L162 200L182 212L211 211L227 224L259 232L261 264L279 265L272 294L297 320L311 343L292 371L311 383L349 391L337 407L365 424L356 434L362 451L392 410L396 427L419 432L427 415L450 407L461 384L486 382L486 361L513 353L513 334L540 324L540 304L563 292L572 269L596 257L596 233L607 208L626 197L621 181L646 174L639 158L621 140L585 133L565 120L527 115L513 103L484 102L463 90L427 95L412 80L383 80L369 71L338 74L313 64L277 68L257 52L230 54L225 38L200 37L193 16Z';
 const brazilMapBoundaries = '<g class="map-boundaries"><path d="M122 42L158 36L193 16"/><path d="M104 61L158 36L175 82L140 111L112 154"/><path d="M175 82L213 80L250 91L250 123L221 150L211 211"/><path d="M225 38L230 54L257 52L277 68L250 91"/><path d="M277 68L313 64L338 74L338 108L320 132"/><path d="M338 74L369 71L383 80L390 110L365 129"/><path d="M383 80L412 80L427 95L463 90L484 102L470 126"/><path d="M484 102L513 103L527 115L565 120L585 133L563 147"/><path d="M565 120L621 140L607 160L626 174"/><path d="M16 137L61 164L85 173L112 154L140 169L162 200"/><path d="M250 123L320 132L345 168L330 200L280 208L259 232"/><path d="M320 132L365 129L390 161L427 175L407 211L385 245L350 260L279 265"/><path d="M390 161L470 126L500 160L540 171L520 208L563 220"/><path d="M500 160L563 147L607 160L596 194L572 214L596 233"/><path d="M407 211L430 244L420 278L385 300L350 293L297 320"/><path d="M420 278L486 255L540 270L513 294L540 304"/><path d="M350 293L385 300L407 325L450 340L486 361L461 384"/><path d="M297 320L311 343L337 346L365 370L392 382L386 410"/><path d="M311 383L349 391L337 407L365 424L356 434"/><path d="M392 382L427 367L461 384L450 407L427 415"/><path d="M486 361L513 334L540 324L563 292L572 269"/></g>';
+const brazilMapCoordinates = [[-73.95, -7.4], [-70.4, -2.2], [-66.2, 0.5], [-60, 4.4], [-53, 4.2], [-48, 1.4], [-43, 2], [-38, -1.8], [-35, -5.8], [-34.5, -10.2], [-36.2, -13.4], [-35.8, -17.2], [-38.7, -20.6], [-37.5, -23.6], [-40.8, -25.7], [-44.6, -28.2], [-47.6, -32.4], [-51.8, -33.8], [-55.2, -32], [-58.2, -29.5], [-59.8, -25], [-62.8, -21.2], [-65.8, -17], [-69.5, -13.4], [-73.2, -11], [-75, -7.4], [-73.95, -7.4]];
+const brazilRegionLines = [[[-62, 2], [-61, -7], [-57, -12]], [[-51, 4], [-51, -4], [-48, -10], [-45, -13]], [[-57, -12], [-55, -16], [-52, -20], [-48, -25]], [[-48, -1], [-48, -8], [-45, -13], [-43, -20]], [[-64, -19], [-60, -22], [-57, -25], [-55, -30]], [[-52, -20], [-49, -23], [-47, -28], [-48, -32]]];
+const brazilMapStyle = { version: 8, sources: {}, layers: [{ id: 'return-map-background', type: 'background', paint: { 'background-color': '#f7f9fc' } }] };
 const defaultFreightDocuments = () => ([
   { id: 1, type: 'GTA', name: 'GTA-MT-2026-00284', trip: 'VIA-1024 · Campo Verde → Goiânia', status: 'Emitido', statusClass: 'issued', fileName: 'GTA-MT-2026-00284.pdf', uploadedAt: '28/07/2026' },
   { id: 2, type: 'CT-e', name: 'CTE-45890', trip: 'VIA-1024 · Transportadora Boiadeiro', status: 'Emitido', statusClass: 'issued', fileName: 'CTE-45890.pdf', uploadedAt: '28/07/2026' },
@@ -609,7 +612,7 @@ function enhanceReturnMap() {
 
   const map = new maplibregl.Map({
     container: 'return-map-canvas',
-    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    style: brazilMapStyle,
     center: [-53.5, -15.5],
     zoom: 3.25,
     minZoom: 2.3,
@@ -625,6 +628,11 @@ function enhanceReturnMap() {
   zoomOutButton?.addEventListener('click', () => map.zoomOut());
 
   map.on('load', () => {
+    map.addSource('brazil-country', { type: 'geojson', data: { type: 'Feature', properties: { name: 'Brasil' }, geometry: { type: 'Polygon', coordinates: [brazilMapCoordinates] } } });
+    map.addLayer({ id: 'brazil-country-fill', type: 'fill', source: 'brazil-country', paint: { 'fill-color': '#e8e5ff', 'fill-opacity': .92 } });
+    map.addLayer({ id: 'brazil-country-line', type: 'line', source: 'brazil-country', paint: { 'line-color': '#7661cf', 'line-width': 2, 'line-opacity': .95 } });
+    map.addSource('brazil-region-lines', { type: 'geojson', data: { type: 'FeatureCollection', features: brazilRegionLines.map((coordinates, index) => ({ type: 'Feature', properties: { id: index }, geometry: { type: 'LineString', coordinates } })) } });
+    map.addLayer({ id: 'brazil-region-lines', type: 'line', source: 'brazil-region-lines', paint: { 'line-color': '#ffffff', 'line-width': 1.4, 'line-opacity': .95, 'line-dasharray': [1, 0] }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
     const routeFeatures = loads.map((load) => ({ type: 'Feature', properties: { id: load.id, demand: load.demand }, geometry: { type: 'LineString', coordinates: [[load.lng, load.lat], [load.destinationLng, load.destinationLat]] } }));
     map.addSource('return-routes', { type: 'geojson', data: { type: 'FeatureCollection', features: routeFeatures } });
     map.addLayer({ id: 'return-routes-line', type: 'line', source: 'return-routes', paint: { 'line-color': '#43b58d', 'line-width': 3, 'line-opacity': .86, 'line-dasharray': [2, 1.5] }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
