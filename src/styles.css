@@ -79,6 +79,18 @@ button { cursor:pointer; }
 .search-results-grid { max-width:1180px; grid-template-columns:repeat(3,minmax(0,1fr)); margin:0 auto; }
 .search-results-grid .lot-card { min-width:0; }
 .search-empty-state { grid-column:1/-1; min-height:170px; display:grid; place-items:center; align-content:center; gap:13px; text-align:center; }
+.search-page-empty { display:flex; flex-direction:column; justify-content:center; }
+.search-page-empty .search-page-heading,.search-page-empty .search-suggestions,.search-page-empty .search-results-heading,.search-page-empty .search-results-grid { display:none; }
+.search-page-empty .breed-search-panel { width:min(680px,100%); margin:auto; padding:0; border:0; background:transparent; box-shadow:none; }
+.search-empty-hero { display:none; text-align:center; }
+.search-page-empty .search-empty-hero { display:block; margin-bottom:18px; color:var(--blue); }
+.search-empty-hero > svg { display:block; margin:0 auto 13px; padding:12px; width:72px; height:72px; border-radius:50%; color:var(--blue); background:#eaf3fb; }
+.search-empty-hero h2 { margin:5px 0 7px; color:var(--navy); font:800 24px 'Plus Jakarta Sans',sans-serif; letter-spacing:-.03em; }
+.search-empty-hero p:not(.eyebrow) { margin:0; color:var(--muted); font-size:10px; }
+.search-page-empty .breed-search-form { display:block; }
+.search-page-empty .breed-search-input { min-height:56px; padding:0 16px; border-color:#bed4e1; border-radius:9px; box-shadow:0 12px 26px rgba(7,29,52,.08); }
+.search-page-empty .breed-search-input input { min-height:54px; font-size:12px; }
+.search-page-empty .breed-search-form .primary-button { width:100%; min-height:46px; margin-top:10px; }
 .search-empty-state .secondary-button { padding:9px 13px; }
 @media (max-width:900px) { .search-page { padding:25px 22px 50px; }.search-page-heading h1 { font-size:25px; }.search-results-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:720px) { .search-page { padding:20px 14px 45px; }.search-page-heading { display:block; }.search-page-heading h1 { font-size:23px; }.search-result-pill { display:inline-block; margin-top:13px; }.breed-search-panel { padding:13px; }.breed-search-form { display:block; }.breed-search-form .primary-button { width:100%; margin-top:9px; }.search-suggestions { align-items:flex-start; }.search-suggestions > span { width:100%; margin-bottom:1px; }.search-results-heading { display:block; }.search-results-actions { margin-top:12px; }.search-results-actions .filter-button { flex:1; justify-content:center; }.search-results-actions .sort-select { flex:1; }.search-results-grid { grid-template-columns:1fr; }.search-results-grid .lot-card { width:100%; } }

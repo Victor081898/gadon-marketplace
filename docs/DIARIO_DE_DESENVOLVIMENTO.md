@@ -77,3 +77,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído com sucesso; eventos de navegação, busca, filtros, seleção e compra revisados estaticamente. A inspeção automática no navegador ficou indisponível por falha no runtime do browser embutido.
 - O que falta: testar manualmente o fluxo no navegador e conectar a busca a um catálogo/API real quando o back-end estiver disponível.
 - Próximo responsável: Victor valida a experiência visual; Claiton define o contrato de consulta de raças/lotes; Pablo cria testes da busca e seleção quando a API estiver integrada.
+
+### 2026-07-28 — Estado inicial vazio da pesquisa
+- Responsável: IA: Codex
+- Objetivo: deixar a nova aba de pesquisa limpa, mostrando somente a lupa e o campo para digitar o nome do produto/raça antes de carregar o catálogo.
+- Alterações: o acesso a “Buscar gado” agora limpa a pesquisa e os filtros, exibe uma tela inicial centralizada e só mostra resultados após a entrada de um termo ou seleção de uma raça.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: build e revisão estática dos eventos de navegação, submissão e limpeza da busca.
+- O que falta: validar a experiência visual no navegador e conectar a consulta ao catálogo real.
+- Próximo responsável: Victor testa a nova tela; Claiton define a consulta de produtos/raças; Pablo cobre o fluxo com testes automatizados.
