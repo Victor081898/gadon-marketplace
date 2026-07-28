@@ -29,20 +29,24 @@ Infra: `vitest.config.js` (ambiente jsdom), `tests/setup.js` (isolamento por tes
 | `tests/filtros-avancados.spec.js` | Filtros combinados: sexo, finalidade, fazenda, localização, região, peso e idade; contador; reset; combinações com busca e categoria | Diário: "testes de filtros combinados" |
 | `tests/documentos-frete.spec.js` | Gestão de documentos: listagem, contadores (total/emitidos/pendentes), abas de status, anexos entrando como pendentes, limite de 10 MB, persistência | Diário: "cobre filtros, contadores e anexos" |
 | `tests/tabela-rotas.spec.js` | Tabela completa de rotas: abertura, fechamento, renderização, somatórios (km e R$), badges de status | Diário: "cobre a abertura, fechamento e renderização da tabela" |
+| `tests/relatorio-csv.spec.js` | Exportação CSV de relatórios: nome do arquivo, BOM UTF-8, 4 seções, indicadores, escape de aspas, dados persistidos | Backlog item 1 |
+| `tests/mensagens.spec.js` | Chat: envio de texto, prévia, não-lidas, busca de conversas, anexos (com limite de 10 MB), atalhos de contexto | Backlog item 2 |
+| `tests/cadastro-gado.spec.js` | Habilitar lote: formulário, protocolo, log de auditoria com etapas, ordem dos envios, persistência | Backlog item 3 |
+| `tests/notificacoes.spec.js` | Central de notificações: popover, contagem, marcar como lidas, navegação por tipo, estado vazio | Backlog item 4 |
 
 ## Backlog imediato (não depende do back-end)
 
 Fluxos do protótipo ainda sem cobertura, em ordem de prioridade:
 
-| # | Automação | Escopo |
-| --- | --- | --- |
-| 1 | Teste da exportação CSV de relatórios | Botão "Exportar" do módulo Relatórios: download gerado, seções (resumo, rotas, viagens, documentos), codificação UTF-8 |
-| 2 | Testes do chat/mensagens | Enviar mensagem, buscar conversa, anexos (limite 10 MB), zerar não-lidas ao abrir, conversa criada a partir do lote |
-| 3 | Testes do cadastro de gado | Formulário "Habilitar lote", geração do log de auditoria com etapas, persistência em `gadon.audit-log.v1` |
-| 4 | Testes das notificações | Popover, contagem de não-lidas, "marcar como lidas", navegação por tipo (mensagem → Mensagens, demais → Fretes) |
-| 5 | Testes do calendário de fretes | Agendar viagem, ordenação por data, feriados nacionais (algoritmo da Páscoa), navegação entre meses |
-| 6 | Testes da cotação de frete | Formulário "Solicitar cotações" — base do futuro Motor de Cotação |
-| 7 | Publicação automática do app (GitHub Pages) | Deploy do protótipo num link público a cada push na main, para o time validar no navegador/celular sem instalar nada |
+| # | Automação | Escopo | Status |
+| --- | --- | --- | --- |
+| 1 | Teste da exportação CSV de relatórios | Botão "Exportar" do módulo Relatórios: download gerado, seções (resumo, rotas, viagens, documentos), codificação UTF-8 | ✅ feito (`tests/relatorio-csv.spec.js`) |
+| 2 | Testes do chat/mensagens | Enviar mensagem, buscar conversa, anexos (limite 10 MB), zerar não-lidas ao abrir, conversa criada a partir do lote | ✅ feito (`tests/mensagens.spec.js`) |
+| 3 | Testes do cadastro de gado | Formulário "Habilitar lote", geração do log de auditoria com etapas, persistência em `gadon.audit-log.v1` | ✅ feito (`tests/cadastro-gado.spec.js`) |
+| 4 | Testes das notificações | Popover, contagem de não-lidas, "marcar como lidas", navegação por tipo (mensagem → Mensagens, demais → Fretes) | ✅ feito (`tests/notificacoes.spec.js`) |
+| 5 | Testes do calendário de fretes | Agendar viagem, ordenação por data, feriados nacionais (algoritmo da Páscoa), navegação entre meses | pendente |
+| 6 | Testes da cotação de frete | Formulário "Solicitar cotações" — base do futuro Motor de Cotação | pendente |
+| 7 | Publicação automática do app (GitHub Pages) | Deploy do protótipo num link público a cada push na main, para o time validar no navegador/celular sem instalar nada | pendente |
 
 ## Próximas ondas (dependem de contratos do back-end)
 

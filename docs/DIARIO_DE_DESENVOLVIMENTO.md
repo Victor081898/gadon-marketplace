@@ -186,3 +186,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm test` (61/61) segue verde; alteração é somente de documentação.
 - O que falta: executar os itens do backlog na ordem definida; ondas A–G continuam aguardando os contratos de API.
 - Próximo responsável: `@ricardopablo1914-create` executa o backlog; Victor decide se quer o link público do item 7; `@ecossystem2` publica os primeiros contratos.
+
+### 2026-07-28 — Cobertura dos itens 1 a 4 do backlog de automações
+- Responsável: Humano: Pablo Figueiredo (`@ricardopablo1914-create`), com apoio de IA
+- Objetivo: executar os quatro primeiros itens do backlog imediato do `docs/PLANO_DE_TESTES.md`.
+- Alterações: criadas 4 novas suítes com 30 testes, elevando a suíte de 61 para 91 testes: `tests/relatorio-csv.spec.js` (6 — valida a exportação CSV recém-criada: nome datado, BOM UTF-8 nos bytes, 4 seções, indicadores, escape de aspas/ponto-e-vírgula, dados persistidos e toast), `tests/mensagens.spec.js` (10 — conversas padrão, não-lidas, envio de texto, mensagem vazia bloqueada, busca de conversas, anexo feliz e anexo >10 MB rejeitado, "Ver lote", atalhos de cotação), `tests/cadastro-gado.spec.js` (6 — abertura do cadastro, estado vazio da auditoria, envio com protocolo `GDN-*`, etapas do log, ordem dos envios, persistência) e `tests/notificacoes.spec.js` (8 — popover, contagem, marcar como lidas, navegação por tipo, estado vazio, seed persistido). Plano de testes atualizado com o status dos itens.
+- Arquivos: `tests/relatorio-csv.spec.js`, `tests/mensagens.spec.js`, `tests/cadastro-gado.spec.js`, `tests/notificacoes.spec.js`, `docs/PLANO_DE_TESTES.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm test` com 91/91 aprovados, inclusive com ordem embaralhada; `npm run build` concluído; nenhum arquivo de `src/` alterado.
+- O que falta: itens 5 (calendário de fretes), 6 (formulário de cotação) e 7 (publicação automática do app) do backlog; ondas A–G aguardando contratos de API.
+- Próximo responsável: `@ricardopablo1914-create` segue nos itens 5–7; Victor decide sobre o link público (item 7); `@ecossystem2` publica os contratos.
