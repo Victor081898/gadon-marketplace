@@ -68,3 +68,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: integração documentada sem copiar agentes nem alterar configurações globais.
 - O que falta: disponibilizar o `agent-mod` no ambiente compatível de cada colaborador e registrar o commit/versão consultado quando uma task utilizar um agente externo.
 - Próximo responsável: Victor encaminha demandas de front-end; Claiton seleciona os agentes de back-end; Pablo e Claiton selecionam os agentes de automação e testes.
+
+### 2026-07-28 — Tela dedicada para buscar gado
+- Responsável: IA: Codex
+- Objetivo: habilitar uma aba de pesquisa acessível pelo botão “Buscar gado”, permitindo pesquisar pelo nome da raça e selecionar lotes para compra.
+- Alterações: criada a tela `search` com campo de busca por raça/nome, raças populares, contagem de resultados, filtros de região/peso, ordenação e catálogo completo; os cards reutilizam seleção, favoritos, “Ver lote” e a barra de solicitação de compra já existente.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build` concluído com sucesso; eventos de navegação, busca, filtros, seleção e compra revisados estaticamente. A inspeção automática no navegador ficou indisponível por falha no runtime do browser embutido.
+- O que falta: testar manualmente o fluxo no navegador e conectar a busca a um catálogo/API real quando o back-end estiver disponível.
+- Próximo responsável: Victor valida a experiência visual; Claiton define o contrato de consulta de raças/lotes; Pablo cria testes da busca e seleção quando a API estiver integrada.
