@@ -278,3 +278,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais dos formulários e handlers de login/logout.
 - O que falta: integrar autenticação real, hash de senha, recuperação de acesso, verificação de e-mail, sessão segura e autorização no back-end.
 - Próximo responsável: Victor valida a experiência inicial; `@ecossystem2` define o contrato de autenticação/sessão; `@ricardopablo1914-create` automatiza criação de conta, login, logout, validações e recuperação futura.
+
+### 2026-07-28 — Redesign da tela de criação de conta
+- Responsável: IA: Codex
+- Objetivo: alinhar a tela de criação de conta à referência visual enviada para o novo painel GadOn.
+- Alterações: aplicado layout escuro em duas colunas, navegação “Início/Entrar”, marca GadOn, destaque “Comece agora”, título com acento laranja, campos Nome/Sobrenome/E-mail/Senha, alternância de visibilidade da senha, aceite de termos, botão “Criar com Google”, CTA “Criar conta”, aviso de segurança, curva pontilhada laranja, selo bovino e painel fotográfico com marca GadOn.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: formulário `account-registration-reference-form`; os dados continuam sendo enviados ao fluxo local de criação de conta.
+- Validação: serão executados `npm run build`, `git diff --check`, teste HTTP local e verificações estruturais dos elementos da referência.
+- O que falta: substituir a imagem demonstrativa por um asset/licença aprovado, integrar Google OAuth, termos reais e autenticação de produção.
+- Próximo responsável: Victor valida aderência visual; `@ecossystem2` define OAuth e contrato de conta; `@ricardopablo1914-create` testa responsividade, validação e submissão do novo formulário.

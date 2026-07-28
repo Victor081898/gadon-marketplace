@@ -402,3 +402,55 @@ button { cursor:pointer; }
 .account-logout-button:hover { color:#fff; background:#123e5f; }
 @media (max-width:900px) { .auth-shell { grid-template-columns:1fr; }.auth-brand-panel { display:none; }.auth-main { min-height:100vh; padding:25px 18px; }.auth-card { padding:26px 22px; }.account-logout-button { left:15px; bottom:15px; } }
 @media (max-width:560px) { .auth-form-grid { grid-template-columns:1fr; }.auth-field-full { grid-column:auto; }.auth-card-heading h1 { font-size:22px; }.auth-form-options { align-items:flex-start; flex-direction:column; }.auth-link { padding:0; } }
+
+.register-reference-shell { min-height:100vh; display:grid; place-items:center; padding:45px; box-sizing:border-box; background:radial-gradient(circle at 10% 10%,#596272,#2e3542 65%,#252c37); }
+.register-reference-card { display:grid; grid-template-columns:minmax(540px,1fr) minmax(420px,1fr); width:min(1400px,100%); min-height:810px; overflow:hidden; border-radius:23px; background:#111722; box-shadow:0 24px 60px rgba(0,0,0,.35); }
+.register-reference-form-panel { position:relative; z-index:2; padding:50px 78px 46px; color:#fff; background:linear-gradient(145deg,#101621,#141a27 70%,#0d131e); }
+.register-reference-header { display:flex; align-items:flex-start; justify-content:space-between; gap:30px; }
+.register-reference-brand { display:grid; gap:0; color:#fff; line-height:.9; }
+.register-reference-brand strong,.register-reference-visual-logo strong { color:#1470bc; font:900 34px 'Plus Jakarta Sans',sans-serif; letter-spacing:-2px; }
+.register-reference-brand strong span,.register-reference-visual-logo strong span { color:#ff8500; }
+.register-reference-brand small,.register-reference-visual-logo small { color:#fff; font:700 10px 'Plus Jakarta Sans',sans-serif; letter-spacing:-.2px; }
+.register-reference-header nav { display:flex; align-items:center; gap:54px; padding-top:8px; }
+.register-reference-nav { padding:0; border:0; color:#b9c0cc; background:transparent; font-size:13px; cursor:pointer; }
+.register-reference-nav.active,.register-reference-nav:hover { color:#1e9bff; }
+.register-reference-copy { margin-top:65px; }
+.register-reference-copy > p { margin:0 0 16px; color:#ff8a00; font-size:12px; font-weight:800; letter-spacing:.3px; }
+.register-reference-copy h1 { margin:0 0 11px; color:#f7f8fb; font:800 41px/1.05 'Plus Jakarta Sans',sans-serif; letter-spacing:-1.5px; }
+.register-reference-copy h1 span { color:#ff8900; }
+.register-reference-copy > span { color:#b8c0cc; font-size:12px; }
+.register-reference-copy > span button { padding:0; border:0; color:#199aff; background:transparent; font-size:12px; cursor:pointer; }
+.register-reference-error { max-width:568px; margin:20px 0 -4px; }
+.register-reference-form { max-width:568px; margin-top:33px; }
+.register-reference-fields { display:grid; grid-template-columns:1fr 1fr; gap:20px 22px; }
+.register-reference-fields label { display:grid; gap:9px; color:#c8ced8; font-size:12px; }
+.register-reference-fields label > div { display:flex; align-items:center; gap:11px; min-height:53px; box-sizing:border-box; padding:0 16px; border:1px solid #303846; border-radius:11px; color:#a4adbc; background:#202633; }
+.register-reference-fields label > div:focus-within { border-color:#159eff; box-shadow:0 0 0 2px rgba(21,158,255,.18); }
+.register-reference-fields input { width:100%; min-width:0; border:0; outline:0; color:#fff; background:transparent; font-size:12px; }
+.register-reference-fields input::placeholder { color:#737d8e; }
+.register-reference-full { grid-column:1/-1; }
+.register-reference-password { position:relative; padding-right:12px !important; }
+.register-reference-password input { padding-right:32px; }
+.register-reference-password button { display:grid; place-items:center; flex:none; padding:0; border:0; color:#aeb8c8; background:transparent; cursor:pointer; }
+.register-reference-terms { display:flex; align-items:flex-start; gap:10px; margin-top:21px; color:#b7bfcc; font-size:11px; line-height:1.4; cursor:pointer; }
+.register-reference-terms input { flex:none; width:17px; height:17px; margin:0; accent-color:#ff8600; }
+.register-reference-terms a { color:#159eff; text-decoration:none; }
+.register-reference-actions { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:26px; }
+.google-button,.register-reference-submit { display:flex; align-items:center; justify-content:center; gap:10px; min-height:55px; border:0; border-radius:30px; font-size:13px; font-weight:800; cursor:pointer; }
+.google-button { color:#f0f2f6; background:#303744; }
+.google-button:hover { background:#3b4352; }
+.google-button span { color:#4285f4; font:900 20px Arial,sans-serif; text-shadow:1px 0 #34a853,-1px 0 #ea4335,0 1px #fbbc05; }
+.register-reference-submit { color:#fff; background:linear-gradient(110deg,#ff8c00,#ff7c00); box-shadow:0 11px 20px rgba(255,126,0,.2); }
+.register-reference-submit:hover { background:#f17000; }
+.register-reference-security { display:flex; align-items:center; gap:11px; margin-top:28px; color:#aeb7c5; font-size:11px; }
+.register-reference-security svg { color:#159eff; flex:none; }
+.register-reference-visual { position:relative; overflow:hidden; min-height:100%; background-image:linear-gradient(90deg,rgba(4,10,15,.83),rgba(5,11,16,.23)),var(--reference-cattle-image); background-position:center; background-size:cover; }
+.register-reference-visual::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,13,17,.45),transparent 35%,rgba(4,8,12,.26)); pointer-events:none; }
+.register-reference-curve { position:absolute; z-index:2; top:-8%; left:-132px; width:255px; height:116%; border:2px dashed #ff8500; border-right:0; border-radius:50%; transform:rotate(-3deg); }
+.register-reference-cow-badge { position:absolute; z-index:4; top:50%; left:-32px; display:grid; place-items:center; width:59px; height:59px; border:3px solid #ff8500; border-radius:50%; color:#fff; background:#116fb3; box-shadow:0 0 0 7px rgba(17,23,34,.74); transform:translateY(-50%); }
+.register-reference-visual-logo { position:absolute; z-index:4; right:55px; bottom:54px; display:grid; gap:0; text-align:left; }
+.register-reference-visual-logo strong { font-size:36px; text-shadow:0 3px 10px rgba(0,0,0,.4); }
+.register-reference-visual-logo small { font-size:12px; text-shadow:0 2px 5px rgba(0,0,0,.7); }
+@media (max-width:1050px) { .register-reference-shell { padding:25px; }.register-reference-card { grid-template-columns:minmax(480px,1fr) minmax(330px,.8fr); }.register-reference-form-panel { padding:38px 45px; }.register-reference-copy h1 { font-size:35px; }.register-reference-header nav { gap:26px; } }
+@media (max-width:780px) { .register-reference-shell { display:block; padding:0; background:#111722; }.register-reference-card { display:block; min-height:100vh; border-radius:0; }.register-reference-form-panel { min-height:100vh; padding:28px 24px 36px; }.register-reference-header nav { gap:20px; }.register-reference-copy { margin-top:46px; }.register-reference-copy h1 { font-size:32px; }.register-reference-visual { display:none; }.register-reference-actions { grid-template-columns:1fr; gap:11px; }.register-reference-form { max-width:none; } }
+@media (max-width:480px) { .register-reference-header { align-items:flex-start; }.register-reference-brand strong { font-size:27px; }.register-reference-brand small { font-size:8px; }.register-reference-header nav { padding-top:4px; gap:14px; }.register-reference-nav { font-size:11px; }.register-reference-copy { margin-top:52px; }.register-reference-copy h1 { font-size:29px; }.register-reference-fields { grid-template-columns:1fr; gap:15px; }.register-reference-full { grid-column:auto; }.register-reference-fields label > div { min-height:49px; }.register-reference-terms { font-size:10px; }.google-button,.register-reference-submit { min-height:50px; } }
