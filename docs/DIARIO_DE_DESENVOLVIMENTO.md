@@ -113,3 +113,12 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: revisão estática das menções e dos fluxos de atribuição; será executado `npm run build` antes do commit.
 - O que falta: abrir e atribuir as primeiras issues específicas de integração quando Victor definir as próximas demandas de produto.
 - Próximo responsável: Victor abre as tasks de front-end; `@ecossystem2` registra os contratos de back-end; `@ricardopablo1914` estrutura os testes e automações com apoio de `@ecossystem2`.
+
+### 2026-07-28 — Publicação obrigatória de todas as alterações
+- Responsável: IA: Codex
+- Objetivo: garantir que nenhuma alteração do projeto fique somente no ambiente local.
+- Alterações: adicionada uma regra permanente em `AGENTS.md`, na skill local, no processo de colaboração e em `CONTRIBUTING.md`: toda mudança, inclusive documentação, deve atualizar o diário no mesmo commit, passar pelas validações aplicáveis, ser publicada no GitHub e atualizar o pull request quando existir.
+- Arquivos: `AGENTS.md`, `.agents/skills/gadon-colaboracao/SKILL.md`, `docs/PROCESSO_DE_COLABORACAO.md`, `CONTRIBUTING.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: revisão estática das regras e `npm run build` executado antes do commit.
+- O que falta: aplicar esse fluxo em todas as próximas tasks e criar/atualizar issues quando uma demanda atravessar front-end, back-end, automações ou testes.
+- Próximo responsável: todos os colaboradores; Victor coordena o front-end, `@ecossystem2` o back-end e `@ricardopablo1914` as automações e testes.

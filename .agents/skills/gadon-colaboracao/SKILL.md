@@ -35,6 +35,10 @@ Toda alteração humana ou de IA deve atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.
 - próximo responsável;
 - novas tasks/issues necessárias.
 
+## Publicação obrigatória
+
+Qualquer alteração, inclusive documentação, deve atualizar o diário no mesmo commit, passar pelas validações aplicáveis e ser publicada no GitHub na branch de trabalho. Ao existir um pull request, ele também deve receber a atualização. Não finalize uma sessão deixando alterações somente no checkout local.
+
 ## Finalização
 
 Antes de concluir, rode o build e os testes aplicáveis, revise o diff, atualize a issue e o pull request e confirme que código, documentação e diário estão no mesmo fluxo de revisão.

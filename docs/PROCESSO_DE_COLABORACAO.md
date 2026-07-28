@@ -50,3 +50,14 @@ O diário em `docs/DIARIO_DE_DESENVOLVIMENTO.md` deve ser atualizado em toda tar
 - novas tasks/issues necessárias.
 
 Uma tarefa só está concluída quando o GitHub contém o código, o diário e a documentação atualizados, e as tarefas dependentes foram criadas ou vinculadas.
+
+## Regra permanente de publicação
+
+Toda alteração humana ou feita pela IA, incluindo documentação e ajustes de processo, deve:
+
+1. atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit;
+2. passar pelas validações aplicáveis;
+3. ser commitada e publicada no GitHub na branch de trabalho;
+4. atualizar o pull request relacionado, quando existir.
+
+Alterações não publicadas não devem ser consideradas concluídas.

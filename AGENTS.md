@@ -62,6 +62,10 @@ Use os marcadores `front-end`, `back-end`, `automação` e `testes` para tornar 
 5. Abra ou atualize o pull request referenciando a issue e preenchendo o checklist.
 6. Só considere a demanda concluída quando código, testes, documentação e encaminhamentos estiverem sincronizados no GitHub.
 
+## Regra de publicação contínua
+
+Qualquer alteração feita por uma pessoa ou pela IA, inclusive alterações somente de documentação, deve atualizar o diário, ser validada, commitada e publicada no GitHub na branch de trabalho. O pull request correspondente também deve ser atualizado quando existir. Nenhuma alteração deve ficar apenas no checkout local ao encerrar uma sessão.
+
 ## Regra do diário
 
 Cada mudança humana ou feita pela IA deve atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit. O registro deve informar o que foi feito, o que falta, quem é o próximo responsável e quais tarefas precisam ser criadas.

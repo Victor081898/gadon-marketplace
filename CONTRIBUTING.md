@@ -11,6 +11,7 @@
 7. Atualize `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit da alteração.
 8. Rode `npm run build` e os testes aplicáveis antes de abrir o pull request.
 9. Abra um pull request descrevendo o que mudou, como foi validado, o que falta e quais tasks dependentes foram criadas.
+10. Faça commit e push de toda alteração, inclusive documentação, e atualize o pull request antes de encerrar a sessão.
 
 ## Commits
 
@@ -33,6 +34,10 @@ O diário é a fonte compartilhada de contexto do projeto. Cada registro deve co
 - próximos passos ou pendências.
 
 Não apague registros anteriores. Se uma decisão for revertida, acrescente uma nova entrada explicando o motivo.
+
+## Publicação obrigatória
+
+Nenhuma alteração deve permanecer somente no checkout local. Toda mudança deve atualizar o diário no mesmo commit, passar pelas validações aplicáveis e ser publicada no GitHub na branch de trabalho.
 
 ## Segurança e arquivos locais
 
