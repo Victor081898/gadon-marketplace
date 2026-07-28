@@ -738,3 +738,63 @@ button { cursor:pointer; }
   .document-manager-row { display:grid; grid-template-columns:auto minmax(0,1fr); gap:8px; }
   .document-manager-row .doc-badge { margin-left:0; grid-column:2; justify-self:start; }
 }
+
+/* Mobile navigation and focused logistics card. */
+.mobile-drawer-backdrop,.mobile-drawer { display:none; }
+.logistics-panel-content { min-width:0; flex:1; position:relative; z-index:2; }
+.logistics-panel .mini-route { z-index:3; }
+.logistics-opportunity-button { position:relative; overflow:hidden; transition:transform .2s ease,box-shadow .2s ease; animation:logistics-cta-pulse 2.4s ease-in-out infinite; }
+.logistics-opportunity-button::after { content:''; position:absolute; inset:0; background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.32) 50%,transparent 75%); transform:translateX(-120%); animation:logistics-cta-shine 3.8s ease-in-out infinite; pointer-events:none; }
+.logistics-opportunity-button:hover { transform:translateY(-2px); animation-play-state:paused; box-shadow:0 8px 18px rgba(244,122,24,.2); }
+@keyframes logistics-cta-pulse { 0%,100% { box-shadow:0 0 0 0 rgba(255,255,255,0); } 50% { box-shadow:0 0 0 4px rgba(255,255,255,.12); } }
+@keyframes logistics-cta-shine { 0%,55%,100% { transform:translateX(-120%); } 72% { transform:translateX(120%); } }
+
+@media (max-width:720px) {
+  .theme-toggle { display:none; }
+  .top-actions .top-avatar { display:none; }
+  .mobile-menu { display:grid !important; place-items:center; width:38px; height:38px; padding:0; border:0; border-radius:50%; color:var(--navy); background:rgba(21,90,162,.1); }
+  .mobile-drawer-backdrop { position:fixed; z-index:80; inset:0; display:block; background:rgba(3,18,32,.5); opacity:0; pointer-events:none; transition:opacity .22s ease; }
+  .mobile-drawer-backdrop.is-open { opacity:1; pointer-events:auto; }
+  .mobile-drawer { position:fixed; z-index:81; inset:0 auto 0 0; display:flex; width:min(336px,calc(100vw - 34px)); max-width:100%; flex-direction:column; padding:20px 15px 15px; color:#eef6fb; background:linear-gradient(180deg,#071d34 0%,#0d2d49 100%); border-radius:0 26px 26px 0; box-shadow:16px 0 36px rgba(2,15,27,.34); transform:translateX(-105%); transition:transform .26s cubic-bezier(.22,.8,.3,1); overflow-y:auto; }
+  .mobile-drawer.is-open { transform:translateX(0); }
+  .mobile-drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:4px 6px 18px; border-bottom:1px solid rgba(191,224,243,.13); }
+  .mobile-drawer-head .eyebrow { color:#f7a45e; margin-bottom:5px; }
+  .mobile-drawer-head h2 { margin:0; color:#fff; font:800 20px 'Plus Jakarta Sans',sans-serif; }
+  .mobile-drawer-close { display:grid; place-items:center; width:36px; height:36px; border:1px solid rgba(255,255,255,.16); border-radius:50%; color:#fff; background:rgba(255,255,255,.08); }
+  .mobile-drawer-profile { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:10px; width:100%; margin:16px 0 17px; padding:12px; border:1px solid rgba(139,201,235,.2); border-radius:18px; color:#fff; text-align:left; background:rgba(255,255,255,.08); }
+  .mobile-drawer-avatar { display:grid; place-items:center; width:42px; height:42px; border:2px solid #f4862c; border-radius:50%; color:#fff; background:#155a9b; font-size:12px; font-weight:800; }
+  .mobile-drawer-profile strong,.mobile-drawer-profile small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .mobile-drawer-profile strong { font-size:12px; }
+  .mobile-drawer-profile small { margin-top:4px; color:#a9c4d4; font-size:9px; }
+  .mobile-drawer-profile > svg { color:#a7c9dc; }
+  .mobile-drawer-nav { display:grid; gap:5px; }
+  .mobile-drawer-label { margin:10px 8px 4px; color:#8baec3; font-size:8px; font-weight:800; letter-spacing:1.4px; }
+  .mobile-drawer-item { display:flex; align-items:center; gap:11px; min-height:45px; width:100%; padding:0 12px; border:1px solid transparent; border-radius:14px; color:#c5d9e5; background:transparent; text-align:left; font-size:11px; font-weight:700; }
+  .mobile-drawer-item svg { flex:none; color:#8dbbd4; }
+  .mobile-drawer-item span { min-width:0; flex:1; }
+  .mobile-drawer-item b { display:grid; place-items:center; min-width:18px; height:18px; padding:0 5px; border-radius:999px; color:#fff; background:var(--orange); font-size:8px; }
+  .mobile-drawer-item i { color:#8baec3; font-size:8px; font-style:normal; font-weight:600; }
+  .mobile-drawer-item.active,.mobile-drawer-item:hover { border-color:rgba(244,122,24,.28); color:#fff; background:linear-gradient(90deg,rgba(244,122,24,.22),rgba(21,90,162,.2)); }
+  .mobile-drawer-item.active svg,.mobile-drawer-item:hover svg { color:#f6a05a; }
+  .mobile-theme-action { margin-top:2px; }
+  .mobile-logout-action { margin-top:8px; color:#ffc2a2; border-top:1px solid rgba(191,224,243,.13); border-radius:0; }
+  .mobile-logout-action svg { color:#f49a69; }
+  .mobile-drawer-foot { margin:auto 8px 4px; padding-top:18px; color:#7898aa; font-size:9px; }
+  .mobile-drawer-foot span { color:var(--orange); margin:0 4px; }
+  .logistics-panel { display:grid; grid-template-columns:42px minmax(0,1fr); align-items:start; gap:11px; }
+  .logistics-panel .mini-route { position:static; grid-column:2; justify-self:start; margin-top:1px; }
+  .logistics-opportunity-button { min-height:42px; padding:10px 13px; border-radius:13px; font-size:10px; }
+  .lot-actions { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px; width:100%; }
+  .lot-actions .select-lot-button,.lot-actions .view-button { min-height:40px; padding:10px 8px; border-radius:12px; font-size:10px; }
+  .lot-actions .select-lot-button { color:#fff; border-color:var(--orange); background:var(--orange); box-shadow:0 6px 13px rgba(244,122,24,.22); }
+  .lot-actions .select-lot-button:hover,.lot-actions .select-lot-button.selected { color:#fff; background:#dc650d; }
+  .lot-actions .view-button { justify-content:center; border:1px solid #c7dce9; background:#f0f8fd; }
+}
+
+@media (max-width:560px) {
+  .mobile-drawer { width:min(316px,calc(100vw - 24px)); }
+  .logistics-panel { grid-template-columns:38px minmax(0,1fr); gap:9px; }
+  .logistics-panel .operation-icon { width:38px; height:38px; }
+  .logistics-opportunity-button { width:100%; justify-content:center; }
+  .lot-actions .select-lot-button,.lot-actions .view-button { min-height:42px; padding:10px 6px; font-size:9px; }
+}

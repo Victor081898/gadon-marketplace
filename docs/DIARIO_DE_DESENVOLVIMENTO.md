@@ -456,3 +456,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática da grade 2×2 no breakpoint mobile.
 - O que falta: Victor validar a densidade visual em aparelho real; `@ricardopablo1914-create` testar toque, foco e leitura dos quatro cards em telas estreitas.
 - Próximo responsável: Victor valida a composição visual; `@ricardopablo1914-create` automatiza a regressão responsiva.
+
+### 2026-07-28 — Menu hamburguer e CTAs mobile
+- Responsável: IA: Codex
+- Objetivo: centralizar a navegação e as preferências no menu hamburguer mobile e tornar as ações de compra e logística mais claras e interativas.
+- Alterações: criado um drawer mobile com as seções do site, perfil com iniciais do usuário, favoritos, Meu perfil, logout e alternância de modo escuro; os itens navegam diretamente entre as telas e o avatar do cabeçalho fica concentrado no menu. Os botões `Selecionar` e `Ver lote` ganharam maior área de toque, contraste e destaque. O card `Inteligência logística` foi reorganizado e o botão `Ver oportunidades` recebeu animação de pulso e brilho sutil.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: apresentação, navegação local e preferência de tema do front-end; sem alteração em APIs, autenticação, persistência remota ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática do drawer, navegação, modo escuro, alvos de toque e animação logística.
+- O que falta: Victor validar a abertura/fechamento do drawer e a densidade dos CTAs em aparelho real; `@ricardopablo1914-create` testar navegação mobile, logout, alternância de tema, foco e acessibilidade do menu.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão dos fluxos mobile.

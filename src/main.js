@@ -366,6 +366,25 @@ function accountTopbarTemplate(crumb) {
   return `<header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> ${escapeHtml(crumb)}</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><button class="top-avatar" data-account-page="profile">${escapeHtml(initials)}</button><button class="top-user" data-account-page="profile">${escapeHtml(state.profile.name)} <span>⌄</span></button></div></header>`;
 }
 
+function mobileMenuTemplate() {
+  const initials = state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+  const navItems = ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
+  return `<div class="mobile-drawer-backdrop ${state.mobileMenuOpen ? 'is-open' : ''}" data-mobile-menu-close></div><aside class="mobile-drawer ${state.mobileMenuOpen ? 'is-open' : ''}" aria-label="Menu principal" aria-hidden="${state.mobileMenuOpen ? 'false' : 'true'}"><div class="mobile-drawer-head"><div><p class="eyebrow">NAVEGAÇÃO</p><h2>Menu GadOn</h2></div><button type="button" class="mobile-drawer-close" data-mobile-menu-close aria-label="Fechar menu">${icon('close', 19)}</button></div><button type="button" class="mobile-drawer-profile" data-account-page="profile"><span class="mobile-drawer-avatar">${escapeHtml(initials || 'JP')}</span><span><strong>${escapeHtml(state.profile.name)}</strong><small>Comprador verificado</small></span>${icon('chevron', 16)}</button><nav class="mobile-drawer-nav"><p class="mobile-drawer-label">MENU PRINCIPAL</p>${navItems.map((item, i) => `<button type="button" class="mobile-drawer-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i], 18)}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="mobile-drawer-label">CONTA</p><button type="button" class="mobile-drawer-item ${state.page === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart', 18)}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button type="button" class="mobile-drawer-item ${state.page === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user', 18)}<span>Meu perfil</span></button><p class="mobile-drawer-label">PREFERÊNCIAS</p><button type="button" class="mobile-drawer-item mobile-theme-action" data-action="mobile-theme">${icon(state.darkMode ? 'sun' : 'moon', 18)}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span><i>${state.darkMode ? 'Ativo' : 'Inativo'}</i></button><button type="button" class="mobile-drawer-item mobile-logout-action" data-action="logout">${icon('logout', 18)}<span>Sair da conta</span></button></nav><p class="mobile-drawer-foot">GadOn <span>•</span> O mercado do Gado</p></aside>`;
+}
+
+function mountMobileMenu() {
+  if (!state.authenticated || !document.querySelector('.mobile-menu')) return;
+  document.querySelector('#app')?.insertAdjacentHTML('beforeend', mobileMenuTemplate());
+  document.querySelectorAll('.mobile-menu').forEach((el) => el.addEventListener('click', () => { state.mobileMenuOpen = true; render(); }));
+  document.querySelectorAll('[data-mobile-menu-close]').forEach((el) => el.addEventListener('click', () => { state.mobileMenuOpen = false; render(); }));
+  document.querySelectorAll('.mobile-drawer [data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const item = el.dataset.nav; state.activeNav = item; state.page = item === 'Mensagens' ? 'messages' : item === 'Fretes' ? 'freight' : item === 'Fretes de retorno' ? 'returnFreight' : item === 'Buscar gado' ? 'search' : item === 'Meus anúncios' ? 'announcements' : 'home'; if (item === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } state.mobileMenuOpen = false; render(); }));
+  document.querySelectorAll('.mobile-drawer [data-account-page]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); state.activeNav = el.dataset.accountPage === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.mobileMenuOpen = false; state.page = el.dataset.accountPage; render(); }));
+  document.querySelectorAll('[data-action="mobile-theme"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); state.mobileMenuOpen = true; applyTheme(); render(); }));
+  document.querySelectorAll('.mobile-drawer [data-action="logout"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); logout(); }));
+}
+
 function accountShellTemplate(activePage, crumb, content) {
   return `<div class="app-shell account-shell">${accountSidebarTemplate(activePage)}<main class="main-content">${accountTopbarTemplate(crumb)}${content}</main></div><button type="button" class="account-logout-button" data-action="logout">${icon('logout', 15)} Sair da conta</button>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
@@ -447,37 +466,44 @@ function render() {
   }
   if (state.page === 'messages') {
     document.querySelector('#app').innerHTML = messagesTemplate();
+    mountMobileMenu();
     bindMessagesEvents();
     return;
   }
   if (state.page === 'freight') {
     document.querySelector('#app').innerHTML = freightTemplate();
+    mountMobileMenu();
     bindFreightEvents();
     return;
   }
   if (state.page === 'returnFreight') {
     document.querySelector('#app').innerHTML = returnFreightTemplate();
+    mountMobileMenu();
     bindReturnFreightEvents();
     enhanceReturnMap();
     return;
   }
   if (state.page === 'search') {
     document.querySelector('#app').innerHTML = searchPageTemplate();
+    mountMobileMenu();
     bindSearchEvents();
     return;
   }
   if (state.page === 'announcements') {
     document.querySelector('#app').innerHTML = announcementsTemplate();
+    mountMobileMenu();
     bindAnnouncementsEvents();
     return;
   }
   if (state.page === 'profile') {
     document.querySelector('#app').innerHTML = profileTemplate();
+    mountMobileMenu();
     bindProfileEvents();
     return;
   }
   if (state.page === 'favorites') {
     document.querySelector('#app').innerHTML = favoritesTemplate();
+    mountMobileMenu();
     bindFavoritesEvents();
     return;
   }
@@ -509,7 +535,7 @@ function render() {
           <section class="hero-card"><div class="hero-copy"><span class="hero-kicker">GADON MARKETPLACE</span><h2>O gado certo.<br><em>Do seu jeito.</em></h2><p>Compra, venda e frete inteligente em um só lugar.</p><button class="primary-button" data-scroll="lots">Buscar lotes ${icon('arrow', 16)}</button></div><div class="hero-art" role="img" aria-label="Gado Nelore em um pasto ao pôr do sol"><div class="hero-note"><span class="status-dot"></span> 2.351 lotes ativos agora</div></div></section>
           <section class="quick-stats"><div class="quick-stat"><div class="stat-icon blue-bg">${icon('cow', 19)}</div><div><strong>2.351</strong><span>lotes ativos</span></div></div><div class="quick-stat"><div class="stat-icon orange-bg">${icon('message', 19)}</div><div><strong>1.128</strong><span>negociações abertas</span></div></div><div class="quick-stat"><div class="stat-icon green-bg">${icon('truck', 19)}</div><div><strong>843</strong><span>fretes realizados</span></div></div><div class="quick-stat highlight"><div class="stat-icon purple-bg">${icon('repeat', 19)}</div><div><strong>Encontre cargas para a viagem de volta</strong><span>Aproveite a viagem de volta</span></div><button data-nav="Fretes de retorno">${icon('arrow', 15)}</button></div></section>
           <section class="section-block" id="lots"><div class="section-heading"><div><p class="eyebrow">PARA VOCÊ</p><h2>${state.collectionView === 'favorites' ? 'Meus favoritos' : state.collectionView === 'history' ? 'Histórico de visualizações' : 'Lotes em destaque'}</h2></div><button class="text-button" data-nav="Buscar gado">Ver todos ${icon('arrow', 15)}</button></div><div class="filter-row"><div class="search-field">${icon('search', 17)}<input id="search" value="${state.query}" placeholder="Busque por raça, cidade ou categoria..." /></div><div class="category-tabs">${['Todos', 'Nelore', 'Angus', 'Cruza', 'Bezerros'].map(c => `<button class="tab ${state.category === c ? 'selected' : ''}" data-category="${c}">${c}</button>`).join('')}</div><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar lotes"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div><div class="lots-grid">${filtered.length ? filtered.slice(0, 4).map(lotCard).join('') : `<div class="empty-state">Nenhum lote encontrado. Tente outra busca.</div>`}</div></section>
-          <section class="operations"><div class="operation-panel freight"><div class="operation-icon">${icon('truck', 22)}</div><div><p class="eyebrow">FRETE PARCEIRO</p><h3>Leve seu gado com segurança.</h3><p>Solicite cotações de transportadoras parceiras para sua rota.</p><button class="outline-button" data-nav="Fretes">Cotar frete ${icon('arrow', 15)}</button></div><div class="route-lines"></div></div><div class="operation-panel return"><div class="operation-icon">${icon('repeat', 22)}</div><div><p class="eyebrow">INTELIGÊNCIA LOGÍSTICA</p><h3>Encontre cargas para a viagem de volta</h3><p>Aproveite o trajeto de retorno e reduza o custo do frete.</p><button class="outline-button" data-nav="Fretes de retorno">Ver oportunidades ${icon('arrow', 15)}</button></div><div class="mini-route"><span>GO</span><i></i><span>MT</span></div></div></section>
+          <section class="operations"><div class="operation-panel freight"><div class="operation-icon">${icon('truck', 22)}</div><div><p class="eyebrow">FRETE PARCEIRO</p><h3>Leve seu gado com segurança.</h3><p>Solicite cotações de transportadoras parceiras para sua rota.</p><button class="outline-button" data-nav="Fretes">Cotar frete ${icon('arrow', 15)}</button></div><div class="route-lines"></div></div><div class="operation-panel return logistics-panel"><div class="operation-icon">${icon('repeat', 22)}</div><div class="logistics-panel-content"><p class="eyebrow">INTELIGÊNCIA LOGÍSTICA</p><h3>Encontre cargas para a viagem de volta</h3><p>Aproveite o trajeto de retorno e reduza o custo do frete.</p><button class="outline-button logistics-opportunity-button" data-nav="Fretes de retorno">Ver oportunidades ${icon('arrow', 15)}</button></div><div class="mini-route"><span>GO</span><i></i><span>MT</span></div></div></section>
           <section class="trust-row"><div>${icon('heart', 20)}<span><strong>Negociação direta</strong> fale com o anunciante</span></div><div>${icon('truck', 20)}<span><strong>Transportadores parceiros</strong> frete com cotação</span></div><div>${icon('user', 20)}<span><strong>Perfis verificados</strong> mais segurança</span></div><div>${icon('chart', 20)}<span><strong>Gestão completa</strong> para seu negócio</span></div></section>
         </div>
       </main>
@@ -518,6 +544,7 @@ function render() {
     ${state.filterOpen ? filterDrawerTemplate() : ''}
     ${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}
   `;
+  mountMobileMenu();
   bindEvents();
 }
 
