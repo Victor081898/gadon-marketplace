@@ -546,3 +546,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; verificar a agenda e a visão consolidada em viewport mobile nos temas claro e escuro.
 - O que falta: Victor validar a leitura final em aparelho real; `@ricardopablo1914-create` testar calendário, lista consolidada, gesto de rolagem e alternância de tema; `@ecossystem2` acompanhar eventuais necessidades de persistência caso o painel passe a consumir dados remotos.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão mobile; `@ecossystem2` avalia impactos de integração se necessário.
+
+### 2026-07-29 — Painel de criação de conta mobile baseado na referência visual
+- Responsável: IA: Codex
+- Objetivo: aproximar a tela mobile de criação de conta do layout enviado, mantendo os elementos do fluxo de cadastro do GadOn.
+- Alterações: a composição mobile passou a usar cartão escuro arredondado, logo e ação `Entrar` no topo, imagem de gado no cabeçalho, máscara curva entre imagem e formulário, linha tracejada laranja com selo circular de gado, formulário empilhado com campos de nome, sobrenome, e-mail e senha, termos, botão Google, CTA `Criar conta` e aviso de segurança. Foi adicionado um traçado SVG específico para a curva mobile sem remover a versão desktop.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação responsiva e composição visual do front-end; o formulário, validações e eventos de criação de conta continuam os mesmos, sem alteração em APIs, autenticação ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; revisar a tela de criação de conta em viewport mobile, incluindo foco dos campos, termos, Google e envio do formulário.
+- O que falta: Victor validar o enquadramento da foto e a posição da curva em aparelho real; `@ricardopablo1914-create` testar cadastro, senha, termos, Google, retorno ao login e diferentes larguras; `@ecossystem2` acompanhar eventuais necessidades futuras de integração de autenticação.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão do cadastro mobile; `@ecossystem2` avalia impactos de integração quando o cadastro real for conectado.
