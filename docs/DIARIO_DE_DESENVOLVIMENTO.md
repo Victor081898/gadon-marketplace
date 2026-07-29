@@ -506,3 +506,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática de overflow horizontal oculto.
 - O que falta: Victor validar a navegação vertical do histórico em aparelho real; `@ricardopablo1914-create` testar documentos longos e diferentes larguras mobile.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de rolagem.
+
+### 2026-07-28 — Barra vertical oculta na Gestão de Documentos
+- Responsável: IA: Codex
+- Objetivo: ocultar também o indicador visual da rolagem vertical no painel mobile, mantendo o deslocamento por toque e gesto.
+- Alterações: adicionados estilos de scrollbar invisível para navegadores baseados em Chromium/WebKit, Firefox e Internet Explorer/Edge legado no modal de documentos; o histórico continua com `overflow-y: auto`.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e rolagem do front-end; sem alteração em APIs, autenticação, documentos ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática da scrollbar invisível com rolagem vertical preservada.
+- O que falta: Victor validar o gesto de rolagem no aparelho real; `@ricardopablo1914-create` testar o histórico longo com toque e teclado virtual.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de rolagem mobile.

@@ -860,6 +860,7 @@ button { cursor:pointer; }
 
 @media (max-width:720px) {
   .document-manager-backdrop { overflow-x:hidden; }
-  .document-manager { min-width:0; overflow-x:hidden; overflow-y:auto; }
+  .document-manager { min-width:0; overflow-x:hidden; overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; }
+  .document-manager::-webkit-scrollbar { width:0; height:0; display:none; }
   .document-manager-list,.document-manager-row,.document-manager-main { min-width:0; max-width:100%; }
 }
