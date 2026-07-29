@@ -486,3 +486,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática dos itens do menu, barra de rolagem oculta, grade mobile e cores do modo escuro.
 - O que falta: Victor validar a densidade dos cards e o menu em aparelho real; `@ricardopablo1914-create` testar as sete rotas do menu, o foco do drawer e os dois temas.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão das rotas mobile e dos cards de frete.
+
+### 2026-07-28 — Contraste da gestão de documentos no modo escuro
+- Responsável: IA: Codex
+- Objetivo: tornar o painel de histórico da Gestão de Documentos legível no modo escuro mobile.
+- Alterações: o modal de todos os documentos recebeu superfícies escuras, bordas contrastantes, títulos e metadados claros, contadores diferenciados, abas de filtro acessíveis e estados de documento emitido/pendente ajustados para o tema escuro.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e contraste do front-end; sem alteração em APIs, autenticação, documentos ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática dos estilos do painel no tema escuro.
+- O que falta: Victor validar a leitura do painel em aparelho real; `@ricardopablo1914-create` testar abas Todos, Emitidos e Pendentes, abertura do anexo e inclusão de documentos nos dois temas.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão da Gestão de Documentos.

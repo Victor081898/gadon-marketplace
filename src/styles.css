@@ -831,3 +831,29 @@ button { cursor:pointer; }
   .freight-module-card b { font-size:8px; }
   .freight-module-card small { font-size:7px; }
 }
+
+/* Document manager contrast for dark mode, including the mobile full-history view. */
+[data-theme="dark"] .document-manager { color:#e8f0f7; background:#132536; border-color:#39546a; }
+[data-theme="dark"] .document-manager-head { border-color:#39546a; }
+[data-theme="dark"] .document-manager-head h2,
+[data-theme="dark"] .document-manager-stat strong,
+[data-theme="dark"] .document-manager-main strong { color:#e8f0f7; }
+[data-theme="dark"] .document-manager-head p:not(.eyebrow),
+[data-theme="dark"] .document-manager-stat small,
+[data-theme="dark"] .document-manager-main span { color:#aec1cf; }
+[data-theme="dark"] .document-manager-stat { border-color:#39546a; background:#183247; }
+[data-theme="dark"] .document-manager-stat > span { background:#21445e; color:#8cc8f4; }
+[data-theme="dark"] .document-manager-stat.issued > span { background:#194a42; color:#73d6ad; }
+[data-theme="dark"] .document-manager-stat.pending > span { background:#513b27; color:#ffc477; }
+[data-theme="dark"] .document-status-tab { border-color:#39546a; color:#aec1cf; background:#172d40; }
+[data-theme="dark"] .document-status-tab b { color:#aec1cf; background:#28465b; }
+[data-theme="dark"] .document-status-tab.active { border-color:#70b7ed; color:#e8f0f7; background:#1c4865; }
+[data-theme="dark"] .document-status-tab.active b { color:#09243b; background:#8bc8f2; }
+[data-theme="dark"] .document-manager-list { border-color:#39546a; }
+[data-theme="dark"] .document-manager-row { border-color:#2a4053; }
+[data-theme="dark"] .document-manager-main small { color:#8faaba; }
+[data-theme="dark"] .document-manager-main p { color:#b7c9d5; }
+[data-theme="dark"] .document-manager-empty { color:#aec1cf; }
+[data-theme="dark"] .document-manager .doc-type { background:#21445e; color:#8cc8f4; }
+[data-theme="dark"] .document-manager .doc-badge.issued { color:#77dbb0; background:#194a42; }
+[data-theme="dark"] .document-manager .doc-badge.pending { color:#ffc477; background:#513b27; }
