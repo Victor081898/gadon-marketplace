@@ -1292,3 +1292,15 @@ textarea:focus-visible { outline:3px solid rgba(112,183,237,.45); outline-offset
   .register-reference-card::after { display:none; }
   .register-reference-divider-mobile-svg path.register-reference-divider-mobile-mask { fill:#080e17; stroke:none!important; filter:none!important; }
 }
+
+/* Cabeçalho de autenticação mobile: melhora a leitura da logo sobre a fotografia. */
+@media (max-width:780px) {
+  .register-reference-header { padding:6px 8px; border:1px solid rgba(255,255,255,.12); border-radius:19px; background:linear-gradient(90deg,rgba(3,12,22,.9),rgba(3,12,22,.68)); box-shadow:0 8px 20px rgba(0,0,0,.2); backdrop-filter:blur(3px); }
+  .register-reference-brand { width:185px; height:84px; padding:4px; border-radius:15px; background-color:rgba(2,12,23,.72); filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)); }
+  .register-reference-header nav .register-reference-nav:last-child { min-height:36px; padding:8px 13px; border:1px solid rgba(30,155,255,.55); border-radius:999px; color:#eaf7ff!important; background:rgba(3,22,39,.86); box-shadow:0 4px 12px rgba(0,0,0,.24); font-size:14px; font-weight:800; text-shadow:0 1px 4px rgba(0,0,0,.8); }
+}
+
+@media (max-width:420px) {
+  .register-reference-brand { width:175px; height:78px; }
+  .register-reference-header nav .register-reference-nav:last-child { min-height:34px; padding:7px 11px; font-size:13px; }
+}

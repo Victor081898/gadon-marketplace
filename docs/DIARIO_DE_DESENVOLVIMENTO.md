@@ -576,3 +576,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; verificar o contorno da máscara e o selo de gado em login e criação de conta mobile.
 - O que falta: Victor validar a ausência de vazamentos em aparelhos reais e diferentes alturas; `@ricardopablo1914-create` testar a regressão visual dos dois fluxos de autenticação; `@ecossystem2` acompanhar futuras integrações de autenticação.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão mobile.
+
+### 2026-07-29 — Legibilidade da logo e do botão Entrar no login mobile
+- Responsável: IA: Codex
+- Objetivo: melhorar a visualização dos elementos do cabeçalho da autenticação sobre a foto de gado em telas pequenas.
+- Alterações: criada uma faixa escura translúcida com leve desfoque atrás do cabeçalho, aumentada a área útil da logo GadOn com sombra e fundo de proteção, e transformado o texto `Entrar` em uma ação azul com borda, preenchimento e sombra de alto contraste.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação responsiva da autenticação; sem alteração em login, cadastro, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; verificar o cabeçalho de login e criação de conta em diferentes larguras mobile.
+- O que falta: Victor validar a leitura em aparelho real sobre diferentes recortes da foto; `@ricardopablo1914-create` testar foco, toque no botão `Entrar` e regressão dos dois fluxos de autenticação; `@ecossystem2` acompanhar futuras integrações de autenticação.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de autenticação mobile.
