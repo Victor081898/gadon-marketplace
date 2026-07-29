@@ -526,3 +526,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; confirmar a aplicação em `http://127.0.0.1:5173/` e revisar cada rota nos dois temas em viewport desktop e mobile.
 - O que falta: Victor validar a leitura final em aparelho real e monitor; `@ricardopablo1914-create` testar regressão visual das rotas, foco, campos, tabelas, modais e estados vazios nos dois temas; `@ecossystem2` acompanhar eventuais impactos de integração.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de tema e acessibilidade; `@ecossystem2` avalia impactos de integração.
+
+### 2026-07-29 — Conversas mobile e rolagem das tabelas de frete
+- Responsável: IA: Codex
+- Objetivo: melhorar a usabilidade da aba Conversas em telas pequenas e remover indicadores visuais de rolagem nas tabelas de distância e rotas contratadas.
+- Alterações: a tela mobile de mensagens recebeu hierarquia de cabeçalho, lista de conversas com maior área de toque, avatares destacados, busca arredondada, chat separado, balões compactos e compositor circular para anexos, áudio e envio. A lista e o histórico de mensagens continuam navegáveis por toque, porém sem barra vertical visível. `Tabela de Distância` passou a ocultar a barra horizontal mantendo a navegação por gesto; `Rotas contratadas` passou a ocultar as barras horizontal e vertical no modal e na tabela, sem remover o acesso aos registros.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação, interação por toque e rolagem do front-end; sem alteração em APIs, mensagens, fretes, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; revisar a aba de mensagens, a Tabela de Distância e Rotas contratadas em viewport mobile nos temas claro e escuro.
+- O que falta: Victor validar a experiência em aparelho real e confirmar a semelhança visual desejada com mensageiros; `@ricardopablo1914-create` testar seleção de conversas, busca, anexos, áudio, gestos de rolagem e tabelas longas; `@ecossystem2` acompanhar eventuais necessidades de persistência ou contratos para mensagens.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão mobile; `@ecossystem2` avalia impactos de integração caso a navegação evolua para dados remotos.
