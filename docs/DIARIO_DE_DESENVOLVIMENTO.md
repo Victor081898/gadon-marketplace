@@ -476,3 +476,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática das cores do seletor no tema escuro.
 - O que falta: Victor validar a leitura no aparelho real e em diferentes navegadores mobile; `@ricardopablo1914-create` testar foco, abertura das opções e contraste no modo escuro.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de tema e filtros.
+
+### 2026-07-28 — Menu sem barra visível e cards de frete compactos
+- Responsável: IA: Codex
+- Objetivo: melhorar a navegação mobile e reduzir o espaço ocupado pela área de Operação de Frete, mantendo legibilidade no modo escuro.
+- Alterações: a barra visual de rolagem do menu hamburguer foi ocultada sem remover a rolagem; as seções Buscar gado, Meus anúncios, Mensagens, Fretes, Fretes de retorno, Favoritos e Meu perfil permanecem ligadas às mesmas navegações e ações da versão desktop. Os cards de estatísticas e módulos de frete foram compactados, passando os módulos para duas colunas em telas estreitas, com superfícies, bordas e textos próprios para o tema escuro.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente navegação local, apresentação responsiva e contraste do front-end; sem alteração em APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática dos itens do menu, barra de rolagem oculta, grade mobile e cores do modo escuro.
+- O que falta: Victor validar a densidade dos cards e o menu em aparelho real; `@ricardopablo1914-create` testar as sete rotas do menu, o foco do drawer e os dois temas.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão das rotas mobile e dos cards de frete.

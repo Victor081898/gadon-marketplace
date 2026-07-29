@@ -802,3 +802,32 @@ button { cursor:pointer; }
 /* Keep native sorting controls legible when the dark theme is active. */
 [data-theme="dark"] .sort-select { color:#e8f0f7; background:#132536; border-color:#45647b; color-scheme:dark; font-weight:700; }
 [data-theme="dark"] .sort-select option { color:#e8f0f7; background:#132536; }
+
+/* Freight cards need their own dark-theme surface and compact mobile layout. */
+[data-theme="dark"] .freight-stats > div,
+[data-theme="dark"] .freight-module-card,
+[data-theme="dark"] .report-grid > div { color:#e8f0f7; background:#132536; border-color:#39546a; }
+[data-theme="dark"] .freight-module-card b,
+[data-theme="dark"] .freight-stats b,
+[data-theme="dark"] .report-grid b { color:#e8f0f7; }
+[data-theme="dark"] .freight-module-card small,
+[data-theme="dark"] .freight-stats small,
+[data-theme="dark"] .report-grid span,
+[data-theme="dark"] .report-grid small { color:#a9bdcb; }
+
+@media (max-width:720px) {
+  .mobile-drawer { scrollbar-width:none; -ms-overflow-style:none; }
+  .mobile-drawer::-webkit-scrollbar { width:0; height:0; display:none; }
+  .freight-stats > div { min-height:66px; padding:10px 9px; }
+  .freight-module-card { min-height:74px; padding:10px 9px; }
+  .freight-module-card b { line-height:1.2; }
+  .freight-module-card small { line-height:1.25; }
+}
+
+@media (max-width:560px) {
+  .freight-modules { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .freight-module-card { min-height:82px; align-items:flex-start; padding:10px 9px; }
+  .freight-module-card .module-icon { width:30px; height:30px; }
+  .freight-module-card b { font-size:8px; }
+  .freight-module-card small { font-size:7px; }
+}
