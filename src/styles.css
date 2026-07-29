@@ -1194,3 +1194,24 @@ textarea:focus-visible { outline:3px solid rgba(112,183,237,.45); outline-offset
   [data-theme="dark"] .chat-messages { background:radial-gradient(circle at 15% 15%,rgba(112,183,237,.08),transparent 24%),#0d1c2a; }
   [data-theme="dark"] .chat-actions button:first-child { background:#21445e; }
 }
+
+/* Visão consolidada da Agenda de Viagens: reforço de contraste no tema noturno. */
+[data-theme="dark"] .all-trips-panel { background:#132536; border-color:#39546a; color:#e8f0f7; }
+[data-theme="dark"] .all-trips-heading h3,
+[data-theme="dark"] .trip-analysis b,
+[data-theme="dark"] .all-trip-route strong { color:#f4f8fb; }
+[data-theme="dark"] .all-trips-heading p:not(.eyebrow),
+[data-theme="dark"] .trip-analysis small,
+[data-theme="dark"] .all-trip-route span,
+[data-theme="dark"] .all-trips-empty { color:#b8cbd7; }
+[data-theme="dark"] .trip-analysis > div { background:#172d40; border-color:#39546a; }
+[data-theme="dark"] .all-trips-list,
+[data-theme="dark"] .all-trip-row { border-color:#2a4053; }
+[data-theme="dark"] .all-trips-panel .panel-status { color:#ffc477; background:#513b27; }
+
+@media (max-width:720px) {
+  /* A agenda continua rolável por gesto, sem exibir a barra vertical. */
+  .calendar-dialog { overflow-x:hidden; overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; }
+  .calendar-dialog::-webkit-scrollbar { width:0; height:0; display:none; }
+  [data-theme="dark"] .all-trips-panel { background:#132536; }
+}

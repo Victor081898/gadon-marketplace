@@ -536,3 +536,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; revisar a aba de mensagens, a Tabela de Distância e Rotas contratadas em viewport mobile nos temas claro e escuro.
 - O que falta: Victor validar a experiência em aparelho real e confirmar a semelhança visual desejada com mensageiros; `@ricardopablo1914-create` testar seleção de conversas, busca, anexos, áudio, gestos de rolagem e tabelas longas; `@ecossystem2` acompanhar eventuais necessidades de persistência ou contratos para mensagens.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão mobile; `@ecossystem2` avalia impactos de integração caso a navegação evolua para dados remotos.
+
+### 2026-07-29 — Contraste da visão consolidada e rolagem da agenda mobile
+- Responsável: IA: Codex
+- Objetivo: tornar a seção `Visão consolidada` legível no modo noturno e ocultar a barra vertical da `Agenda de viagens` em telas mobile.
+- Alterações: o painel de todas as viagens recebeu superfícies escuras, bordas, títulos, métricas, descrições, rotas e status com contraste reforçado. O diálogo da agenda passou a manter `overflow-y: auto` para navegação por toque, ocultando a barra vertical em navegadores WebKit, Firefox e Edge legado.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação, contraste e rolagem do front-end; sem alteração em APIs, viagens, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; verificar a agenda e a visão consolidada em viewport mobile nos temas claro e escuro.
+- O que falta: Victor validar a leitura final em aparelho real; `@ricardopablo1914-create` testar calendário, lista consolidada, gesto de rolagem e alternância de tema; `@ecossystem2` acompanhar eventuais necessidades de persistência caso o painel passe a consumir dados remotos.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão mobile; `@ecossystem2` avalia impactos de integração se necessário.
