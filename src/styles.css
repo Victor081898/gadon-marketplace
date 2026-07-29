@@ -1285,3 +1285,10 @@ textarea:focus-visible { outline:3px solid rgba(112,183,237,.45); outline-offset
   .register-reference-card::before { clip-path:polygon(0 0,100% 0,100% 94%,92% 94%,83% 96%,74% 99%,66% 98%,58% 94%,50% 91%,43% 87%,35% 83%,27% 78%,19% 73%,10% 70%,0 58%); }
   .register-reference-card::after { clip-path:polygon(0 58%,10% 70%,19% 73%,27% 78%,35% 83%,43% 87%,50% 91%,58% 94%,66% 98%,74% 99%,83% 96%,92% 94%,100% 94%,100% 100%,0 100%); }
 }
+
+/* A máscara inferior agora usa o mesmo caminho Bézier da linha, eliminando folgas entre os contornos. */
+@media (max-width:780px) {
+  .register-reference-card::before { clip-path:inset(0); }
+  .register-reference-card::after { display:none; }
+  .register-reference-divider-mobile-svg path.register-reference-divider-mobile-mask { fill:#080e17; stroke:none!important; filter:none!important; }
+}

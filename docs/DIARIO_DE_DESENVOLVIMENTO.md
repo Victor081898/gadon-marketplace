@@ -566,3 +566,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; verificar login e criação de conta em viewport mobile, incluindo título, linha, foto e bordas do cartão.
 - O que falta: Victor validar a posição final em aparelhos com diferentes alturas; `@ricardopablo1914-create` testar login, criação de conta e regressão visual em larguras estreitas; `@ecossystem2` acompanhar eventuais integrações futuras de autenticação.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão dos dois fluxos de autenticação.
+
+### 2026-07-29 — Máscara SVG alinhada à divisória do cadastro mobile
+- Responsável: IA: Codex
+- Objetivo: eliminar os vazamentos residuais entre a foto do gado, o fundo escuro e a linha tracejada laranja.
+- Alterações: adicionada uma forma SVG preenchida para a máscara inferior, reutilizando exatamente o mesmo caminho Bézier da divisória mobile. O recorte aproximado foi substituído por uma camada inferior sincronizada com o traçado; a foto permanece limitada ao cartão e o preenchimento escuro cobre toda a área abaixo da curva.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente composição visual responsiva do front-end; sem alteração em autenticação, eventos, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; verificar o contorno da máscara e o selo de gado em login e criação de conta mobile.
+- O que falta: Victor validar a ausência de vazamentos em aparelhos reais e diferentes alturas; `@ricardopablo1914-create` testar a regressão visual dos dois fluxos de autenticação; `@ecossystem2` acompanhar futuras integrações de autenticação.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão mobile.
