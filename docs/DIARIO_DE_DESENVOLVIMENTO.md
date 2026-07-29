@@ -516,3 +516,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática da scrollbar invisível com rolagem vertical preservada.
 - O que falta: Victor validar o gesto de rolagem no aparelho real; `@ricardopablo1914-create` testar o histórico longo com toque e teclado virtual.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de rolagem mobile.
+
+### 2026-07-28 — Auditoria de contraste claro e escuro em todas as abas
+- Responsável: IA: Codex
+- Objetivo: garantir leitura consistente nas versões desktop e mobile, tanto no modo claro quanto no modo escuro.
+- Alterações: criada uma camada visual centralizada para corrigir superfícies, bordas, títulos, textos auxiliares, campos, seletores, estados vazios, tabelas, modais e controles das telas de pesquisa, mensagens, fretes, fretes de retorno, perfil, favoritos, anúncios, gestão de documentos, calendário, tabela completa de rotas e autenticação. Estados de sucesso, pendência, feriado e erro foram preservados com cores próprias; os controles nativos receberam `color-scheme` adequado e todos os campos ganharam foco visível.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação, acessibilidade visual e responsividade do front-end; sem alteração em APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; confirmar a aplicação em `http://127.0.0.1:5173/` e revisar cada rota nos dois temas em viewport desktop e mobile.
+- O que falta: Victor validar a leitura final em aparelho real e monitor; `@ricardopablo1914-create` testar regressão visual das rotas, foco, campos, tabelas, modais e estados vazios nos dois temas; `@ecossystem2` acompanhar eventuais impactos de integração.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de tema e acessibilidade; `@ecossystem2` avalia impactos de integração.
