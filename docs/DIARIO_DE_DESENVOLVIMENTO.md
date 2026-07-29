@@ -496,3 +496,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática dos estilos do painel no tema escuro.
 - O que falta: Victor validar a leitura do painel em aparelho real; `@ricardopablo1914-create` testar abas Todos, Emitidos e Pendentes, abertura do anexo e inclusão de documentos nos dois temas.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão da Gestão de Documentos.
+
+### 2026-07-28 — Rolagem horizontal oculta na Gestão de Documentos
+- Responsável: IA: Codex
+- Objetivo: remover a barra de rolagem lateral visível no painel mobile de Gestão de Documentos sem impedir a consulta vertical dos registros.
+- Alterações: o modal, o backdrop, a lista e as linhas de documentos passaram a limitar a largura e ocultar overflow horizontal em telas de até 720px, mantendo apenas a rolagem vertical do histórico.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente comportamento visual e rolagem do front-end; sem alteração em APIs, autenticação, documentos ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática de overflow horizontal oculto.
+- O que falta: Victor validar a navegação vertical do histórico em aparelho real; `@ricardopablo1914-create` testar documentos longos e diferentes larguras mobile.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de rolagem.

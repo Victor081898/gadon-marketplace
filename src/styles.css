@@ -857,3 +857,9 @@ button { cursor:pointer; }
 [data-theme="dark"] .document-manager .doc-type { background:#21445e; color:#8cc8f4; }
 [data-theme="dark"] .document-manager .doc-badge.issued { color:#77dbb0; background:#194a42; }
 [data-theme="dark"] .document-manager .doc-badge.pending { color:#ffc477; background:#513b27; }
+
+@media (max-width:720px) {
+  .document-manager-backdrop { overflow-x:hidden; }
+  .document-manager { min-width:0; overflow-x:hidden; overflow-y:auto; }
+  .document-manager-list,.document-manager-row,.document-manager-main { min-width:0; max-width:100%; }
+}
