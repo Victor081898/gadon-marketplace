@@ -1268,3 +1268,20 @@ textarea:focus-visible { outline:3px solid rgba(112,183,237,.45); outline-offset
   .register-reference-divider { top:clamp(190px,50vw,245px); }
   .register-reference-divider .register-reference-cow-badge { width:58px; height:58px; }
 }
+
+/* Refinamento da divisória mobile: a curva sobe e os dois lados recebem máscaras complementares. */
+@media (max-width:780px) {
+  .register-reference-card::before { bottom:auto; width:100%; height:clamp(270px,74vw,400px); clip-path:polygon(0 0,100% 0,100% 74%,92% 74%,83% 71%,74% 66%,66% 60%,58% 54%,50% 48%,43% 42%,35% 36%,27% 31%,19% 25%,10% 19%,0 12%); }
+  .register-reference-card::after { content:''; position:absolute; z-index:2; inset:0; background:#080e17; pointer-events:none; clip-path:polygon(0 12%,10% 19%,19% 25%,27% 31%,35% 36%,43% 42%,50% 48%,58% 54%,66% 60%,74% 66%,83% 71%,92% 74%,100% 74%,100% 100%,0 100%); }
+  .register-reference-divider { top:clamp(145px,38vw,220px); height:clamp(150px,42vw,220px); }
+}
+
+@media (max-width:420px) {
+  .register-reference-card::before { height:clamp(250px,70vw,340px); }
+  .register-reference-divider { top:clamp(135px,36vw,190px); height:clamp(145px,40vw,190px); }
+}
+
+@media (max-width:780px) {
+  .register-reference-card::before { clip-path:polygon(0 0,100% 0,100% 94%,92% 94%,83% 96%,74% 99%,66% 98%,58% 94%,50% 91%,43% 87%,35% 83%,27% 78%,19% 73%,10% 70%,0 58%); }
+  .register-reference-card::after { clip-path:polygon(0 58%,10% 70%,19% 73%,27% 78%,35% 83%,43% 87%,50% 91%,58% 94%,66% 98%,74% 99%,83% 96%,92% 94%,100% 94%,100% 100%,0 100%); }
+}

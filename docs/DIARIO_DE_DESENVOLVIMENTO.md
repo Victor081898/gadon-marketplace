@@ -556,3 +556,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; revisar a tela de criação de conta em viewport mobile, incluindo foco dos campos, termos, Google e envio do formulário.
 - O que falta: Victor validar o enquadramento da foto e a posição da curva em aparelho real; `@ricardopablo1914-create` testar cadastro, senha, termos, Google, retorno ao login e diferentes larguras; `@ecossystem2` acompanhar eventuais necessidades futuras de integração de autenticação.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão do cadastro mobile; `@ecossystem2` avalia impactos de integração quando o cadastro real for conectado.
+
+### 2026-07-29 — Refinamento da divisória curva no cadastro mobile
+- Responsável: IA: Codex
+- Objetivo: afastar a linha tracejada laranja do título do formulário e impedir vazamentos entre a área da foto e o painel escuro.
+- Alterações: a divisória mobile foi reposicionada para cima sem mover o conteúdo do cadastro. A máscara da foto foi alinhada ao novo caminho curvo e foi criada uma máscara complementar escura sobre a área inferior do cartão; ambas seguem a mesma geometria aproximada do traçado SVG. O selo de gado continua sobreposto à linha.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente composição visual responsiva do front-end; sem alteração em autenticação, eventos, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build` concluído; `git diff --check` concluído; verificar login e criação de conta em viewport mobile, incluindo título, linha, foto e bordas do cartão.
+- O que falta: Victor validar a posição final em aparelhos com diferentes alturas; `@ricardopablo1914-create` testar login, criação de conta e regressão visual em larguras estreitas; `@ecossystem2` acompanhar eventuais integrações futuras de autenticação.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão dos dois fluxos de autenticação.
