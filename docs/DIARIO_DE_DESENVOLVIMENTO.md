@@ -466,3 +466,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática do drawer, navegação, modo escuro, alvos de toque e animação logística.
 - O que falta: Victor validar a abertura/fechamento do drawer e a densidade dos CTAs em aparelho real; `@ricardopablo1914-create` testar navegação mobile, logout, alternância de tema, foco e acessibilidade do menu.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão dos fluxos mobile.
+
+### 2026-07-28 — Contraste do seletor no modo escuro mobile
+- Responsável: IA: Codex
+- Objetivo: corrigir a baixa legibilidade do botão de ordenação `Mais relevantes` quando o modo escuro está ativo em telas pequenas.
+- Alterações: o seletor `.sort-select` passou a usar fundo azul-escuro, borda contrastante, texto claro e esquema de cores escuro também nas opções nativas do navegador, mantendo a integração visual com o botão de filtros.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente contraste e apresentação responsiva do front-end; sem alteração em APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check`, teste HTTP e verificação estática das cores do seletor no tema escuro.
+- O que falta: Victor validar a leitura no aparelho real e em diferentes navegadores mobile; `@ricardopablo1914-create` testar foco, abertura das opções e contraste no modo escuro.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de tema e filtros.

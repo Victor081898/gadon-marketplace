@@ -798,3 +798,7 @@ button { cursor:pointer; }
   .logistics-opportunity-button { width:100%; justify-content:center; }
   .lot-actions .select-lot-button,.lot-actions .view-button { min-height:42px; padding:10px 6px; font-size:9px; }
 }
+
+/* Keep native sorting controls legible when the dark theme is active. */
+[data-theme="dark"] .sort-select { color:#e8f0f7; background:#132536; border-color:#45647b; color-scheme:dark; font-weight:700; }
+[data-theme="dark"] .sort-select option { color:#e8f0f7; background:#132536; }
