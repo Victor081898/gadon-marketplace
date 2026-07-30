@@ -586,3 +586,63 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; verificar o cabeçalho de login e criação de conta em diferentes larguras mobile.
 - O que falta: Victor validar a leitura em aparelho real sobre diferentes recortes da foto; `@ricardopablo1914-create` testar foco, toque no botão `Entrar` e regressão dos dois fluxos de autenticação; `@ecossystem2` acompanhar futuras integrações de autenticação.
 - Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de autenticação mobile.
+
+### 2026-07-29 — CTAs laranja na operação de frete
+- Responsável: IA: Codex
+- Objetivo: alinhar os botões `Cotar frete` e `Ver oportunidades` ao padrão visual dos demais CTAs do sistema.
+- Alterações: os dois botões passaram a reutilizar a classe `primary-button`, com fundo laranja, texto branco, cantos arredondados, sombra e estados de interação consistentes; a animação do botão `Ver oportunidades` foi preservada.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e navegação local do front-end; sem alteração em APIs, fretes, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check` e revisar estaticamente as classes dos dois CTAs.
+- O que falta: Victor validar a hierarquia visual dos CTAs em desktop e mobile; `@ricardopablo1914-create` testar foco, toque, animação e navegação dos botões; `@ecossystem2` acompanhar futuras integrações de cotação e oportunidades.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão dos CTAs.
+
+### 2026-07-29 — Ajuste de escala do CTA de oportunidades
+- Responsável: IA: Codex
+- Objetivo: reduzir discretamente o tamanho do botão `Ver oportunidades` sem perder destaque no card de inteligência logística.
+- Alterações: reduzidos padding, altura mínima, raio e tamanho da fonte do CTA em desktop e mobile; a cor laranja, o contraste e as animações de pulso/brilho foram mantidos.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação responsiva do front-end; sem alteração em APIs, fretes, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check` e revisar o CTA em desktop e mobile.
+- O que falta: Victor validar a proporção final do botão no card; `@ricardopablo1914-create` testar foco, toque, animação e navegação; `@ecossystem2` acompanhar futuras integrações de oportunidades.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão do CTA.
+
+### 2026-07-29 — Simplificação do card de inteligência logística
+- Responsável: IA: Codex
+- Objetivo: remover a indicação visual `GO — MT` que poluía o card `Inteligência logística`.
+- Alterações: retirado o elemento decorativo da rota no card, preservando o título, a descrição, o CTA laranja e a navegação para fretes de retorno.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação do front-end; sem alteração em APIs, fretes, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check` e revisar estaticamente a ausência do texto `GO`/`MT` no card.
+- O que falta: Victor validar o equilíbrio visual do card após a remoção; `@ricardopablo1914-create` testar a navegação do CTA; `@ecossystem2` acompanhar futuras integrações de rotas.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão do card.
+
+### 2026-07-30 — Perfil vendedor e comprovação da propriedade
+- Responsável: IA: Codex
+- Objetivo: permitir que o perfil comprador acesse um modo vendedor com dados comerciais, identificação da fazenda e documentação de suporte para publicar gado.
+- Alterações: adicionado o acesso `Abrir perfil vendedor` dentro do perfil comprador; criada a tela de perfil vendedor com dados do produtor, CPF/CNPJ, contato comercial, fazenda, município, UF, registro da propriedade, inscrição estadual, situação de vacinação, rastreabilidade e upload de comprovantes de vacinação e documentos da propriedade. O modo vendedor também oferece `Cadastrar gado completo`, reutilizando o formulário de lote com raça, quantidade, sexo, idade, peso, preço, origem, sanidade, fotos e documentos.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: a interface armazena somente estado demonstrativo e nomes de arquivos no `localStorage`; a validação de identidade, armazenamento seguro dos documentos, análise jurídica e publicação dependem de autenticação, API e persistência de back-end.
+- Validação: `npm run build` concluído; `git diff --check` concluído; verificar navegação comprador → vendedor, salvamento local, anexos, modo escuro e acesso ao cadastro completo em mobile e desktop.
+- O que falta: `@ecossystem2` definir contrato de vendedor, verificação de CPF/CNPJ, propriedade e armazenamento de documentos; `@ricardopablo1914-create` testar upload, validação, retorno ao perfil comprador e regressão responsiva; Victor validar a experiência visual e os textos jurídicos com especialista antes de produção.
+- Próximo responsável: Victor valida a experiência do perfil; `@ecossystem2` estrutura a integração de identidade/documentos; `@ricardopablo1914-create` automatiza os fluxos de perfil e cadastro.
+
+### 2026-07-30 — Atalho do perfil na barra lateral desktop
+- Responsável: IA: Codex
+- Objetivo: permitir que o usuário abra o painel de perfil ao clicar no bloco com avatar, nome e seta na barra lateral desktop.
+- Alterações: adicionada delegação de clique para os blocos `profile-mini` que ainda eram elementos visuais, com cursor e estado de hover; o clique agora navega para `Meu perfil` sem interferir no botão de perfil já existente nas telas de conta.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente navegação local e apresentação do front-end; sem alteração em autenticação, APIs, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check` e testar o clique no avatar, nome e seta em desktop.
+- O que falta: Victor validar a navegação nas telas desktop; `@ricardopablo1914-create` testar a regressão do atalho e do menu mobile; `@ecossystem2` acompanhar futuras integrações de perfil.
+- Próximo responsável: Victor valida a experiência visual; `@ricardopablo1914-create` automatiza a regressão de navegação.
+
+### 2026-07-30 — Alternância comprador/vendedor e simulação de frete na compra
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: permitir que a mesma conta alterne entre comprador e vendedor, reaproveite os dados cadastrais já informados e tenha fluxos essenciais de venda e compra também no mobile.
+- Alterações: criado o modo persistente comprador/vendedor no `localStorage`, com botão de alternância disponível no desktop e no menu mobile. O cadastro vendedor passa a pré-preencher nome, e-mail e telefone do perfil comprador. Criado o painel vendedor com navegação própria para painel, produtos, anúncio de gado, promoções e perfil comercial; o cadastro completo de lote continua disponível com fotos, sanidade e documentos. No fluxo comprador, `Comprar / solicitar proposta`, `Solicitar compra` e a seleção de favoritos agora abrem uma simulação de frete com origem, destino, distância estimada, valor de referência e aviso de que a cotação final depende da transportadora.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: o protótipo mantém modo, perfil vendedor e nomes de anexos no `localStorage`; o cálculo de frete é demonstrativo. Criar task para `@ecossystem2` definir autenticação/autorização de papéis, contrato de perfil vendedor, upload seguro de documentos, catálogo/promoções e endpoint de simulação/cotação com origem, destino, quantidade, distância e preço. Criar task de apoio para `@ricardopablo1914-create` com testes de alternância, persistência, regressão mobile, validação de campos e cenários de compra com cotação.
+- Validação: `npm run build` concluído; `git diff --check` concluído; página local respondeu em `http://127.0.0.1:5173/`; fluxo desktop testado até a estimativa e continuidade para Mensagens; viewport mobile testado com menu, ativação do perfil vendedor e retorno ao comprador.
+- O que falta: backend deve substituir o `localStorage`, validar documentos e calcular o frete com dados reais de rotas/transportadoras; promoções ainda exibem uma confirmação de protótipo; Victor deve validar os textos comerciais e requisitos jurídicos; Pablo deve automatizar os testes de API e integração quando o contrato estiver definido.
+- Próximo responsável: `@ecossystem2` (`back-end`) especifica os contratos e persistência; `@ricardopablo1914-create` (`automação`, `testes`) cria a matriz de regressão; Victor revisa a experiência comprador/vendedor em dispositivos reais.
