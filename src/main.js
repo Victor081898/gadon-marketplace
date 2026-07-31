@@ -622,10 +622,14 @@ function mountDesktopAccountTools() {
     nav.insertAdjacentHTML('beforeend', `<button class="nav-item theme-nav-item" data-action="desktop-theme">${icon(state.darkMode ? 'sun' : 'moon')}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span></button>`);
     nav.querySelector('.theme-nav-item')?.addEventListener('click', () => toggleTheme());
   }
+  if (!nav.querySelector('.logout-nav-item')) {
+    nav.insertAdjacentHTML('beforeend', `<button class="nav-item logout-nav-item" data-action="logout">${icon('logout')}<span>Sair da conta</span></button>`);
+    nav.querySelector('.logout-nav-item')?.addEventListener('click', logout);
+  }
 }
 
 function accountShellTemplate(activePage, crumb, content) {
-  return `<div class="app-shell account-shell">${accountSidebarTemplateV2(activePage)}<main class="main-content">${accountTopbarTemplateV2(crumb)}${content}</main></div><button type="button" class="account-logout-button" data-action="logout">${icon('logout', 15)} Sair da conta</button>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
+  return `<div class="app-shell account-shell">${accountSidebarTemplateV2(activePage)}<main class="main-content">${accountTopbarTemplateV2(crumb)}${content}</main></div>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
 function profileTemplate() {
@@ -662,7 +666,7 @@ function bindAccountNavigation() {
   document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = page; } render(); }));
   document.querySelectorAll('[data-profile-mode]').forEach((el) => el.addEventListener('click', () => switchProfileMode(el.dataset.profileMode)));
   document.querySelectorAll('[data-action="desktop-theme"]').forEach((el) => el.addEventListener('click', () => toggleTheme()));
-  document.querySelectorAll('[data-action="logout"]').forEach((el) => el.addEventListener('click', logout));
+  document.querySelectorAll('[data-action="logout"]:not(.logout-nav-item)').forEach((el) => el.addEventListener('click', logout));
   document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', openCattleRegistration));
   bindNotificationEvents();
 }

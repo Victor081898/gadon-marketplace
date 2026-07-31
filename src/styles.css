@@ -49,6 +49,7 @@ button { cursor:pointer; }
 @media (max-width:780px) { .announcement-record-photo-gallery > div { grid-template-columns:repeat(2,1fr); } }
 @keyframes pulse-recording { 50% { box-shadow:0 0 0 4px rgba(231,91,75,.18); } }
 
+.logout-nav-item { color:#e8a79b; }.logout-nav-item svg { color:#d98375; }.logout-nav-item:hover { color:#fff; background:rgba(217,131,117,.16); }
 @media (max-width:780px) { .seller-product-actions { grid-column:2; display:flex; flex-wrap:wrap; gap:6px; }.seller-product-actions .secondary-button { width:auto; padding:8px 9px; } }
 
 .hero-art { background:#29455d url('/home-hero-nelore.png') center/cover no-repeat; }

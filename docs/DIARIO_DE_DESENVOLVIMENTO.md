@@ -736,3 +736,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check` e verificar a renderização do card e do detalhe em desktop/mobile.
 - O que falta: Victor validar o enquadramento visual da foto em diferentes tamanhos de card; `@ricardopablo1914-create` pode adicionar uma verificação de regressão do asset local.
 - Próximo responsável: Victor valida a apresentação comercial; Pablo acompanha a regressão visual quando a suíte estiver disponível.
+
+### 2026-07-31 — Logout na seção Conta da barra lateral desktop
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: facilitar a saída da conta colocando o controle no grupo `CONTA`, logo abaixo do botão de modo claro/escuro, conforme o layout de referência.
+- Alterações: removido o botão flutuante de logout das telas de conta e incluído `Sair da conta` como item da barra lateral desktop, imediatamente após `Modo claro`/`Modo escuro`. O logout do menu mobile foi preservado.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente navegação e apresentação local do front-end; não houve alteração de autenticação remota ou APIs. Não é necessária task de back-end para esta mudança.
+- Validação: executar `npm run build`, `git diff --check` e revisar a posição e o clique do logout no desktop e no menu mobile.
+- O que falta: Victor validar a posição visual em diferentes resoluções; `@ricardopablo1914-create` automatizar o logout e a regressão da navegação por conta.
+- Próximo responsável: Victor valida a experiência; `@ricardopablo1914-create` cobre a regressão de logout.
