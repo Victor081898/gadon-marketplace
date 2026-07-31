@@ -127,6 +127,7 @@ const loadAuth = () => { try { return localStorage.getItem(authStorageKey) === '
 const saveAuth = (authenticated) => { try { localStorage.setItem(authStorageKey, authenticated ? 'true' : 'false'); } catch { /* sessão local indisponível */ } };
 const loadDarkMode = () => { try { return localStorage.getItem(themeStorageKey) === 'dark'; } catch { return false; } };
 const saveDarkMode = (enabled) => { try { localStorage.setItem(themeStorageKey, enabled ? 'dark' : 'light'); } catch { /* preferência local indisponível */ } };
+const toggleTheme = (keepMobileMenuOpen = false) => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); if (keepMobileMenuOpen) state.mobileMenuOpen = true; applyTheme(); render(); };
 const notificationStorageKey = 'gadon.notifications.v1';
 const defaultNotifications = () => ([
   { id: 1, type: 'message', title: 'Nova mensagem', source: 'Fazenda Santa Rita', body: 'Você recebeu uma nova mensagem sobre o lote Nelore selecionado.', time: '14:20', unread: true },
@@ -448,7 +449,7 @@ function mountMobileMenu() {
   document.querySelectorAll('.mobile-drawer [data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const item = el.dataset.nav; state.activeNav = item; state.page = item === 'Mensagens' ? 'messages' : item === 'Fretes' ? 'freight' : item === 'Fretes de retorno' ? 'returnFreight' : item === 'Buscar gado' ? 'search' : item === 'Meus anúncios' ? 'announcements' : item === 'Meus produtos' || item === 'Painel vendedor' || item === 'Promoções' ? 'sellerMarketplace' : item === 'Anunciar gado' ? 'register' : 'home'; if (item === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } state.mobileMenuOpen = false; render(); }));
   document.querySelectorAll('.mobile-drawer [data-account-page]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; } state.collectionView = 'all'; state.modalLot = null; state.mobileMenuOpen = false; state.page = page; render(); }));
   document.querySelectorAll('.mobile-drawer [data-profile-mode]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); switchProfileMode(el.dataset.profileMode); }));
-  document.querySelectorAll('[data-action="mobile-theme"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); state.mobileMenuOpen = true; applyTheme(); render(); }));
+  document.querySelectorAll('[data-action="mobile-theme"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); toggleTheme(true); }));
   document.querySelectorAll('.mobile-drawer [data-action="logout"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); logout(); }));
 }
 
@@ -490,7 +491,7 @@ function mountDesktopAccountTools() {
   }
   if (!nav.querySelector('.theme-nav-item')) {
     nav.insertAdjacentHTML('beforeend', `<button class="nav-item theme-nav-item" data-action="desktop-theme">${icon(state.darkMode ? 'sun' : 'moon')}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span></button>`);
-    nav.querySelector('.theme-nav-item')?.addEventListener('click', () => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); render(); });
+    nav.querySelector('.theme-nav-item')?.addEventListener('click', () => toggleTheme());
   }
 }
 
@@ -531,7 +532,7 @@ function bindAccountNavigation() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { const item = el.dataset.nav; state.activeNav = item; if (item === 'Mensagens') state.page = 'messages'; else if (item === 'Fretes') state.page = 'freight'; else if (item === 'Fretes de retorno') state.page = 'returnFreight'; else if (item === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else if (item === 'Meus anúncios' || item === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements'; else if (item === 'Anunciar gado') state.page = 'register'; else if (item === 'Perfil vendedor') state.page = 'sellerProfile'; else if (item === 'Promoções') { state.page = 'sellerMarketplace'; state.toast = 'A área de promoções está pronta para receber suas campanhas.'; } else if (item === 'Painel vendedor') state.page = 'sellerMarketplace'; else state.page = 'home'; render(); }));
   document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; } else if (page === 'profile' && state.mode === 'seller') { switchProfileMode('buyer'); return; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = page; } render(); }));
   document.querySelectorAll('[data-profile-mode]').forEach((el) => el.addEventListener('click', () => switchProfileMode(el.dataset.profileMode)));
-  document.querySelectorAll('[data-action="desktop-theme"]').forEach((el) => el.addEventListener('click', () => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); render(); }));
+  document.querySelectorAll('[data-action="desktop-theme"]').forEach((el) => el.addEventListener('click', () => toggleTheme()));
   document.querySelectorAll('[data-action="logout"]').forEach((el) => el.addEventListener('click', logout));
   document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
   bindNotificationEvents();
@@ -577,11 +578,6 @@ function destroyReturnMap() {
 
 function applyTheme() {
   document.documentElement.dataset.theme = state.darkMode ? 'dark' : 'light';
-  const toggle = document.querySelector('#theme-toggle');
-  if (!toggle) return;
-  toggle.innerHTML = `${icon(state.darkMode ? 'sun' : 'moon', 16)}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span>`;
-  toggle.setAttribute('aria-label', state.darkMode ? 'Ativar modo claro' : 'Ativar modo escuro');
-  toggle.setAttribute('aria-pressed', String(state.darkMode));
 }
 
 function render() {
@@ -1256,6 +1252,5 @@ document.addEventListener('click', (event) => {
   render();
 });
 
-document.querySelector('#theme-toggle')?.addEventListener('click', () => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); applyTheme(); });
 applyTheme();
 render();

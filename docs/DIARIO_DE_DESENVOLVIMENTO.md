@@ -656,3 +656,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; desktop validado com `CONTA → Meu perfil → Perfil vendedor → Modo claro`; menu mobile validado com a mesma ordem e troca de perfil funcional.
 - O que falta: Victor validar espaçamento e legibilidade em diferentes resoluções; `@ricardopablo1914-create` testar regressão dos cliques de perfil, tema, menu mobile e logout; `@ecossystem2` apenas acompanhar possíveis mudanças futuras no contrato de permissões de perfil.
 - Próximo responsável: Victor faz a validação visual final; `@ricardopablo1914-create` automatiza a regressão de navegação e tema.
+
+### 2026-07-30 — Alternância de tema pelo grupo Conta
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: deixar o controle de modo claro/escuro funcional no item reposicionado dentro de `CONTA` e remover o botão flutuante do canto inferior direito.
+- Alterações: centralizada a alternância persistente de tema usada pelo botão `Modo claro`/`Modo escuro` da barra lateral desktop e pelo menu mobile; removido o controle flutuante `#theme-toggle` do HTML e seus estilos, evitando dois pontos de controle concorrentes.
+- Arquivos: `index.html`, `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente navegação e preferência visual local do front-end; não houve alteração de APIs, autenticação, dados ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: executar `npm run build`, `git diff --check` e validar desktop/mobile, alternância persistente e ausência do botão flutuante.
+- O que falta: Victor validar a posição final do controle em diferentes resoluções; `@ricardopablo1914-create` automatizar foco, toque, persistência e regressão do menu; `@ecossystem2` apenas acompanhar futuras integrações de preferências do usuário.
+- Próximo responsável: Victor faz a validação visual; `@ricardopablo1914-create` cria a regressão de navegação e tema.
