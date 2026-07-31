@@ -676,3 +676,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build`, `git diff --check`; desktop validado nas quatro ferramentas da central, incluindo entrada e saída do cadastro; mobile validado com ativação do vendedor, `Meus produtos` e retorno explícito ao comprador.
 - O que falta: Victor validar a nomenclatura final dos atalhos de retorno; `@ricardopablo1914-create` automatizar a matriz de navegação por modo e regressão responsiva; `@ecossystem2` acompanhar a futura autorização de papéis no back-end.
 - Próximo responsável: Victor revisa a experiência de separação dos modos; `@ricardopablo1914-create` cria os testes de regressão de navegação.
+
+### 2026-07-31 — Visualização do registro dos produtos no modo vendedor
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: habilitar o botão `Ver registro` nos produtos cadastrados do modo vendedor para que o responsável consiga consultar o cadastro e acompanhar a verificação do lote.
+- Alterações: substituído o aviso temporário por um painel responsivo com protocolo, data, status, características comerciais, origem e propriedade, sanidade, GTA, certificado, fotos/documentos informados e linha do tempo da auditoria. O mesmo painel foi reutilizado em `Meus anúncios`. Novos cadastros passam a registrar os campos adicionais e os nomes dos anexos selecionados, sem armazenar o conteúdo dos arquivos.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente apresentação e auditoria local do front-end; os dados continuam demonstrativos no `localStorage`. Não houve chamada de API nesta etapa. Criar task para `@ecossystem2` definir o registro oficial do lote, permissões, versionamento e consulta segura de documentos; criar task para `@ricardopablo1914-create` cobrir abertura, fechamento, responsividade, modo escuro e compatibilidade com registros antigos.
+- Validação: `npm run build` concluído; `git diff --check` concluído; revisar o fluxo vendedor → Produtos cadastrados → `Ver registro` em desktop e mobile.
+- O que falta: substituir o histórico local pelo registro oficial do back-end, disponibilizar URLs seguras para documentos e aplicar a situação retornada pela análise documental; Victor deve validar os campos e textos jurídicos com a equipe responsável.
+- Próximo responsável: `@ecossystem2` especifica a API e persistência do registro; `@ricardopablo1914-create` automatiza a regressão do painel; Victor valida a experiência e a documentação exibida ao vendedor.
