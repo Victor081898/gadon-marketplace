@@ -666,3 +666,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check` e validar desktop/mobile, alternância persistente e ausência do botão flutuante.
 - O que falta: Victor validar a posição final do controle em diferentes resoluções; `@ricardopablo1914-create` automatizar foco, toque, persistência e regressão do menu; `@ecossystem2` apenas acompanhar futuras integrações de preferências do usuário.
 - Próximo responsável: Victor faz a validação visual; `@ricardopablo1914-create` cria a regressão de navegação e tema.
+
+### 2026-07-30 — Segregação da central de vendas por modo
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: manter as ferramentas exclusivas de vendedor agrupadas na `CENTRAL DE VENDAS` e impedir que uma navegação interna retorne acidentalmente ao modo comprador.
+- Alterações: a navegação vendedor agora mantém `Painel vendedor`, `Meus produtos`, `Anunciar gado` e `Promoções` no desktop e no menu mobile. O item duplicado `Meu perfil` foi retirado da conta vendedora para evitar uma troca implícita de papel; o retorno fica disponível apenas pelos controles explícitos `Voltar ao perfil comprador`. Corrigido também o listener global de navegação, que sobrescrevia `Meus produtos`, `Anunciar gado`, `Painel vendedor` e `Promoções` com a tela inicial.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente estado e navegação local do front-end; não houve alteração de APIs, autenticação, persistência remota ou contratos entre equipes. Não é necessária task de back-end nesta etapa.
+- Validação: `npm run build`, `git diff --check`; desktop validado nas quatro ferramentas da central, incluindo entrada e saída do cadastro; mobile validado com ativação do vendedor, `Meus produtos` e retorno explícito ao comprador.
+- O que falta: Victor validar a nomenclatura final dos atalhos de retorno; `@ricardopablo1914-create` automatizar a matriz de navegação por modo e regressão responsiva; `@ecossystem2` acompanhar a futura autorização de papéis no back-end.
+- Próximo responsável: Victor revisa a experiência de separação dos modos; `@ricardopablo1914-create` cria os testes de regressão de navegação.
