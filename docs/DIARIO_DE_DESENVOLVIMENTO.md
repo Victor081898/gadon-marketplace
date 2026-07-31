@@ -696,3 +696,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; o fluxo de entrada do cadastro vendedor foi centralizado para limpar imagens anteriores e a galeria do registro é montada apenas quando existem fotos válidas.
 - O que falta: substituir o armazenamento local por upload seguro e persistente, integrar a análise documental e validar a experiência visual em dispositivos reais.
 - Próximo responsável: Victor valida a experiência e os limites comerciais; `@ecossystem2` define o contrato de mídia do lote; `@ricardopablo1914-create` automatiza a matriz de testes de upload e consulta.
+
+### 2026-07-31 — Catálogo vendedor com visualização e edição de produtos
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: permitir que o vendedor consulte o produto pelo catálogo e edite os dados dos lotes cadastrados na própria conta.
+- Alterações: o painel `Catálogo / Produtos cadastrados` passou a exibir as ações `Ver produto` e `Editar` para cada lote. `Ver produto` abre o registro detalhado com características, origem, sanidade, documentos, fotos e linha do tempo. `Editar` reabre o cadastro completo com os dados preenchidos, preserva as fotos já anexadas, permite atualizar as informações e envia o lote novamente para verificação; documentos existentes são preservados quando nenhum novo arquivo é escolhido.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: a edição e o catálogo continuam usando o histórico local em `localStorage`, com atualização do protocolo existente e status `EM_VERIFICACAO`; não houve alteração de API. Criar task para `@ecossystem2` definir autorização do vendedor, endpoint de consulta/edição, versionamento, concorrência e persistência oficial; criar task para `@ricardopablo1914-create` cobrir ver produto, edição, preservação de anexos, reenvio para análise e regressão mobile/tema escuro. A criação automática da issue foi tentada, mas o conector GitHub respondeu `403 Resource not accessible by integration`; a tarefa precisa ser aberta manualmente quando a permissão for restabelecida.
+- Validação: `npm run build` concluído; `git diff --check` concluído; página local respondeu HTTP 200; validação estrutural confirma as ações no catálogo, hidratação dos campos e atualização do registro.
+- O que falta: substituir a persistência local por API, permitir substituição/remoção segura de documentos no servidor e validar a experiência visual em dispositivos reais.
+- Próximo responsável: Victor valida o fluxo de catálogo e edição; `@ecossystem2` define o contrato de edição; `@ricardopablo1914-create` automatiza os cenários de consulta, alteração e regressão.
