@@ -686,3 +686,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; revisar o fluxo vendedor → Produtos cadastrados → `Ver registro` em desktop e mobile.
 - O que falta: substituir o histórico local pelo registro oficial do back-end, disponibilizar URLs seguras para documentos e aplicar a situação retornada pela análise documental; Victor deve validar os campos e textos jurídicos com a equipe responsável.
 - Próximo responsável: `@ecossystem2` especifica a API e persistência do registro; `@ricardopablo1914-create` automatiza a regressão do painel; Victor valida a experiência e a documentação exibida ao vendedor.
+
+### 2026-07-31 — Fotos no cadastro de gado do vendedor
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: permitir que o vendedor envie fotos do lote no cadastro para que o produto seja apresentado com evidência visual no catálogo e no registro do anúncio.
+- Alterações: concluído o processamento do campo de fotos já existente no formulário, com seleção de até cinco imagens JPG/PNG de até 2 MB cada, validação de tipo e tamanho, pré-visualização imediata no formulário desktop e mobile e indicação de quantidade selecionada. As imagens aprovadas são registradas junto ao lote no histórico local e exibidas em uma galeria no painel `Ver registro`, mantendo também os nomes dos arquivos para conferência.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: o protótipo mantém imagens como data URLs no `localStorage` para demonstração local. Criar task para `@ecossystem2` definir armazenamento de objetos, URLs seguras, permissões, compressão, limite de tamanho e verificação de conteúdo no back-end; criar task para `@ricardopablo1914-create` cobrir upload, pré-visualização, rejeição de arquivos inválidos, persistência e regressão mobile.
+- Validação: `npm run build` concluído; `git diff --check` concluído; o fluxo de entrada do cadastro vendedor foi centralizado para limpar imagens anteriores e a galeria do registro é montada apenas quando existem fotos válidas.
+- O que falta: substituir o armazenamento local por upload seguro e persistente, integrar a análise documental e validar a experiência visual em dispositivos reais.
+- Próximo responsável: Victor valida a experiência e os limites comerciais; `@ecossystem2` define o contrato de mídia do lote; `@ricardopablo1914-create` automatiza a matriz de testes de upload e consulta.

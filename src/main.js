@@ -138,8 +138,15 @@ const defaultNotifications = () => ([
 const loadNotifications = () => { try { const parsed = JSON.parse(localStorage.getItem(notificationStorageKey) || 'null'); return Array.isArray(parsed) ? parsed : defaultNotifications(); } catch { return defaultNotifications(); } };
 const defaultAdvancedFilters = () => ({ region: 'Todos', sex: 'Todos', farm: 'Todos', location: 'Todos', purpose: 'Todos', minWeight: '', maxWeight: '', minAge: '', maxAge: '' });
 const initialAuthenticated = loadAuth();
-const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', mode: loadMode(), favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), sellerProfile: loadSellerProfile(), authenticated: initialAuthenticated, darkMode: loadDarkMode(), authError: '', modalLot: null, modalTab: 'description', modalMediaIndex: 0, announcementRecordId: null, freightSimulationOpen: false, freightSimulationLots: [], freightOrigin: '', freightDestination: '', freightEstimate: null, toast: '', page: initialAuthenticated && loadMode() === 'seller' ? 'sellerMarketplace' : initialAuthenticated ? 'home' : 'login', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
+const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', mode: loadMode(), favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), sellerProfile: loadSellerProfile(), authenticated: initialAuthenticated, darkMode: loadDarkMode(), authError: '', modalLot: null, modalTab: 'description', modalMediaIndex: 0, announcementRecordId: null, registrationPhotos: [], freightSimulationOpen: false, freightSimulationLots: [], freightOrigin: '', freightDestination: '', freightEstimate: null, toast: '', page: initialAuthenticated && loadMode() === 'seller' ? 'sellerMarketplace' : initialAuthenticated ? 'home' : 'login', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
 let returnMapInstance = null;
+
+function openCattleRegistration() {
+  state.registrationPhotos = [];
+  state.page = 'register';
+  state.toast = '';
+  render();
+}
 
 function saveMessages() {
   try { localStorage.setItem(messageStorageKey, JSON.stringify(state.messages)); } catch { /* armazenamento local indisponível */ }
@@ -233,6 +240,46 @@ async function fileToAttachment(file) {
   return { name: file.name, size: file.size, sizeLabel: formatFileSize(file.size), type: file.type || 'application/octet-stream', url: preview };
 }
 
+async function handleRegistrationPhotos(event) {
+  const files = [...event.target.files || []];
+  if (!files.length) return;
+  const accepted = files.slice(0, 5).filter((file) => file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024);
+  const rejected = files.length - accepted.length;
+  state.registrationPhotos = [];
+  for (const file of accepted) {
+    const attachment = await fileToAttachment(file);
+    if (attachment.url) state.registrationPhotos.push({ name: attachment.name, url: attachment.url, sizeLabel: attachment.sizeLabel });
+  }
+  render();
+  if (rejected || files.length > 5) showToast('Selecione até 5 imagens de até 2 MB cada para o lote.');
+}
+
+function updateRegistrationPhotoPreview() {
+  const photos = state.registrationPhotos;
+  const preview = document.querySelector('.side-preview .preview-placeholder');
+  const input = document.querySelector('input[name="photos"]');
+  if (!input) return;
+  const uploadBox = input.closest('.upload-box');
+  const uploadAction = uploadBox?.querySelector('em');
+  const uploadHint = uploadBox?.querySelector('span');
+  if (uploadAction) uploadAction.textContent = photos.length ? `${photos.length} foto${photos.length === 1 ? '' : 's'} selecionada${photos.length === 1 ? '' : 's'} · trocar` : 'Escolher arquivos';
+  if (uploadHint) uploadHint.textContent = 'JPG ou PNG · até 5 arquivos de 2 MB';
+  let summary = uploadBox?.querySelector('.registration-photo-summary');
+  if (uploadBox && !summary) {
+    uploadBox.insertAdjacentHTML('beforeend', '<div class="registration-photo-summary" aria-live="polite"></div>');
+    summary = uploadBox.querySelector('.registration-photo-summary');
+  }
+  if (summary) summary.innerHTML = photos.length ? photos.map((photo) => `<img src="${escapeHtml(photo.url)}" alt="Prévia de ${escapeHtml(photo.name)}" />`).join('') : '';
+  if (!preview) return;
+  if (!photos.length) {
+    preview.classList.remove('has-photo-preview');
+    preview.innerHTML = `${icon('cow', 31)}<span>Suas fotos aparecerão aqui</span>`;
+    return;
+  }
+  preview.classList.add('has-photo-preview');
+  preview.innerHTML = `<div class="registration-photo-preview-grid">${photos.map((photo) => `<img src="${escapeHtml(photo.url)}" alt="Prévia de ${escapeHtml(photo.name)}" />`).join('')}</div><span>${photos.length} foto${photos.length === 1 ? '' : 's'} pronta${photos.length === 1 ? '' : 's'} para o anúncio</span>`;
+}
+
 function escapeHtml(value = '') {
   return String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
 }
@@ -278,6 +325,7 @@ function createRegistrationLog(data, attachments = {}) {
       gtaStatus: data.gtaStatus || '',
       certificate: data.certificate || '',
       photoNames: attachments.photoNames || [],
+      photos: attachments.photos || [],
       documentNames: attachments.documentNames || []
     },
     steps: [
@@ -377,6 +425,15 @@ function bindAnnouncementRecordEvents() {
   document.querySelectorAll('[data-close-announcement-record], [data-action="close-announcement-record"]').forEach((el) => el.addEventListener('click', (event) => {
     if (el.dataset.action === 'close-announcement-record' || event.target === el) { state.announcementRecordId = null; render(); }
   }));
+  mountAnnouncementRecordPhotos();
+}
+
+function mountAnnouncementRecordPhotos() {
+  const record = selectedAnnouncementRecord();
+  const section = document.querySelector('.announcement-record-files');
+  const photos = record?.lot?.photos?.filter((photo) => photo?.url) || [];
+  if (!section || !photos.length || section.previousElementSibling?.classList.contains('announcement-record-photo-gallery')) return;
+  section.insertAdjacentHTML('beforebegin', `<div class="announcement-record-photo-gallery"><span>Fotos do lote</span><div>${photos.map((photo) => `<img src="${escapeHtml(photo.url)}" alt="Foto de ${escapeHtml(record.lot.name || 'lote')}" />`).join('')}</div></div>`);
 }
 
 function announcementsTemplate() {
@@ -398,7 +455,7 @@ function bindSellerMarketplaceEvents() {
   bindAccountNavigation();
   const sellerReturnButton = document.querySelector('.seller-marketplace-hero [data-profile-mode="buyer"]');
   if (sellerReturnButton) sellerReturnButton.innerHTML = `${icon('repeat', 14)} Voltar ao perfil comprador`;
-  document.querySelectorAll('[data-seller-action="new-lot"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.activeNav = 'Anunciar gado'; state.toast = ''; render(); }));
+  document.querySelectorAll('[data-seller-action="new-lot"]').forEach((el) => el.addEventListener('click', () => { state.activeNav = 'Anunciar gado'; openCattleRegistration(); }));
   document.querySelectorAll('[data-seller-action="profile"]').forEach((el) => el.addEventListener('click', () => { syncSellerIdentity(); state.page = 'sellerProfile'; state.activeNav = 'Perfil vendedor'; render(); }));
   document.querySelectorAll('[data-seller-action="products"]').forEach((el) => el.addEventListener('click', () => { state.activeNav = 'Meus produtos'; showToast('Aqui você acompanha seus lotes cadastrados e os respectivos protocolos.'); }));
   document.querySelectorAll('[data-seller-action="promotions"]').forEach((el) => el.addEventListener('click', () => showToast('A campanha foi preparada. A publicação de promoções será conectada ao serviço de anúncios.')));
@@ -579,12 +636,12 @@ function favoritesTemplate() {
 }
 
 function bindAccountNavigation() {
-  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { const item = el.dataset.nav; state.activeNav = item; if (item === 'Mensagens') state.page = 'messages'; else if (item === 'Fretes') state.page = 'freight'; else if (item === 'Fretes de retorno') state.page = 'returnFreight'; else if (item === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else if (item === 'Meus anúncios' || item === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements'; else if (item === 'Anunciar gado') state.page = 'register'; else if (item === 'Perfil vendedor') state.page = 'sellerProfile'; else if (item === 'Promoções') { state.page = 'sellerMarketplace'; state.toast = 'A área de promoções está pronta para receber suas campanhas.'; } else if (item === 'Painel vendedor') state.page = 'sellerMarketplace'; else state.page = 'home'; render(); }));
+  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { const item = el.dataset.nav; state.activeNav = item; if (item === 'Mensagens') state.page = 'messages'; else if (item === 'Fretes') state.page = 'freight'; else if (item === 'Fretes de retorno') state.page = 'returnFreight'; else if (item === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else if (item === 'Meus anúncios' || item === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements'; else if (item === 'Anunciar gado') openCattleRegistration(); else if (item === 'Perfil vendedor') state.page = 'sellerProfile'; else if (item === 'Promoções') { state.page = 'sellerMarketplace'; state.toast = 'A área de promoções está pronta para receber suas campanhas.'; } else if (item === 'Painel vendedor') state.page = 'sellerMarketplace'; else state.page = 'home'; if (item !== 'Anunciar gado') render(); }));
   document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = page; } render(); }));
   document.querySelectorAll('[data-profile-mode]').forEach((el) => el.addEventListener('click', () => switchProfileMode(el.dataset.profileMode)));
   document.querySelectorAll('[data-action="desktop-theme"]').forEach((el) => el.addEventListener('click', () => toggleTheme()));
   document.querySelectorAll('[data-action="logout"]').forEach((el) => el.addEventListener('click', logout));
-  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
+  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', openCattleRegistration));
   bindNotificationEvents();
 }
 
@@ -602,7 +659,7 @@ function bindSellerProfileEvents() {
   document.querySelector('.seller-mode-switch [data-account-page="profile"]')?.addEventListener('click', (event) => { event.preventDefault(); event.stopImmediatePropagation(); switchProfileMode('buyer'); });
   bindAccountNavigation();
   document.querySelectorAll('[data-seller-files]').forEach((input) => input.addEventListener('change', () => { const list = input.closest('.seller-upload-box')?.querySelector('.seller-file-list'); if (!list) return; const files = [...input.files].map((file) => `<span>${icon('file', 12)} ${escapeHtml(file.name)}</span>`); list.innerHTML = files.length ? files.join('') : '<small>Nenhum arquivo selecionado</small>'; }));
-  document.querySelector('[data-seller-action="new-lot"]')?.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); });
+  document.querySelector('[data-seller-action="new-lot"]')?.addEventListener('click', openCattleRegistration);
   document.querySelector('#seller-profile-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); const selectedFiles = (name, fallback) => { const files = [...event.currentTarget.querySelector(`input[name="${name}"]`)?.files || []].map((file) => file.name); return files.length ? files : fallback; }; state.sellerProfile = { ...state.sellerProfile, ...data, vaccinationDocuments: selectedFiles('vaccinationDocuments', state.sellerProfile.vaccinationDocuments), farmDocuments: selectedFiles('farmDocuments', state.sellerProfile.farmDocuments), sellerStatus: 'Em análise', updatedAt: new Date().toISOString() }; saveSellerProfile(); state.mode = 'seller'; saveMode(); state.page = 'sellerMarketplace'; state.activeNav = 'Painel vendedor'; state.toast = 'Perfil vendedor salvo e enviado para análise documental.'; render(); });
 }
 
@@ -887,7 +944,7 @@ function bindEvents() {
   bindLotEvents();
   document.querySelectorAll('[data-close-modal]').forEach((el) => el.addEventListener('click', (event) => { if (event.target === el || el.classList.contains('modal-close') || el.classList.contains('secondary-button')) { state.modalLot = null; render(); } }));
   document.querySelectorAll('[data-scroll]').forEach((el) => el.addEventListener('click', () => document.querySelector(`#${el.dataset.scroll}`)?.scrollIntoView({ behavior: 'smooth' })));
-  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
+  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', openCattleRegistration));
   document.querySelectorAll('[data-action="filters"]').forEach((el) => el.addEventListener('click', () => { state.filterOpen = true; render(); }));
   document.querySelectorAll('[data-filter-action="close"]').forEach((el) => el.addEventListener('click', (event) => { if (event.target === el || el.classList.contains('modal-close')) { state.filterOpen = false; render(); } }));
   document.querySelector('[data-filter-action="reset"]')?.addEventListener('click', () => { state.advancedFilters = defaultAdvancedFilters(); state.filterOpen = false; render(); });
@@ -936,7 +993,7 @@ function messageBubble(message) {
 
 function bindMessagesEvents() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : el.dataset.nav === 'Buscar gado' ? 'search' : 'home'; if (el.dataset.nav === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } render(); }));
-  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
+  document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', openCattleRegistration));
   document.querySelectorAll('[data-conversation]').forEach((el) => el.addEventListener('click', () => { state.activeConversationId = Number(el.dataset.conversation); const conversation = state.messages.find((item) => item.id === state.activeConversationId); if (conversation) conversation.unread = 0; saveMessages(); render(); }));
   document.querySelector('#message-search')?.addEventListener('input', (event) => { state.messageQuery = event.target.value; render(); setTimeout(() => { const input = document.querySelector('#message-search'); input?.focus(); input?.setSelectionRange(state.messageQuery.length, state.messageQuery.length); }, 0); });
   document.querySelector('#chat-attachment')?.addEventListener('change', async (event) => { const files = Array.from(event.target.files || []); if (!files.length) return; if (files.some((file) => file.size > 10 * 1024 * 1024)) { showToast('Cada anexo deve ter no máximo 10 MB.'); return; } const conversation = state.messages.find((item) => item.id === state.activeConversationId); if (!conversation) return; const attachments = await Promise.all(files.map(fileToAttachment)); const time = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(new Date()); conversation.messages.push({ from: 'me', type: 'attachment', attachments, text: `${attachments.length} anexo(s)`, time }); conversation.lastMessage = `📎 ${attachments.length} anexo(s)`; conversation.updatedAt = 'agora'; saveMessages(); render(); });
@@ -1041,7 +1098,7 @@ function returnFreightTemplate() {
 
 function bindReturnFreightEvents() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Buscar gado' ? 'search' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : 'home'; if (el.dataset.nav === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } render(); }));
-  document.querySelector('[data-action="register"]')?.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); });
+  document.querySelector('[data-action="register"]')?.addEventListener('click', openCattleRegistration);
   document.querySelector('#return-region-filter')?.addEventListener('change', (event) => { state.returnRegion = event.target.value; state.returnSelectedLoad = null; render(); });
   document.querySelector('#return-cargo-filter')?.addEventListener('change', (event) => { state.returnCargoType = event.target.value; state.returnSelectedLoad = null; render(); });
   document.querySelectorAll('[data-return-toggle]').forEach((el) => el.addEventListener('click', () => { if (el.dataset.returnToggle === 'routes') state.returnRoutesEnabled = !state.returnRoutesEnabled; if (el.dataset.returnToggle === 'regions') state.returnRegionsEnabled = !state.returnRegionsEnabled; render(); }));
@@ -1190,7 +1247,7 @@ function freightTemplate() {
 function bindFreightEvents() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : 'home'; render(); }));
   document.querySelectorAll('[data-freight-scroll]').forEach((el) => el.addEventListener('click', () => document.querySelector(`#freight-${el.dataset.freightScroll}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })));
-  document.querySelector('[data-action="register"]')?.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); });
+  document.querySelector('[data-action="register"]')?.addEventListener('click', openCattleRegistration);
   document.querySelector('[data-freight-action="new-quote"]')?.addEventListener('click', () => document.querySelector('#freight-quote')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   document.querySelector('[data-freight-action="all-routes"]')?.addEventListener('click', () => { state.freightRoutesOpen = true; state.freightCalendarOpen = false; state.freightDocumentsOpen = false; render(); });
   document.querySelectorAll('[data-freight-action="close-routes"]').forEach((el) => el.addEventListener('click', () => { state.freightRoutesOpen = false; render(); }));
@@ -1264,8 +1321,10 @@ function auditLogCard(record) {
 }
 
 function bindRegistrationEvents() {
+  document.querySelector('input[name="photos"]')?.addEventListener('change', handleRegistrationPhotos);
+  updateRegistrationPhotoPreview();
   document.querySelectorAll('[data-action="back-home"]').forEach((el) => el.addEventListener('click', () => { state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; state.toast = ''; render(); }));
-  document.querySelector('#cattle-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); const fileNames = (name) => [...event.currentTarget.querySelector(`input[name="${name}"]`)?.files || []].map((file) => file.name); saveAuditLog(createRegistrationLog(data, { photoNames: fileNames('photos'), documentNames: fileNames('documents') })); state.toast = 'Lote habilitado e enviado para análise.'; state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; render(); setTimeout(() => { state.toast = ''; render(); }, 3600); });
+  document.querySelector('#cattle-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); const fileNames = (name) => [...event.currentTarget.querySelector(`input[name="${name}"]`)?.files || []].map((file) => file.name); saveAuditLog(createRegistrationLog(data, { photoNames: state.registrationPhotos.map((photo) => photo.name), photos: state.registrationPhotos, documentNames: fileNames('documents') })); state.registrationPhotos = []; state.toast = 'Lote habilitado e enviado para análise.'; state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; render(); setTimeout(() => { state.toast = ''; render(); }, 3600); });
 }
 
 function bindLotEvents() {
@@ -1288,7 +1347,7 @@ document.addEventListener('click', (event) => {
     else if (button.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight';
     else if (button.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); }
     else if (button.dataset.nav === 'Meus anúncios' || button.dataset.nav === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements';
-    else if (button.dataset.nav === 'Anunciar gado') state.page = 'register';
+    else if (button.dataset.nav === 'Anunciar gado') { state.registrationPhotos = []; state.page = 'register'; }
     else if (button.dataset.nav === 'Painel vendedor' || button.dataset.nav === 'Promoções') state.page = 'sellerMarketplace';
     else state.page = 'home';
     render();
