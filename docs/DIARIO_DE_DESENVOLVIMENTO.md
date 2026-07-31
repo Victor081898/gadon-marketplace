@@ -726,3 +726,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check` e revisar o clique/foco da foto em desktop e mobile.
 - O que falta: Victor validar a affordance visual em diferentes cards; `@ricardopablo1914-create` automatizar a regressão de foto, botão `Ver lote` e favorito.
 - Próximo responsável: Victor valida a experiência do catálogo; `@ricardopablo1914-create` adiciona a cobertura de interação do card.
+
+### 2026-07-31 — Atualização da foto do produto Nelore selecionado
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: substituir a imagem demonstrativa do produto `Nelore selecionado` pela foto fornecida para o projeto.
+- Alterações: adicionada a imagem `public/nelore-selecionado.png` e atualizado o lote de id `1` para usar esse asset local nos cards, no detalhe do produto e nas interações que reutilizam o cadastro do lote.
+- Arquivos: `public/nelore-selecionado.png`, `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente asset e apresentação do front-end; não houve mudança de API, persistência ou regras de negócio. Não é necessária task de back-end.
+- Validação: executar `npm run build`, `git diff --check` e verificar a renderização do card e do detalhe em desktop/mobile.
+- O que falta: Victor validar o enquadramento visual da foto em diferentes tamanhos de card; `@ricardopablo1914-create` pode adicionar uma verificação de regressão do asset local.
+- Próximo responsável: Victor valida a apresentação comercial; Pablo acompanha a regressão visual quando a suíte estiver disponível.
