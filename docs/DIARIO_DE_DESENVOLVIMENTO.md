@@ -706,3 +706,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; página local respondeu HTTP 200; validação estrutural confirma as ações no catálogo, hidratação dos campos e atualização do registro.
 - O que falta: substituir a persistência local por API, permitir substituição/remoção segura de documentos no servidor e validar a experiência visual em dispositivos reais.
 - Próximo responsável: Victor valida o fluxo de catálogo e edição; `@ecossystem2` define o contrato de edição; `@ricardopablo1914-create` automatiza os cenários de consulta, alteração e regressão.
+
+### 2026-07-31 — Sanidade animal concentrada no registro do produto
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: simplificar o perfil comercial vendedor, removendo a seção `Sanidade animal` da conta e mantendo a informação vinculada ao lote.
+- Alterações: o card de vacinação e rastreabilidade é removido da árvore renderizada do `Perfil vendedor`. A seção permanece disponível no cadastro do lote e no painel `Ver produto/Ver registro`, junto aos demais dados sanitários e documentos do produto.
+- Arquivos: `src/main.js`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente a apresentação do front-end; não houve mudança de API nem de persistência. A task de integração já registrada continua necessária para definir o contrato oficial de sanidade por produto.
+- Validação: executar `npm run build`, `git diff --check` e revisar o perfil vendedor e o registro do produto em desktop/mobile.
+- O que falta: validar com o back-end a associação definitiva de vacinação/rastreabilidade ao `productId` e confirmar o texto jurídico com a equipe responsável.
+- Próximo responsável: Victor valida o fluxo visual; `@ecossystem2` define o contrato sanitário do produto; `@ricardopablo1914-create` automatiza a regressão do perfil e do registro.

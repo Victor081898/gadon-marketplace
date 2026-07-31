@@ -678,6 +678,7 @@ function bindProfileEvents() {
 }
 
 function bindSellerProfileEvents() {
+  document.querySelector('.seller-profile-grid > .seller-card:nth-child(3)')?.remove();
   document.querySelector('.seller-mode-switch [data-account-page="profile"]')?.addEventListener('click', (event) => { event.preventDefault(); event.stopImmediatePropagation(); switchProfileMode('buyer'); });
   bindAccountNavigation();
   document.querySelectorAll('[data-seller-files]').forEach((input) => input.addEventListener('change', () => { const list = input.closest('.seller-upload-box')?.querySelector('.seller-file-list'); if (!list) return; const files = [...input.files].map((file) => `<span>${icon('file', 12)} ${escapeHtml(file.name)}</span>`); list.innerHTML = files.length ? files.join('') : '<small>Nenhum arquivo selecionado</small>'; }));
