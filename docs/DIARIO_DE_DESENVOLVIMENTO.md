@@ -716,3 +716,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: executar `npm run build`, `git diff --check` e revisar o perfil vendedor e o registro do produto em desktop/mobile.
 - O que falta: validar com o back-end a associação definitiva de vacinação/rastreabilidade ao `productId` e confirmar o texto jurídico com a equipe responsável.
 - Próximo responsável: Victor valida o fluxo visual; `@ecossystem2` define o contrato sanitário do produto; `@ricardopablo1914-create` automatiza a regressão do perfil e do registro.
+
+### 2026-07-31 — Foto dos cards compradores abre o detalhe do lote
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: permitir que o comprador abra o produto ao clicar diretamente na foto do card, além do botão `Ver lote`.
+- Alterações: a área de imagem dos cards passou a ser interativa, com suporte a clique, teclado `Enter`/`Espaço`, foco visível e reaproveitamento do mesmo modal detalhado do botão `Ver lote`. O botão de favoritos continua independente e não abre o detalhe por engano.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente interação local do catálogo comprador; não houve alteração de API, persistência ou comunicação entre camadas. Não é necessária task de back-end para esta mudança.
+- Validação: executar `npm run build`, `git diff --check` e revisar o clique/foco da foto em desktop e mobile.
+- O que falta: Victor validar a affordance visual em diferentes cards; `@ricardopablo1914-create` automatizar a regressão de foto, botão `Ver lote` e favorito.
+- Próximo responsável: Victor valida a experiência do catálogo; `@ricardopablo1914-create` adiciona a cobertura de interação do card.
