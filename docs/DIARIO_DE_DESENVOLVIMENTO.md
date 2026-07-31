@@ -646,3 +646,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` concluído; `git diff --check` concluído; página local respondeu em `http://127.0.0.1:5173/`; fluxo desktop testado até a estimativa e continuidade para Mensagens; viewport mobile testado com menu, ativação do perfil vendedor e retorno ao comprador.
 - O que falta: backend deve substituir o `localStorage`, validar documentos e calcular o frete com dados reais de rotas/transportadoras; promoções ainda exibem uma confirmação de protótipo; Victor deve validar os textos comerciais e requisitos jurídicos; Pablo deve automatizar os testes de API e integração quando o contrato estiver definido.
 - Próximo responsável: `@ecossystem2` (`back-end`) especifica os contratos e persistência; `@ricardopablo1914-create` (`automação`, `testes`) cria a matriz de regressão; Victor revisa a experiência comprador/vendedor em dispositivos reais.
+
+### 2026-07-30 — Organização dos controles na seção Conta
+- Responsável: IA: Codex, front-end e produto.
+- Objetivo: aproximar a navegação do layout de referência, deixando `Perfil vendedor` e `Modo claro/escuro` logo abaixo de `Meu perfil` dentro do grupo `CONTA`, no desktop e no menu mobile.
+- Alterações: reorganizada a barra lateral das telas de conta e criado um agrupamento equivalente para as telas gerais que usam a navegação legada. O botão de tema passou a permanecer na seção Conta e continua alternando a preferência visual; o acesso ao perfil vendedor continua abrindo o modo vendedor e o menu mobile mantém também a troca rápida de perfil e o logout abaixo dos controles da conta. O botão flutuante de perfil vendedor foi removido do fluxo visual.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: somente navegação e apresentação local do front-end; não houve alteração de APIs, autenticação, persistência remota ou contratos entre equipes. Não é necessária task de back-end para esta mudança visual.
+- Validação: `npm run build` concluído; `git diff --check` concluído; desktop validado com `CONTA → Meu perfil → Perfil vendedor → Modo claro`; menu mobile validado com a mesma ordem e troca de perfil funcional.
+- O que falta: Victor validar espaçamento e legibilidade em diferentes resoluções; `@ricardopablo1914-create` testar regressão dos cliques de perfil, tema, menu mobile e logout; `@ecossystem2` apenas acompanhar possíveis mudanças futuras no contrato de permissões de perfil.
+- Próximo responsável: Victor faz a validação visual final; `@ricardopablo1914-create` automatiza a regressão de navegação e tema.

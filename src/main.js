@@ -436,14 +436,13 @@ function mobileMenuTemplate() {
 
 function mountMobileMenu() {
   if (!state.authenticated) return;
+  mountDesktopAccountTools();
   if (state.freightSimulationOpen) {
     document.querySelector('#app')?.insertAdjacentHTML('beforeend', freightSimulationModalTemplate());
     bindFreightSimulationEvents();
   }
-  document.querySelector('#app')?.insertAdjacentHTML('beforeend', `<button type="button" class="global-profile-mode" data-profile-mode="${state.mode === 'seller' ? 'buyer' : 'seller'}">${icon('repeat', 14)} ${state.mode === 'seller' ? 'Perfil comprador' : 'Perfil vendedor'}</button>`);
-  document.querySelector('.global-profile-mode')?.addEventListener('click', (event) => { event.stopPropagation(); switchProfileMode(event.currentTarget.dataset.profileMode); });
   if (!document.querySelector('.mobile-menu')) return;
-  document.querySelector('#app')?.insertAdjacentHTML('beforeend', mobileMenuTemplate());
+  document.querySelector('#app')?.insertAdjacentHTML('beforeend', mobileMenuTemplateV2());
   document.querySelectorAll('.mobile-menu').forEach((el) => el.addEventListener('click', () => { state.mobileMenuOpen = true; render(); }));
   document.querySelectorAll('[data-mobile-menu-close]').forEach((el) => el.addEventListener('click', () => { state.mobileMenuOpen = false; render(); }));
   document.querySelectorAll('.mobile-drawer [data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const item = el.dataset.nav; state.activeNav = item; state.page = item === 'Mensagens' ? 'messages' : item === 'Fretes' ? 'freight' : item === 'Fretes de retorno' ? 'returnFreight' : item === 'Buscar gado' ? 'search' : item === 'Meus anúncios' ? 'announcements' : item === 'Meus produtos' || item === 'Painel vendedor' || item === 'Promoções' ? 'sellerMarketplace' : item === 'Anunciar gado' ? 'register' : 'home'; if (item === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } state.mobileMenuOpen = false; render(); }));
@@ -453,8 +452,50 @@ function mountMobileMenu() {
   document.querySelectorAll('.mobile-drawer [data-action="logout"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); logout(); }));
 }
 
+function accountSidebarTemplateV2(activePage) {
+  const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
+  const isSeller = state.mode === 'seller';
+  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const accountItems = isSeller
+    ? `<button class="nav-item ${activePage === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user')}<span>Meu perfil</span></button><button class="nav-item ${activePage === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user')}<span>Perfil vendedor</span></button>`
+    : `<button class="nav-item ${activePage === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item ${activePage === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user')}<span>Meu perfil</span></button><button class="nav-item ${activePage === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user')}<span>Perfil vendedor</span></button>`;
+  return `<aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><button class="profile-mini profile-mini-button" data-account-page="${isSeller ? 'sellerProfile' : 'profile'}"><div class="avatar">${escapeHtml(state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase())}</div><div><strong>${escapeHtml(state.profile.name)}</strong><span>${isSeller ? 'Vendedor em preparação' : 'Comprador verificado'}</span></div><span class="icon-button">${icon('chevron', 15)}</span></button><nav class="main-nav"><p class="nav-label">${isSeller ? 'CENTRAL DE VENDAS' : 'MENU PRINCIPAL'}</p>${navItems.map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i])}<span>${item}</span>${!isSeller && item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p>${accountItems}<button class="nav-item theme-nav-item" data-action="desktop-theme">${icon(state.darkMode ? 'sun' : 'moon')}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside>`;
+}
+
+function accountTopbarTemplateV2(crumb) {
+  const initials = state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+  const isSeller = state.mode === 'seller';
+  return `<header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> ${escapeHtml(crumb)}</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} ${isSeller ? 'Anunciar gado' : 'Habilitar lote'}</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><button class="top-avatar" data-account-page="${isSeller ? 'sellerProfile' : 'profile'}">${escapeHtml(initials)}</button><button class="top-user" data-account-page="${isSeller ? 'sellerProfile' : 'profile'}">${escapeHtml(state.profile.name)} <span>⌄</span></button></div></header>`;
+}
+
+function mobileMenuTemplateV2() {
+  const initials = state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+  const isSeller = state.mode === 'seller';
+  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
+  const accountItems = isSeller
+    ? `<button type="button" class="mobile-drawer-item ${state.page === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user', 18)}<span>Meu perfil</span></button><button type="button" class="mobile-drawer-item ${state.page === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user', 18)}<span>Perfil vendedor</span></button>`
+    : `<button type="button" class="mobile-drawer-item ${state.page === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart', 18)}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button type="button" class="mobile-drawer-item ${state.page === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user', 18)}<span>Meu perfil</span></button><button type="button" class="mobile-drawer-item ${state.page === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user', 18)}<span>Perfil vendedor</span></button>`;
+  return `<div class="mobile-drawer-backdrop ${state.mobileMenuOpen ? 'is-open' : ''}" data-mobile-menu-close></div><aside class="mobile-drawer ${state.mobileMenuOpen ? 'is-open' : ''}" aria-label="Menu principal" aria-hidden="${state.mobileMenuOpen ? 'false' : 'true'}"><div class="mobile-drawer-head"><div><p class="eyebrow">NAVEGAÇÃO</p><h2>Menu GadOn</h2></div><button type="button" class="mobile-drawer-close" data-mobile-menu-close aria-label="Fechar menu">${icon('close', 19)}</button></div><button type="button" class="mobile-drawer-profile" data-account-page="${isSeller ? 'sellerProfile' : 'profile'}"><span class="mobile-drawer-avatar">${escapeHtml(initials || 'JP')}</span><span><strong>${escapeHtml(state.profile.name)}</strong><small>${isSeller ? 'Vendedor em preparação' : 'Comprador verificado'}</small></span>${icon('chevron', 16)}</button><nav class="mobile-drawer-nav"><p class="mobile-drawer-label">${isSeller ? 'CENTRAL DE VENDAS' : 'MENU PRINCIPAL'}</p>${navItems.map((item, i) => `<button type="button" class="mobile-drawer-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i], 18)}<span>${item}</span>${!isSeller && item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="mobile-drawer-label">CONTA</p>${accountItems}<button type="button" class="mobile-drawer-item mobile-theme-action" data-action="mobile-theme">${icon(state.darkMode ? 'sun' : 'moon', 18)}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span><i>${state.darkMode ? 'Ativo' : 'Inativo'}</i></button><button type="button" class="mobile-drawer-item mode-switch-drawer" data-profile-mode="${isSeller ? 'buyer' : 'seller'}">${icon('repeat', 18)}<span>${isSeller ? 'Trocar para comprador' : 'Ativar perfil vendedor'}</span></button><button type="button" class="mobile-drawer-item mobile-logout-action" data-action="logout">${icon('logout', 18)}<span>Sair da conta</span></button></nav><p class="mobile-drawer-foot">GadOn <span>•</span> O mercado do Gado</p></aside>`;
+}
+
+function mountDesktopAccountTools() {
+  const nav = document.querySelector('.sidebar .main-nav');
+  if (!nav) return;
+  if (!nav.querySelector('[data-account-page="sellerProfile"]')) {
+    nav.insertAdjacentHTML('beforeend', `<button class="nav-item injected-account-seller" data-account-page="sellerProfile">${icon('user')}<span>Perfil vendedor</span></button>`);
+    nav.querySelector('.injected-account-seller')?.addEventListener('click', () => { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; render(); });
+  }
+  if (!nav.querySelector('.theme-nav-item')) {
+    nav.insertAdjacentHTML('beforeend', `<button class="nav-item theme-nav-item" data-action="desktop-theme">${icon(state.darkMode ? 'sun' : 'moon')}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span></button>`);
+    nav.querySelector('.theme-nav-item')?.addEventListener('click', () => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); render(); });
+  }
+}
+
 function accountShellTemplate(activePage, crumb, content) {
-  return `<div class="app-shell account-shell">${accountSidebarTemplate(activePage)}<main class="main-content">${accountTopbarTemplate(crumb)}${content}</main></div><button type="button" class="account-logout-button" data-action="logout">${icon('logout', 15)} Sair da conta</button>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
+  return `<div class="app-shell account-shell">${accountSidebarTemplateV2(activePage)}<main class="main-content">${accountTopbarTemplateV2(crumb)}${content}</main></div><button type="button" class="account-logout-button" data-action="logout">${icon('logout', 15)} Sair da conta</button>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
 function profileTemplate() {
@@ -488,8 +529,9 @@ function favoritesTemplate() {
 
 function bindAccountNavigation() {
   document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { const item = el.dataset.nav; state.activeNav = item; if (item === 'Mensagens') state.page = 'messages'; else if (item === 'Fretes') state.page = 'freight'; else if (item === 'Fretes de retorno') state.page = 'returnFreight'; else if (item === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else if (item === 'Meus anúncios' || item === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements'; else if (item === 'Anunciar gado') state.page = 'register'; else if (item === 'Perfil vendedor') state.page = 'sellerProfile'; else if (item === 'Promoções') { state.page = 'sellerMarketplace'; state.toast = 'A área de promoções está pronta para receber suas campanhas.'; } else if (item === 'Painel vendedor') state.page = 'sellerMarketplace'; else state.page = 'home'; render(); }));
-  document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = page; } render(); }));
+  document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; } else if (page === 'profile' && state.mode === 'seller') { switchProfileMode('buyer'); return; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = page; } render(); }));
   document.querySelectorAll('[data-profile-mode]').forEach((el) => el.addEventListener('click', () => switchProfileMode(el.dataset.profileMode)));
+  document.querySelectorAll('[data-action="desktop-theme"]').forEach((el) => el.addEventListener('click', () => { state.darkMode = !state.darkMode; saveDarkMode(state.darkMode); render(); }));
   document.querySelectorAll('[data-action="logout"]').forEach((el) => el.addEventListener('click', logout));
   document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
   bindNotificationEvents();
