@@ -716,3 +716,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: navegação mobile testada item a item (Leilão → auction, Loja → shop, Radar → radar, Fretes, Mensagens); modal do lote, simulador (Campo Verde→Goiânia = 765 km reais, ~12,2 h), Fretes, Mensagens, Fretes de retorno e Buscar gado verificados em viewport 375px; `npm run build` verde; produção atualizada.
 - O que falta: Victor validar no aparelho físico durante o evento.
 - Próximo responsável: Victor faz o teste final no celular.
+
+### 2026-08-01 — Loja rural mobile-first
+- Responsável: IA: Claude, front-end mobile.
+- Objetivo: eliminar o estouro horizontal da Loja rural no celular.
+- Alterações: corrigido grid blowout do layout da loja (`grid-template-columns:minmax(0,1fr)` + `min-width:0` nos filhos — o carrossel de categorias forçava a largura intrínseca da página); `overflow-x:clip` no shell como salvaguarda; topbar compacta no mobile (marca oculta, botões Minha loja/Vender/Carrinho reduzidos em uma linha); card "Venda no GadOn" oculto no mobile (o botão Vender do topo cumpre o papel); hero e linha de resultados ajustados.
+- Arquivos: `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: nenhum.
+- Validação: viewport 375px sem rolagem lateral, topbar em linha única, grade de 2 colunas íntegra; `npm run build` verde; produção atualizada.
+- O que falta: —
+- Próximo responsável: Victor confere no aparelho.

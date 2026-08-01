@@ -2178,3 +2178,21 @@ textarea:focus-visible { outline:3px solid rgba(112,183,237,.45); outline-offset
   .return-filterbar .sort-select { flex-shrink:0; width:auto; min-width:110px; }
   .return-summary { margin-left:0; width:auto; flex-shrink:0; white-space:nowrap; }
 }
+
+/* Loja rural — mobile first de verdade */
+.shop-shell { overflow-x:clip; }
+@media (max-width: 900px) {
+  .shop-layout { grid-template-columns:minmax(0, 1fr); }
+  .shop-sidebar, .shop-main { min-width:0; }
+  .shop-sell-card { display:none; }
+}
+@media (max-width: 640px) {
+  .shop-topbar { gap:6px; }
+  .shop-topbar .register-brand { display:none; }
+  .shop-topbar .back-link { flex-shrink:0; }
+  .shop-top-actions { flex:1; justify-content:flex-end; gap:6px; }
+  .shop-sell-button, .shop-cart-button { padding:8px 10px; font-size:.74rem; gap:5px; }
+  .shop-hero { border-radius:14px; }
+  .shop-hero h1 { font-size:1.05rem; }
+  .shop-result-row { flex-wrap:wrap; }
+}
