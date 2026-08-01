@@ -570,7 +570,7 @@ function mountMobileMenu() {
   document.querySelector('#app')?.insertAdjacentHTML('beforeend', mobileMenuTemplateV2());
   document.querySelectorAll('.mobile-menu').forEach((el) => el.addEventListener('click', () => { state.mobileMenuOpen = true; render(); }));
   document.querySelectorAll('[data-mobile-menu-close]').forEach((el) => el.addEventListener('click', () => { state.mobileMenuOpen = false; render(); }));
-  document.querySelectorAll('.mobile-drawer [data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const item = el.dataset.nav; state.activeNav = item; state.page = item === 'Mensagens' ? 'messages' : item === 'Fretes' ? 'freight' : item === 'Fretes de retorno' ? 'returnFreight' : item === 'Buscar gado' ? 'search' : item === 'Meus anúncios' ? 'announcements' : item === 'Meus produtos' || item === 'Painel vendedor' || item === 'Promoções' ? 'sellerMarketplace' : item === 'Anunciar gado' ? 'register' : 'home'; if (item === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } state.mobileMenuOpen = false; render(); }));
+  document.querySelectorAll('.mobile-drawer [data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopImmediatePropagation(); const item = el.dataset.nav; state.activeNav = item; state.page = item === 'Mensagens' ? 'messages' : item === 'Fretes' ? 'freight' : item === 'Fretes de retorno' ? 'returnFreight' : item === 'Radar de fretes' ? 'radar' : item === 'Leilão ao vivo' ? 'auction' : item === 'Loja rural' ? 'shop' : item === 'Buscar gado' ? 'search' : item === 'Meus anúncios' ? 'announcements' : item === 'Meus produtos' || item === 'Painel vendedor' || item === 'Promoções' ? 'sellerMarketplace' : item === 'Anunciar gado' ? 'register' : 'home'; if (item === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } state.mobileMenuOpen = false; render(); }));
   document.querySelectorAll('.mobile-drawer [data-account-page]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; } state.collectionView = 'all'; state.modalLot = null; state.mobileMenuOpen = false; state.page = page; render(); }));
   document.querySelectorAll('.mobile-drawer [data-profile-mode]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); switchProfileMode(el.dataset.profileMode); }));
   document.querySelectorAll('[data-action="mobile-theme"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); toggleTheme(true); }));
@@ -653,7 +653,7 @@ function favoritesTemplate() {
 }
 
 function bindAccountNavigation() {
-  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { const item = el.dataset.nav; state.activeNav = item; if (item === 'Mensagens') state.page = 'messages'; else if (item === 'Fretes') state.page = 'freight'; else if (item === 'Fretes de retorno') state.page = 'returnFreight'; else if (item === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else if (item === 'Meus anúncios' || item === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements'; else if (item === 'Anunciar gado') state.page = 'register'; else if (item === 'Perfil vendedor') state.page = 'sellerProfile'; else if (item === 'Promoções') { state.page = 'sellerMarketplace'; state.toast = 'A área de promoções está pronta para receber suas campanhas.'; } else if (item === 'Painel vendedor') state.page = 'sellerMarketplace'; else state.page = 'home'; render(); }));
+  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopImmediatePropagation(); const item = el.dataset.nav; state.activeNav = item; if (item === 'Mensagens') state.page = 'messages'; else if (item === 'Fretes') state.page = 'freight'; else if (item === 'Fretes de retorno') state.page = 'returnFreight'; else if (item === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else if (item === 'Meus anúncios' || item === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements'; else if (item === 'Anunciar gado') state.page = 'register'; else if (item === 'Perfil vendedor') state.page = 'sellerProfile'; else if (item === 'Promoções') { state.page = 'sellerMarketplace'; state.toast = 'A área de promoções está pronta para receber suas campanhas.'; } else if (item === 'Painel vendedor') state.page = 'sellerMarketplace'; else if (item === 'Leilão ao vivo') state.page = 'auction'; else if (item === 'Loja rural') state.page = 'shop'; else if (item === 'Radar de fretes') state.page = 'radar'; else state.page = 'home'; render(); }));
   document.querySelectorAll('[data-account-page]').forEach((el) => el.addEventListener('click', () => { const page = el.dataset.accountPage; if (page === 'sellerProfile') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.activeNav = 'Perfil vendedor'; state.page = 'sellerProfile'; } else { state.activeNav = page === 'favorites' ? 'Favoritos' : 'Meu perfil'; state.collectionView = 'all'; state.modalLot = null; state.page = page; } render(); }));
   document.querySelectorAll('[data-profile-mode]').forEach((el) => el.addEventListener('click', () => switchProfileMode(el.dataset.profileMode)));
   document.querySelectorAll('[data-action="desktop-theme"]').forEach((el) => el.addEventListener('click', () => toggleTheme()));
@@ -863,9 +863,43 @@ function freightEstimate(origin, destination, selectedLots = []) {
   return { distanceKm, price, animals };
 }
 
+const geocodeMemory = {};
+async function geocodeCity(query) {
+  const key = query.trim().toLowerCase();
+  if (!key || key.length < 3) return null;
+  if (geocodeMemory[key]) return geocodeMemory[key];
+  try { const cached = JSON.parse(localStorage.getItem(`gadon.geo.${key}`) || 'null'); if (cached) { geocodeMemory[key] = cached; return cached; } } catch { /* sem cache */ }
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=br&q=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    if (data?.[0]) {
+      const point = [Number(data[0].lon), Number(data[0].lat)];
+      geocodeMemory[key] = point;
+      try { localStorage.setItem(`gadon.geo.${key}`, JSON.stringify(point)); } catch { /* cache indisponível */ }
+      return point;
+    }
+  } catch { /* geocodificação indisponível */ }
+  return null;
+}
+
+async function computeRealFreight(origin, destination, selectedLots = []) {
+  const [from, to] = await Promise.all([geocodeCity(origin), geocodeCity(destination)]);
+  if (!from || !to) return null;
+  try {
+    const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${from[0]},${from[1]};${to[0]},${to[1]}?overview=false`);
+    const data = await response.json();
+    const road = data.routes?.[0];
+    if (!road) return null;
+    const distanceKm = Math.round(road.distance / 1000);
+    const animals = selectedLots.reduce((total, lot) => total + (Number(String(lot.meta).match(/\d+/)?.[0]) || 1), 0);
+    return { distanceKm, price: Math.round(780 + distanceKm * 3.65 + animals * 14), animals, hours: Math.round((road.duration / 3600) * 10) / 10, real: true };
+  } catch { return null; }
+}
+
 function freightEstimateSummary() {
   if (!state.freightEstimate) return `<div class="freight-simulation-empty">Informe origem e destino para visualizar a estimativa automática.</div>`;
-  return `<div class="freight-simulation-result"><div><span>${icon('route', 16)} Distância estimada</span><strong>${state.freightEstimate.distanceKm.toLocaleString('pt-BR')} km</strong></div><div><span>${icon('truck', 16)} Frete estimado</span><strong>${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(state.freightEstimate.price)}</strong></div><small>${state.freightEstimate.animals} cabeça(s) · valor de referência sujeito à cotação da transportadora</small></div>`;
+  const estimate = state.freightEstimate;
+  return `<div class="freight-simulation-result ${estimate.real ? 'is-real' : ''}"><div><span>${icon('route', 16)} ${estimate.real ? 'Distância pela estrada' : 'Distância estimada'}</span><strong>${estimate.distanceKm.toLocaleString('pt-BR')} km</strong></div>${estimate.real && estimate.hours ? `<div><span>${icon('clock', 16)} Tempo de viagem</span><strong>~${String(estimate.hours).replace('.', ',')} h</strong></div>` : ''}<div><span>${icon('truck', 16)} Frete estimado</span><strong>${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(estimate.price)}</strong></div><small>${estimate.animals} cabeça(s) · ${estimate.real ? '✓ distância real calculada pela rota rodoviária' : 'calculando rota rodoviária real…'}</small></div>`;
 }
 
 function openFreightSimulation(selectedLots) {
@@ -880,11 +914,36 @@ function openFreightSimulation(selectedLots) {
   render();
 }
 
+let freightCalcTimer = null;
+let freightCalcToken = 0;
+
 function bindFreightSimulationEvents() {
   if (!state.freightSimulationOpen) return;
   document.querySelectorAll('[data-freight-sim-close]').forEach((el) => el.addEventListener('click', (event) => { if (event.target === el || el.classList.contains('modal-close') || el.classList.contains('secondary-button')) { state.freightSimulationOpen = false; state.freightEstimate = null; render(); } }));
   const form = document.querySelector('#freight-simulation-form');
-  const update = () => { const data = Object.fromEntries(new FormData(form).entries()); state.freightOrigin = data.origin || ''; state.freightDestination = data.destination || ''; state.freightEstimate = freightEstimate(state.freightOrigin, state.freightDestination, state.freightSimulationLots); const output = document.querySelector('#freight-estimate-output'); if (output) output.innerHTML = freightEstimateSummary(); const continueButton = document.querySelector('[data-action="continue-purchase"]'); if (continueButton) continueButton.disabled = !state.freightEstimate; };
+  const update = () => {
+    const data = Object.fromEntries(new FormData(form).entries());
+    state.freightOrigin = data.origin || '';
+    state.freightDestination = data.destination || '';
+    state.freightEstimate = freightEstimate(state.freightOrigin, state.freightDestination, state.freightSimulationLots);
+    const output = document.querySelector('#freight-estimate-output');
+    if (output) output.innerHTML = freightEstimateSummary();
+    const continueButton = document.querySelector('[data-action="continue-purchase"]');
+    if (continueButton) continueButton.disabled = !state.freightEstimate;
+    const token = ++freightCalcToken;
+    const origin = state.freightOrigin;
+    const destination = state.freightDestination;
+    clearTimeout(freightCalcTimer);
+    if (origin.trim().length > 2 && destination.trim().length > 2) {
+      freightCalcTimer = setTimeout(async () => {
+        const real = await computeRealFreight(origin, destination, state.freightSimulationLots);
+        if (!real || token !== freightCalcToken || state.freightOrigin !== origin || state.freightDestination !== destination || !state.freightSimulationOpen) return;
+        state.freightEstimate = real;
+        const liveOutput = document.querySelector('#freight-estimate-output');
+        if (liveOutput) liveOutput.innerHTML = freightEstimateSummary();
+      }, 650);
+    }
+  };
   form?.addEventListener('submit', (event) => { event.preventDefault(); update(); });
   form?.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
   document.querySelector('[data-action="continue-purchase"]')?.addEventListener('click', () => { const selected = state.freightSimulationLots; state.freightSimulationOpen = false; beginLotNegotiation(selected[0], true, selected); });
@@ -980,7 +1039,7 @@ function bindNotificationEvents() {
 }
 
 function bindEvents() {
-  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; if (el.dataset.nav === 'Mensagens') state.page = 'messages'; else if (el.dataset.nav === 'Fretes') state.page = 'freight'; else if (el.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight'; else if (el.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else { state.page = 'home'; } render(); }));
+  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopImmediatePropagation(); state.activeNav = el.dataset.nav; if (el.dataset.nav === 'Mensagens') state.page = 'messages'; else if (el.dataset.nav === 'Fretes') state.page = 'freight'; else if (el.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight'; else if (el.dataset.nav === 'Leilão ao vivo') state.page = 'auction'; else if (el.dataset.nav === 'Loja rural') state.page = 'shop'; else if (el.dataset.nav === 'Radar de fretes') state.page = 'radar'; else if (el.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } else { state.page = 'home'; } render(); }));
   document.querySelectorAll('[data-category]').forEach((el) => el.addEventListener('click', () => { state.category = el.dataset.category; render(); }));
   const search = document.querySelector('#search');
   search?.addEventListener('input', (event) => { state.query = event.target.value; document.querySelector('.lots-grid').innerHTML = getFilteredLots().slice(0, 4).map(lotCard).join('') || '<div class="empty-state">Nenhum lote encontrado. Tente outra busca.</div>'; bindLotEvents(); });
@@ -1035,7 +1094,7 @@ function messageBubble(message) {
 }
 
 function bindMessagesEvents() {
-  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : el.dataset.nav === 'Buscar gado' ? 'search' : 'home'; if (el.dataset.nav === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } render(); }));
+  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopImmediatePropagation(); state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : el.dataset.nav === 'Buscar gado' ? 'search' : 'home'; if (el.dataset.nav === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } render(); }));
   document.querySelectorAll('[data-action="register"]').forEach((el) => el.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); }));
   document.querySelectorAll('[data-conversation]').forEach((el) => el.addEventListener('click', () => { state.activeConversationId = Number(el.dataset.conversation); const conversation = state.messages.find((item) => item.id === state.activeConversationId); if (conversation) conversation.unread = 0; saveMessages(); render(); }));
   document.querySelector('#message-search')?.addEventListener('input', (event) => { state.messageQuery = event.target.value; render(); setTimeout(() => { const input = document.querySelector('#message-search'); input?.focus(); input?.setSelectionRange(state.messageQuery.length, state.messageQuery.length); }, 0); });
@@ -1144,34 +1203,34 @@ function mountReturnMap() {
   returnMapInstance = new maplibregl.Map({ container, style: radarOsmStyle(), center: [-50, -18], zoom: 4.6 });
   returnMapInstance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
   const map = returnMapInstance;
-  map.on('load', async () => {
-    const loads = state.returnLoads;
-    const seenCities = new Set();
-    loads.forEach((load) => {
-      [[[load.lng, load.lat], load.origin], [[load.destinationLng, load.destinationLat], load.destination]].forEach(([coords, label]) => {
-        if (seenCities.has(label)) return;
-        seenCities.add(label);
-        const cityEl = document.createElement('div');
-        cityEl.className = 'radar-city-dot';
-        cityEl.innerHTML = `<i></i><span>${escapeHtml(label)}</span>`;
-        new maplibregl.Marker({ element: cityEl, anchor: 'left' }).setLngLat(coords).addTo(map);
-      });
+  const loads = state.returnLoads;
+  const seenCities = new Set();
+  loads.forEach((load) => {
+    [[[load.lng, load.lat], load.origin], [[load.destinationLng, load.destinationLat], load.destination]].forEach(([coords, label]) => {
+      if (seenCities.has(label)) return;
+      seenCities.add(label);
+      const cityEl = document.createElement('div');
+      cityEl.className = 'radar-city-dot';
+      cityEl.innerHTML = `<i></i><span>${escapeHtml(label)}</span>`;
+      new maplibregl.Marker({ element: cityEl, anchor: 'left' }).setLngLat(coords).addTo(map);
     });
-    const bounds = new maplibregl.LngLatBounds();
-    loads.forEach((load) => { bounds.extend([load.lng, load.lat]); bounds.extend([load.destinationLng, load.destinationLat]); });
-    map.fitBounds(bounds, { padding: window.innerWidth < 860 ? { top: 40, bottom: 40, left: 40, right: 40 } : { top: 60, bottom: 60, left: 380, right: 60 }, duration: 900 });
+    const truckEl = document.createElement('div');
+    truckEl.className = 'radar-truck volta';
+    if (load.demand === 'Alta') truckEl.classList.add('alta');
+    truckEl.innerHTML = icon('truck', 15);
+    truckEl.addEventListener('click', () => selectReturnLoad(load.id));
+    new maplibregl.Marker({ element: truckEl }).setLngLat([load.lng, load.lat]).addTo(map);
+  });
+  const bounds = new maplibregl.LngLatBounds();
+  loads.forEach((load) => { bounds.extend([load.lng, load.lat]); bounds.extend([load.destinationLng, load.destinationLat]); });
+  map.fitBounds(bounds, { padding: window.innerWidth < 860 ? { top: 40, bottom: 40, left: 40, right: 40 } : { top: 60, bottom: 60, left: 380, right: 60 }, duration: 900 });
+  map.on('load', async () => {
     await Promise.all(loads.map(resolveReturnRoute));
     if (returnMapInstance !== map) return;
     loads.forEach((load) => {
       map.addSource(`ret-${load.id}`, { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: load.points } } });
       map.addLayer({ id: `ret-${load.id}-casing`, type: 'line', source: `ret-${load.id}`, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 6, 'line-opacity': 0.75 } });
       map.addLayer({ id: `ret-${load.id}`, type: 'line', source: `ret-${load.id}`, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': load.demand === 'Alta' ? '#f47a18' : '#1d6fb8', 'line-width': 3, 'line-opacity': 0.95, 'line-dasharray': [0.5, 1.6] } });
-      const truckEl = document.createElement('div');
-      truckEl.className = 'radar-truck volta';
-      if (load.demand === 'Alta') truckEl.classList.add('alta');
-      truckEl.innerHTML = icon('truck', 15);
-      truckEl.addEventListener('click', () => selectReturnLoad(load.id));
-      new maplibregl.Marker({ element: truckEl }).setLngLat([load.lng, load.lat]).addTo(map);
     });
   });
 }
@@ -1333,7 +1392,7 @@ function freightTemplate() {
 }
 
 function bindFreightEvents() {
-  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : 'home'; render(); }));
+  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', (event) => { event.stopImmediatePropagation(); state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : 'home'; render(); }));
   document.querySelectorAll('[data-freight-scroll]').forEach((el) => el.addEventListener('click', () => document.querySelector(`#freight-${el.dataset.freightScroll}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })));
   document.querySelector('[data-action="register"]')?.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); });
   document.querySelector('[data-freight-action="new-quote"]')?.addEventListener('click', () => document.querySelector('#freight-quote')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
@@ -1800,21 +1859,21 @@ function mountRadarMap() {
   radarMapInstance = new maplibregl.Map({ container, style: radarOsmStyle(), center: [-52.5, -19], zoom: 4.8 });
   radarMapInstance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
   const map = radarMapInstance;
-  map.on('load', async () => {
-    const seenCities = new Set();
-    radarRoutes.forEach((route) => {
-      [[route.from, route.origin], [route.to, route.dest]].forEach(([coords, label]) => {
-        if (seenCities.has(label)) return;
-        seenCities.add(label);
-        const cityEl = document.createElement('div');
-        cityEl.className = 'radar-city-dot';
-        cityEl.innerHTML = `<i></i><span>${escapeHtml(label)}</span>`;
-        new maplibregl.Marker({ element: cityEl, anchor: 'left' }).setLngLat(coords).addTo(map);
-      });
+  const seenCities = new Set();
+  radarRoutes.forEach((route) => {
+    [[route.from, route.origin], [route.to, route.dest]].forEach(([coords, label]) => {
+      if (seenCities.has(label)) return;
+      seenCities.add(label);
+      const cityEl = document.createElement('div');
+      cityEl.className = 'radar-city-dot';
+      cityEl.innerHTML = `<i></i><span>${escapeHtml(label)}</span>`;
+      new maplibregl.Marker({ element: cityEl, anchor: 'left' }).setLngLat(coords).addTo(map);
     });
-    const bounds = new maplibregl.LngLatBounds();
-    radarRoutes.forEach((route) => { bounds.extend(route.from); bounds.extend(route.to); });
-    map.fitBounds(bounds, { padding: window.innerWidth < 860 ? { top: 40, bottom: 40, left: 40, right: 40 } : { top: 60, bottom: 60, left: 380, right: 60 }, duration: 900 });
+  });
+  const bounds = new maplibregl.LngLatBounds();
+  radarRoutes.forEach((route) => { bounds.extend(route.from); bounds.extend(route.to); });
+  map.fitBounds(bounds, { padding: window.innerWidth < 860 ? { top: 40, bottom: 40, left: 40, right: 40 } : { top: 60, bottom: 60, left: 380, right: 60 }, duration: 900 });
+  map.on('load', async () => {
     await Promise.all(radarRoutes.map(resolveRoutePoints));
     if (radarMapInstance !== map) return;
     radarRoutes.forEach((route) => {

@@ -706,3 +706,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` verde; fluxos validados no navegador (cadastro como vendedor caindo no painel, produto criado/pausado/reativado na Minha loja, modal de transmissão com seleção de câmera); deploy publicado em gadon.quaerion.site.
 - O que falta: validar a troca de câmera em aparelho físico com duas câmeras durante o evento.
 - Próximo responsável: Victor testa a transmissão frontal/traseira no celular.
+
+### 2026-08-01 — Correção geral do mobile e calculadora de frete com rota real
+- Responsável: IA: Claude, front-end mobile e logística.
+- Objetivo: corrigir a navegação do menu mobile que não abria as páginas novas, o modal do lote no celular e transformar a simulação de frete em cálculo rodoviário real.
+- Alterações: os três handlers empilhados de navegação (drawer mobile, páginas internas e home) foram atualizados com as rotas novas (Leilão ao vivo, Loja rural, Radar de fretes) e passaram a usar stopImmediatePropagation, eliminando renders duplos que destruíam e recriavam os mapas em sequência (vazando contextos WebGL até os mapas pararem de renderizar); modal "Ver lote" no mobile virou folha de tela cheia acima da topbar fixa (z-index corrigido de 10 para 100), com botão de fechar fixo, abas com rolagem horizontal e barra de ações fixa no rodapé; barra de seleção e modal de simulação de frete adaptados ao mobile (bottom sheet); calculadora de frete agora geocodifica origem/destino via Nominatim e calcula distância e tempo reais pela rodovia via OSRM (com cache local e fallback para a estimativa anterior), exibindo selo de rota real; página Fretes de retorno com barra de filtros compacta rolável no mobile; mapas do Radar e do Retorno passaram a exibir marcadores e enquadramento imediatamente, sem esperar o carregamento dos tiles.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: novo uso do geocodificador público Nominatim (somente leitura, cache em localStorage `gadon.geo.*`); demais contratos inalterados.
+- Validação: navegação mobile testada item a item (Leilão → auction, Loja → shop, Radar → radar, Fretes, Mensagens); modal do lote, simulador (Campo Verde→Goiânia = 765 km reais, ~12,2 h), Fretes, Mensagens, Fretes de retorno e Buscar gado verificados em viewport 375px; `npm run build` verde; produção atualizada.
+- O que falta: Victor validar no aparelho físico durante o evento.
+- Próximo responsável: Victor faz o teste final no celular.

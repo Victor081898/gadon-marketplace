@@ -2137,3 +2137,44 @@ textarea:focus-visible { outline:3px solid rgba(112,183,237,.45); outline-offset
   .register-role-options { flex-direction:column; }
   .register-role-option span { width:100%; justify-content:center; }
 }
+
+/* ===== Mobile-first: modal do lote, simulação de frete, barra de seleção ===== */
+.modal-backdrop { z-index:100; }
+.modal-tabs button, .modal-tabs .tab { flex-shrink:0; white-space:nowrap; }
+@media (max-width:720px) {
+  .modal-backdrop { padding:0; }
+  .modal-backdrop .modal { top:0; left:0; transform:none; width:100vw; height:100dvh; max-height:100dvh; border-radius:0; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+  .modal-close { position:fixed; top:14px; right:14px; z-index:110; width:38px; height:38px; background:rgba(7,29,52,.68); color:#fff; backdrop-filter:blur(6px); }
+  .modal-photo { min-height:240px; max-height:300px; }
+  .modal-body { padding:20px 16px 96px; }
+  .modal-tabs { gap:4px; margin:0 -16px; padding:0 16px 2px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .modal-tabs::-webkit-scrollbar { display:none; }
+  .modal-actions { position:fixed; left:0; right:0; bottom:0; z-index:109; margin:0; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); background:var(--surface); border-top:1px solid var(--line); box-shadow:0 -8px 24px rgba(7,29,52,.12); }
+  .detail-grid { gap:14px 10px; }
+
+  /* Barra de seleção (simular frete) */
+  .selection-bar { left:12px; right:12px; bottom:12px; z-index:70; flex-direction:column; align-items:stretch; gap:10px; padding:13px 14px; }
+  .selection-actions { display:flex; gap:8px; }
+  .selection-actions .secondary-button { flex:1; text-align:center; }
+  .selection-actions .primary-button { flex:1.4; justify-content:center; }
+
+  /* Modal da calculadora de frete */
+  .freight-simulation-backdrop { padding:0; align-items:flex-end; }
+  .freight-simulation-modal { width:100vw; max-height:94dvh; overflow-y:auto; border-radius:22px 22px 0 0; padding:22px 18px calc(20px + env(safe-area-inset-bottom)); }
+  .freight-simulation-fields { grid-template-columns:1fr; }
+  .freight-simulation-actions { flex-wrap:wrap; }
+  .freight-simulation-actions .primary-button { flex:1 1 100%; justify-content:center; }
+  .freight-simulation-actions .secondary-button { flex:1; }
+}
+.freight-simulation-result.is-real { border-color:rgba(46,165,107,.5); }
+.freight-simulation-result.is-real small { color:var(--green); font-weight:600; }
+
+/* Fretes de retorno — filtros compactos no mobile */
+@media (max-width: 860px) {
+  .return-filterbar { padding:8px 12px; gap:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .return-filterbar::-webkit-scrollbar { display:none; }
+  .return-chips { flex-wrap:nowrap; }
+  .return-chips .tab { white-space:nowrap; flex-shrink:0; }
+  .return-filterbar .sort-select { flex-shrink:0; width:auto; min-width:110px; }
+  .return-summary { margin-left:0; width:auto; flex-shrink:0; white-space:nowrap; }
+}
