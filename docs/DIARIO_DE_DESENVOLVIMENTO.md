@@ -686,3 +686,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: `npm run build` verde; fluxos validados no navegador em desktop e mobile (cadastro→lead, lance→lead, pedido GDN-881749→lead, produto publicado, solicitação de retorno→lead, mapas com rotas nas estradas).
 - O que falta: revisar textos finais com o Victor antes do evento; decidir pós-evento se a captura migra para backend próprio e se a tabela temporária é descartada.
 - Próximo responsável: Victor valida o roteiro da apresentação; time decide o destino do backend temporário após o evento.
+
+### 2026-08-01 — Domínio próprio e rotas de produção no Cloudflare Pages
+- Responsável: IA: Claude, infra de demo.
+- Objetivo: publicar o app no domínio gadon.quaerion.site com rotas de SPA e cache corretos.
+- Alterações: deploy de produção no Cloudflare Pages (projeto `gadon-marketplace`); domínio custom gadon.quaerion.site conectado (DNS na zona Cloudflare, feito pelo Victor no painel); adicionado `public/_redirects` (`/* /index.html 200`) para fallback explícito de SPA em qualquer caminho e `public/_headers` com cache imutável de 1 ano para `/assets/*` (nomes com hash) e `/videos/*`.
+- Arquivos: `public/_redirects`, `public/_headers`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: nenhum contrato de código; apenas infraestrutura de entrega estática.
+- Validação: produção verificada em https://gadon.quaerion.site — build mais recente servido, `/leilao` responde 200 via fallback, vídeos com range requests (206) e headers de cache aplicados.
+- O que falta: push do repositório para o GitHub com as credenciais do Victor.
+- Próximo responsável: Victor publica a branch no GitHub e valida o domínio no celular.
