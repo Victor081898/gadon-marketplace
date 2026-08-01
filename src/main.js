@@ -54,7 +54,7 @@ function ensureAuctionFeedPlays() {
 
 const auctionFeedMarkup = (lot, index) => {
   const camera = lot.cameras[index % lot.cameras.length];
-  if (camera.type === 'live') return `<video class="cam-feed cam-live" autoplay muted playsinline></video>`;
+  if (camera.type === 'live') return `<video class="cam-feed cam-live ${userBroadcastFacing === 'user' ? 'is-mirrored' : ''}" autoplay muted playsinline></video>`;
   if (camera.type === 'video') return `<video class="cam-feed" src="${camera.src}" autoplay muted loop playsinline></video>`;
   return `<img class="cam-feed" src="${camera.src}" alt="${escapeHtml(lot.name)} ao vivo" />`;
 };
@@ -254,7 +254,7 @@ Object.assign(state, {
   cameraOpen: false, cattlePhotos: [],
   userLocation: null, userLocationDemo: false, radarSelected: null, radarAlertShown: false,
   broadcastOpen: false, userAuctionLot: null,
-  shopQuery: '', userProducts: loadUserProducts(), sellOpen: false, checkoutStep: 1, checkoutData: {}, lastOrderId: '',
+  shopQuery: '', userProducts: loadUserProducts(), sellOpen: false, checkoutStep: 1, checkoutData: {}, lastOrderId: '', myStoreEditing: null,
 });
 
 function saveMessages() {
@@ -505,7 +505,7 @@ function accountRegistrationTemplate() {
 
 function accountRegistrationReferenceTemplate() {
   const heroImage = '/nelore-cadastro.png';
-  return `<div class="register-reference-shell"><main class="register-reference-card"><section class="register-reference-form-panel"><header class="register-reference-header"><div class="register-reference-brand"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div><nav><button type="button" class="register-reference-nav active">Início</button><button type="button" class="register-reference-nav" data-auth-action="back-login">Entrar</button></nav></header><div class="register-reference-copy"><p>COMECE AGORA</p><h1>Criar nova conta<span>.</span></h1><span>Já tem uma conta? <button type="button" data-auth-action="back-login">Entrar</button></span></div>${state.authError ? `<div class="auth-error register-reference-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="account-registration-reference-form" class="register-reference-form"><div class="register-reference-fields"><label><span>Nome</span><div>${icon('user', 17)}<input name="name" autocomplete="given-name" placeholder="Seu nome" required maxlength="60" /></div></label><label><span>Sobrenome</span><div>${icon('user', 17)}<input name="surname" autocomplete="family-name" placeholder="Seu sobrenome" required maxlength="80" /></div></label><label class="register-reference-full"><span>E-mail</span><div>${icon('mail', 17)}<input name="email" type="email" autocomplete="email" placeholder="seu@email.com" required /></div></label><label class="register-reference-full"><span>Celular / WhatsApp</span><div>${icon('phone', 17)}<input name="phone" type="tel" autocomplete="tel" placeholder="(00) 00000-0000" /></div></label><label class="register-reference-full"><span>Senha</span><div class="register-reference-password">${icon('lock', 17)}<input id="reference-password" name="password" type="password" autocomplete="new-password" placeholder="••••••••" minlength="6" required /><button type="button" data-auth-action="toggle-password" aria-label="Mostrar senha">${icon('eye', 17)}</button></div></label></div><label class="register-reference-terms"><input name="terms" type="checkbox" required /><span>Eu concordo com os <a href="#" data-auth-action="terms">Termos de Uso</a> e a <a href="#" data-auth-action="privacy">Política de Privacidade</a>.</span></label><div class="register-reference-actions"><button type="button" class="google-button" data-auth-action="google"><span>G</span> Criar com Google</button><button type="submit" class="register-reference-submit">Criar conta ${icon('arrow', 17)}</button></div><div class="register-reference-security">${icon('shield', 19)} <span>Seus dados estão protegidos com segurança de ponta.</span></div></form></section><section class="register-reference-visual" style="--reference-cattle-image:url('${heroImage}')"><div class="register-reference-curve"></div><div class="register-reference-cow-badge">${icon('cow', 30)}</div><div class="register-reference-visual-logo"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></section></main></div>`;
+  return `<div class="register-reference-shell"><main class="register-reference-card"><section class="register-reference-form-panel"><header class="register-reference-header"><div class="register-reference-brand"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div><nav><button type="button" class="register-reference-nav active">Início</button><button type="button" class="register-reference-nav" data-auth-action="back-login">Entrar</button></nav></header><div class="register-reference-copy"><p>COMECE AGORA</p><h1>Criar nova conta<span>.</span></h1><span>Já tem uma conta? <button type="button" data-auth-action="back-login">Entrar</button></span></div>${state.authError ? `<div class="auth-error register-reference-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="account-registration-reference-form" class="register-reference-form"><div class="register-reference-fields"><label><span>Nome</span><div>${icon('user', 17)}<input name="name" autocomplete="given-name" placeholder="Seu nome" required maxlength="60" /></div></label><label><span>Sobrenome</span><div>${icon('user', 17)}<input name="surname" autocomplete="family-name" placeholder="Seu sobrenome" required maxlength="80" /></div></label><label class="register-reference-full"><span>E-mail</span><div>${icon('mail', 17)}<input name="email" type="email" autocomplete="email" placeholder="seu@email.com" required /></div></label><label class="register-reference-full"><span>Celular / WhatsApp</span><div>${icon('phone', 17)}<input name="phone" type="tel" autocomplete="tel" placeholder="(00) 00000-0000" /></div></label><label class="register-reference-full"><span>Senha</span><div class="register-reference-password">${icon('lock', 17)}<input id="reference-password" name="password" type="password" autocomplete="new-password" placeholder="••••••••" minlength="6" required /><button type="button" data-auth-action="toggle-password" aria-label="Mostrar senha">${icon('eye', 17)}</button></div></label></div><div class="register-role-block"><p class="register-role-label">Como você quer usar o GadOn?</p><div class="register-role-options"><label class="register-role-option"><input type="radio" name="role" value="comprador" checked /><span>${icon('cart', 15)} Comprador</span></label><label class="register-role-option"><input type="radio" name="role" value="vendedor" /><span>${icon('cow', 15)} Vendedor</span></label><label class="register-role-option"><input type="radio" name="role" value="ambos" /><span>${icon('repeat', 15)} Os dois</span></label></div></div><label class="register-reference-terms"><input name="terms" type="checkbox" required /><span>Eu concordo com os <a href="#" data-auth-action="terms">Termos de Uso</a> e a <a href="#" data-auth-action="privacy">Política de Privacidade</a>.</span></label><div class="register-reference-actions"><button type="button" class="google-button" data-auth-action="google"><span>G</span> Criar com Google</button><button type="submit" class="register-reference-submit">Criar conta ${icon('arrow', 17)}</button></div><div class="register-reference-security">${icon('shield', 19)} <span>Seus dados estão protegidos com segurança de ponta.</span></div></form></section><section class="register-reference-visual" style="--reference-cattle-image:url('${heroImage}')"><div class="register-reference-curve"></div><div class="register-reference-cow-badge">${icon('cow', 30)}</div><div class="register-reference-visual-logo"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></section></main></div>`;
 }
 
 function logout() {
@@ -530,7 +530,7 @@ function bindLoginEvents() {
 
 function bindAccountRegistrationEvents() {
   document.querySelectorAll('[data-auth-action="back-login"]').forEach((el) => el.addEventListener('click', () => { state.authError = ''; state.page = 'login'; render(); }));
-  document.querySelector('#account-registration-reference-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (data.password.length < 6) { state.authError = 'A senha precisa ter pelo menos 6 caracteres.'; render(); return; } const fullName = `${data.name.trim()} ${data.surname.trim()}`.trim(); sendLead('cadastro-conta', { name: fullName, email: data.email.trim(), phone: (data.phone || '').trim(), details: { origem: 'criar-conta' } }); state.profile = { ...state.profile, name: fullName, email: data.email.trim(), phone: (data.phone || '').trim(), avatar: '', passwordChangedAt: null }; saveProfile(); state.authenticated = true; state.authError = ''; state.page = 'home'; saveAuth(true); render(); showToast(`Bem-vindo ao GadOn, ${data.name.trim()}! Sua conta foi criada.`); });
+  document.querySelector('#account-registration-reference-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (data.password.length < 6) { state.authError = 'A senha precisa ter pelo menos 6 caracteres.'; render(); return; } const fullName = `${data.name.trim()} ${data.surname.trim()}`.trim(); const role = data.role || 'comprador'; sendLead('cadastro-conta', { name: fullName, email: data.email.trim(), phone: (data.phone || '').trim(), details: { origem: 'criar-conta', perfil: role } }); state.profile = { ...state.profile, name: fullName, email: data.email.trim(), phone: (data.phone || '').trim(), role, avatar: '', passwordChangedAt: null }; saveProfile(); state.authenticated = true; state.authError = ''; saveAuth(true); if (role === 'vendedor') { state.mode = 'seller'; saveMode(); syncSellerIdentity(); saveSellerProfile(); state.page = 'sellerMarketplace'; state.activeNav = 'Painel vendedor'; } else { state.mode = 'buyer'; saveMode(); state.page = 'home'; state.activeNav = 'Início'; } render(); showToast(`Bem-vindo ao GadOn, ${data.name.trim()}! Conta de ${role === 'ambos' ? 'comprador e vendedor' : role} criada.`); });
   document.querySelector('[data-auth-action="toggle-password"]')?.addEventListener('click', (event) => { const input = document.querySelector('#reference-password'); if (!input) return; input.type = input.type === 'password' ? 'text' : 'password'; event.currentTarget.setAttribute('aria-label', input.type === 'password' ? 'Mostrar senha' : 'Ocultar senha'); });
   document.querySelector('[data-auth-action="google"]')?.addEventListener('click', () => { state.authError = 'A criação com Google será conectada ao serviço de autenticação.'; render(); });
   document.querySelectorAll('[data-auth-action="terms"],[data-auth-action="privacy"]').forEach((el) => el.addEventListener('click', (event) => event.preventDefault()));
@@ -731,6 +731,11 @@ function render() {
   if (state.page === 'shop') {
     document.querySelector('#app').innerHTML = shopTemplate();
     bindShopEvents();
+    return;
+  }
+  if (state.page === 'myStore') {
+    document.querySelector('#app').innerHTML = myStoreTemplate();
+    bindMyStoreEvents();
     return;
   }
   if (state.page === 'register') {
@@ -1576,7 +1581,7 @@ function changeCartQty(id, delta) {
 
 function shopFilteredProducts() {
   const query = state.shopQuery.trim().toLowerCase();
-  return allShopProducts().filter((product) => (state.shopCategory === 'Todos' || product.category === state.shopCategory) && (!query || `${product.name} ${product.category} ${product.unit}`.toLowerCase().includes(query)));
+  return allShopProducts().filter((product) => !product.paused && (state.shopCategory === 'Todos' || product.category === state.shopCategory) && (!query || `${product.name} ${product.category} ${product.unit}`.toLowerCase().includes(query)));
 }
 
 function shopProductCard(product) {
@@ -1593,7 +1598,8 @@ function cartDrawerTemplate() {
 
 function sellModalTemplate() {
   const categories = [...shopCategories.filter((category) => category !== 'Todos' && category !== 'Terras & Fazendas'), 'Outros'];
-  return `<div class="checkout-overlay"><div class="checkout-card"><div class="checkout-head"><strong>${icon('store', 17)} Vender na Loja GadOn</strong><button type="button" data-action="close-sell" aria-label="Fechar">${icon('close', 17)}</button></div><p class="sell-note">Cadastre queijos, laticínios, mel, ração e o que mais sua fazenda produz. Seu produto entra na vitrine na hora.</p><form id="sell-form" class="checkout-form"><label><span>Nome do produto</span><input name="name" placeholder="Ex.: Queijo canastra meia cura 1kg" required maxlength="60" /></label><div class="sell-grid"><label><span>Categoria</span><select name="category">${categories.map((category) => `<option>${category}</option>`).join('')}</select></label><label><span>Preço (R$)</span><input name="price" type="number" min="1" step="0.01" placeholder="59,90" required /></label></div><label><span>Unidade de venda</span><input name="unit" placeholder="Ex.: peça 1kg · pote 500g · saco 40kg" required maxlength="40" /></label><label><span>Foto do produto <em class="optional-inline">opcional</em></span><input name="photo" type="file" accept="image/*" class="sell-file" /></label><button type="submit" class="primary-button">Publicar produto ${icon('check', 16)}</button></form></div></div>`;
+  const editing = state.myStoreEditing ? state.userProducts.find((product) => product.id === state.myStoreEditing) : null;
+  return `<div class="checkout-overlay"><div class="checkout-card"><div class="checkout-head"><strong>${icon('store', 17)} ${editing ? 'Editar produto' : 'Vender na Loja GadOn'}</strong><button type="button" data-action="close-sell" aria-label="Fechar">${icon('close', 17)}</button></div><p class="sell-note">${editing ? 'Atualize as informações do seu produto — as mudanças aparecem na vitrine na hora.' : 'Cadastre queijos, laticínios, mel, ração e o que mais sua fazenda produz. Seu produto entra na vitrine na hora.'}</p><form id="sell-form" class="checkout-form"><label><span>Nome do produto</span><input name="name" value="${editing ? escapeHtml(editing.name) : ''}" placeholder="Ex.: Queijo canastra meia cura 1kg" required maxlength="60" /></label><div class="sell-grid"><label><span>Categoria</span><select name="category">${categories.map((category) => `<option ${editing && editing.category === category ? 'selected' : ''}>${category}</option>`).join('')}</select></label><label><span>Preço (R$)</span><input name="price" type="number" min="1" step="0.01" value="${editing ? editing.price : ''}" placeholder="59,90" required /></label></div><label><span>Unidade de venda</span><input name="unit" value="${editing ? escapeHtml(editing.unit) : ''}" placeholder="Ex.: peça 1kg · pote 500g · saco 40kg" required maxlength="40" /></label><label><span>Foto do produto <em class="optional-inline">${editing ? 'enviar nova é opcional' : 'opcional'}</em></span><input name="photo" type="file" accept="image/*" class="sell-file" /></label><button type="submit" class="primary-button">${editing ? `Salvar alterações ${icon('check', 16)}` : `Publicar produto ${icon('check', 16)}`}</button></form></div></div>`;
 }
 
 function checkoutStepperMarkup() {
@@ -1619,7 +1625,7 @@ function checkoutModalTemplate() {
 function shopTemplate() {
   const filtered = shopFilteredProducts();
   return `<div class="shop-shell">
-    <header class="shop-topbar"><button class="back-link" data-action="shop-back">${icon('back', 16)} Voltar</button><div class="brand register-brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>Loja rural</small></div></div><div class="shop-top-actions"><button type="button" class="shop-sell-button" data-action="open-sell">${icon('store', 16)} Vender</button><button type="button" class="shop-cart-button" data-action="open-cart">${icon('cart', 18)} Carrinho ${cartCount() ? `<b>${cartCount()}</b>` : ''}</button></div></header>
+    <header class="shop-topbar"><button class="back-link" data-action="shop-back">${icon('back', 16)} Voltar</button><div class="brand register-brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>Loja rural</small></div></div><div class="shop-top-actions"><button type="button" class="shop-sell-button" data-action="open-mystore">${icon('chart', 16)} Minha loja${state.userProducts.length ? ` <b class="mystore-count">${state.userProducts.length}</b>` : ''}</button><button type="button" class="shop-sell-button" data-action="open-sell">${icon('store', 16)} Vender</button><button type="button" class="shop-cart-button" data-action="open-cart">${icon('cart', 18)} Carrinho ${cartCount() ? `<b>${cartCount()}</b>` : ''}</button></div></header>
     <main class="shop-layout">
       <aside class="shop-sidebar">
         <div class="shop-search">${icon('search', 16)}<input id="shop-search-input" value="${escapeHtml(state.shopQuery)}" placeholder="Buscar produtos..." /></div>
@@ -1637,6 +1643,73 @@ function shopTemplate() {
     ${state.checkoutOpen ? checkoutModalTemplate() : ''}
     ${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}
   </div>`;
+}
+
+function bindSellForm(afterSave) {
+  document.querySelector('[data-action="close-sell"]')?.addEventListener('click', () => { state.sellOpen = false; state.myStoreEditing = null; render(); });
+  document.querySelector('#sell-form')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    const photoFile = form.querySelector('[name="photo"]').files?.[0];
+    let newImage = null;
+    if (photoFile && photoFile.type.startsWith('image/') && photoFile.size <= 2.5 * 1024 * 1024) { try { newImage = await readAsDataUrl(photoFile); } catch { /* usa imagem atual/padrão */ } }
+    if (state.myStoreEditing) {
+      const product = state.userProducts.find((item) => item.id === state.myStoreEditing);
+      if (product) { product.name = data.name.trim(); product.category = data.category; product.price = Number(data.price) || 0; product.unit = data.unit.trim(); if (newImage) product.image = newImage; }
+      saveUserProducts();
+      state.myStoreEditing = null;
+      state.sellOpen = false;
+      render();
+      showToast('Produto atualizado!');
+      return;
+    }
+    const product = { id: Date.now(), category: data.category, name: data.name.trim(), unit: data.unit.trim(), price: Number(data.price) || 0, image: newImage || categoryDefaultImages[data.category] || categoryDefaultImages.Outros, mine: true };
+    state.userProducts = [product, ...state.userProducts];
+    saveUserProducts();
+    sendLead('loja-produto-cadastrado', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { produto: product.name, categoria: product.category, preco: product.price, unidade: product.unit } });
+    state.sellOpen = false;
+    if (afterSave) afterSave(product);
+    render();
+    showToast(`“${product.name}” publicado na Loja GadOn!`);
+  });
+}
+
+const myStoreStats = () => {
+  const orders = state.userProducts.reduce((sum, product) => sum + 1 + (product.id % 3), 0);
+  return {
+    count: state.userProducts.length,
+    views: state.userProducts.reduce((sum, product) => sum + 40 + (product.id % 87), 0),
+    orders,
+    revenue: state.userProducts.reduce((sum, product) => sum + (1 + (product.id % 3)) * product.price, 0),
+  };
+};
+
+function myStoreRow(product) {
+  return `<div class="store-row ${product.paused ? 'is-paused' : ''}"><img src="${product.image}" alt="" /><div class="store-row-info"><strong>${escapeHtml(product.name)}</strong><span>${escapeHtml(product.category)} · ${escapeHtml(product.unit)}</span><small>${formatBRL(product.price)}</small></div><div class="store-row-metrics"><span>${icon('eye', 13)} ${40 + (product.id % 87)}</span><span>${icon('bag', 13)} ${1 + (product.id % 3)} pedido${(product.id % 3) ? 's' : ''}</span></div><span class="store-status ${product.paused ? 'paused' : 'active'}">${product.paused ? 'Pausado' : 'Ativo'}</span><div class="store-row-actions"><button type="button" data-store-edit="${product.id}" title="Editar">${icon('file', 15)}</button><button type="button" data-store-pause="${product.id}" title="${product.paused ? 'Reativar' : 'Pausar'}">${product.paused ? icon('play', 15) : icon('stop', 15)}</button><button type="button" class="store-delete" data-store-delete="${product.id}" title="Excluir">${icon('close', 15)}</button></div></div>`;
+}
+
+function myStoreTemplate() {
+  const stats = myStoreStats();
+  return `<div class="shop-shell">
+    <header class="shop-topbar"><button class="back-link" data-action="mystore-back">${icon('back', 16)} Voltar para a loja</button><div class="brand register-brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>Minha loja</small></div></div><button type="button" class="primary-button" data-action="open-sell">${icon('plus', 15)} Cadastrar produto</button></header>
+    <main class="store-content">
+      <section class="store-hero"><div><p class="eyebrow">PAINEL DO VENDEDOR</p><h1>Minha loja</h1><p>Gerencie os produtos que você vende na Loja GadOn — edite, pause ou acompanhe o desempenho.</p></div></section>
+      <div class="store-stats"><div class="store-stat"><span>Produtos publicados</span><strong>${stats.count}</strong></div><div class="store-stat"><span>Visualizações</span><strong>${stats.views}</strong></div><div class="store-stat"><span>Pedidos recebidos</span><strong>${stats.orders}</strong></div><div class="store-stat highlight"><span>Faturamento estimado</span><strong>${formatBRL(stats.revenue)}</strong></div></div>
+      ${state.userProducts.length ? `<div class="store-list"><div class="store-list-head"><p class="eyebrow">SEUS PRODUTOS</p></div>${state.userProducts.map(myStoreRow).join('')}</div>` : `<div class="shop-empty">${icon('store', 28)}<p>Você ainda não publicou produtos.</p><span>Cadastre queijos, mel, ração e o que mais sua fazenda produz.</span><button type="button" class="primary-button" data-action="open-sell" style="margin-top:12px">Cadastrar meu primeiro produto ${icon('arrow', 14)}</button></div>`}
+    </main>
+    ${state.sellOpen ? sellModalTemplate() : ''}
+    ${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}
+  </div>`;
+}
+
+function bindMyStoreEvents() {
+  document.querySelector('[data-action="mystore-back"]')?.addEventListener('click', () => { state.page = 'shop'; render(); });
+  document.querySelectorAll('[data-action="open-sell"]').forEach((el) => el.addEventListener('click', () => { state.myStoreEditing = null; state.sellOpen = true; render(); }));
+  document.querySelectorAll('[data-store-edit]').forEach((el) => el.addEventListener('click', () => { state.myStoreEditing = Number(el.dataset.storeEdit); state.sellOpen = true; render(); }));
+  document.querySelectorAll('[data-store-pause]').forEach((el) => el.addEventListener('click', () => { const product = state.userProducts.find((item) => item.id === Number(el.dataset.storePause)); if (!product) return; product.paused = !product.paused; saveUserProducts(); render(); showToast(product.paused ? 'Produto pausado — saiu da vitrine.' : 'Produto reativado na vitrine!'); }));
+  document.querySelectorAll('[data-store-delete]').forEach((el) => el.addEventListener('click', () => { const id = Number(el.dataset.storeDelete); const product = state.userProducts.find((item) => item.id === id); if (!product) return; if (!window.confirm(`Excluir “${product.name}” da sua loja?`)) return; state.userProducts = state.userProducts.filter((item) => item.id !== id); saveUserProducts(); render(); showToast('Produto excluído.'); }));
+  bindSellForm();
 }
 
 function bindShopCardEvents() {
@@ -1663,25 +1736,9 @@ function bindShopEvents() {
   document.querySelector('[data-action="open-cart"]')?.addEventListener('click', () => { state.cartOpen = true; render(); });
   document.querySelectorAll('[data-action="close-cart"]').forEach((el) => el.addEventListener('click', () => { state.cartOpen = false; render(); }));
   document.querySelectorAll('[data-cart-qty]').forEach((el) => el.addEventListener('click', () => changeCartQty(Number(el.dataset.cartQty), Number(el.dataset.delta))));
-  document.querySelectorAll('[data-action="open-sell"]').forEach((el) => el.addEventListener('click', () => { state.sellOpen = true; render(); }));
-  document.querySelector('[data-action="close-sell"]')?.addEventListener('click', () => { state.sellOpen = false; render(); });
-  document.querySelector('#sell-form')?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
-    const photoFile = form.querySelector('[name="photo"]').files?.[0];
-    let image = categoryDefaultImages[data.category] || categoryDefaultImages.Outros;
-    if (photoFile && photoFile.type.startsWith('image/') && photoFile.size <= 2.5 * 1024 * 1024) { try { image = await readAsDataUrl(photoFile); } catch { /* usa imagem padrão */ } }
-    const product = { id: Date.now(), category: data.category, name: data.name.trim(), unit: data.unit.trim(), price: Number(data.price) || 0, image, mine: true };
-    state.userProducts = [product, ...state.userProducts];
-    saveUserProducts();
-    sendLead('loja-produto-cadastrado', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { produto: product.name, categoria: product.category, preco: product.price, unidade: product.unit } });
-    state.sellOpen = false;
-    state.shopCategory = data.category;
-    state.shopQuery = '';
-    render();
-    showToast(`“${product.name}” publicado na Loja GadOn!`);
-  });
+  document.querySelectorAll('[data-action="open-sell"]').forEach((el) => el.addEventListener('click', () => { state.myStoreEditing = null; state.sellOpen = true; render(); }));
+  document.querySelector('[data-action="open-mystore"]')?.addEventListener('click', () => { state.page = 'myStore'; state.sellOpen = false; render(); });
+  bindSellForm((product) => { state.shopCategory = product.category; state.shopQuery = ''; });
   document.querySelector('[data-action="open-checkout"]')?.addEventListener('click', () => { state.checkoutOpen = true; state.checkoutDone = false; state.checkoutStep = 1; render(); });
   document.querySelectorAll('[data-action="close-checkout"]').forEach((el) => el.addEventListener('click', () => { const finished = state.checkoutDone; state.checkoutOpen = false; if (finished) { state.cart = []; saveCart(); state.cartOpen = false; state.checkoutDone = false; state.checkoutStep = 1; state.checkoutData = {}; } render(); }));
   document.querySelectorAll('[data-checkout-back]').forEach((el) => el.addEventListener('click', () => { state.checkoutStep = Math.max(1, state.checkoutStep - 1); render(); }));
@@ -1887,6 +1944,7 @@ let auctionInterval = null;
 let auctionCamIndex = 0;
 let auctionTickCount = 0;
 let userAuctionStream = null;
+let userBroadcastFacing = 'environment';
 const currentAuctionLot = () => state.userAuctionLot || auctionLots[state.auctionIndex % auctionLots.length];
 
 function resetAuctionLot() {
@@ -2009,7 +2067,8 @@ function updateAuctionDom(bidFlash = false) {
 
 async function startUserBroadcast(form) {
   if (!navigator.mediaDevices?.getUserMedia) { showToast('Seu navegador não permite acesso à câmera.'); return; }
-  try { userAuctionStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }); }
+  userBroadcastFacing = form.camera === 'user' ? 'user' : 'environment';
+  try { userAuctionStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: userBroadcastFacing }, audio: false }); }
   catch { showToast('Não foi possível acessar a câmera. Verifique a permissão do navegador.'); return; }
   const startBid = Number(String(form.startBid).replace(/\D/g, '')) || 50000;
   const increment = Number(String(form.increment).replace(/\D/g, '')) || 500;
@@ -2031,8 +2090,25 @@ function stopUserBroadcast() {
   state.userAuctionLot = null;
 }
 
+const broadcastCamLabel = () => (userBroadcastFacing === 'user' ? 'CAM FRONTAL · Você' : 'CAM TRASEIRA · Animal');
+
+async function flipBroadcastCamera() {
+  if (!state.userAuctionLot) return;
+  const next = userBroadcastFacing === 'environment' ? 'user' : 'environment';
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: next }, audio: false });
+    userAuctionStream?.getTracks().forEach((track) => track.stop());
+    userAuctionStream = stream;
+    userBroadcastFacing = next;
+    const video = document.querySelector('#auction-cam video');
+    if (video) { video.srcObject = stream; video.classList.toggle('is-mirrored', next === 'user'); const playing = video.play(); if (playing) playing.catch(() => { /* autoplay bloqueado */ }); }
+    const label = document.querySelector('#auction-cam-label');
+    if (label) label.innerHTML = `<i></i> ${broadcastCamLabel()}`;
+  } catch { showToast('Não foi possível trocar de câmera neste aparelho.'); }
+}
+
 function broadcastModalTemplate() {
-  return `<div class="checkout-overlay"><div class="checkout-card broadcast-card"><div class="checkout-head"><strong>${icon('camera', 17)} Leiloar meu lote ao vivo</strong><button type="button" data-action="close-broadcast" aria-label="Fechar">${icon('close', 17)}</button></div><p class="broadcast-note">Abra a câmera do seu aparelho, mostre o gado e acompanhe os lances chegando em tempo real — a simulação completa do pregão, com você como vendedor.</p><form id="broadcast-form" class="checkout-form"><label><span>Nome do lote</span><input name="name" placeholder="Ex.: Nelore da minha fazenda" required maxlength="60" /></label><label><span>Descrição curta</span><input name="desc" placeholder="Ex.: 20 machos · 15@ média" maxlength="80" /></label><div class="broadcast-grid"><label><span>Lance inicial (R$)</span><input name="startBid" type="number" min="1000" step="500" value="50000" required /></label><label><span>Incremento (R$)</span><input name="increment" type="number" min="100" step="100" value="500" required /></label></div><button type="submit" class="primary-button">${icon('camera', 16)} Abrir câmera e iniciar pregão</button></form></div></div>`;
+  return `<div class="checkout-overlay"><div class="checkout-card broadcast-card"><div class="checkout-head"><strong>${icon('camera', 17)} Leiloar meu lote ao vivo</strong><button type="button" data-action="close-broadcast" aria-label="Fechar">${icon('close', 17)}</button></div><p class="broadcast-note">Abra a câmera do seu aparelho, mostre o gado e acompanhe os lances chegando em tempo real — a simulação completa do pregão, com você como vendedor.</p><form id="broadcast-form" class="checkout-form"><label><span>Nome do lote</span><input name="name" placeholder="Ex.: Nelore da minha fazenda" required maxlength="60" /></label><label><span>Descrição curta</span><input name="desc" placeholder="Ex.: 20 machos · 15@ média" maxlength="80" /></label><div class="broadcast-grid"><label><span>Lance inicial (R$)</span><input name="startBid" type="number" min="1000" step="500" value="50000" required /></label><label><span>Incremento (R$)</span><input name="increment" type="number" min="100" step="100" value="500" required /></label></div><p class="checkout-group-label">Qual câmera iniciar?</p><div class="option-cards"><label class="option-card"><input type="radio" name="camera" value="environment" checked /><div>${icon('cow', 17)}<b>Traseira</b><span>Mostrar o animal</span></div></label><label class="option-card"><input type="radio" name="camera" value="user" /><div>${icon('user', 17)}<b>Frontal</b><span>Você apresentando</span></div></label></div><small class="broadcast-tip">${icon('repeat', 12)} Dá pra trocar de câmera a qualquer momento durante o pregão.</small><button type="submit" class="primary-button">${icon('camera', 16)} Abrir câmera e iniciar pregão</button></form></div></div>`;
 }
 
 function auctionTemplate() {
@@ -2051,7 +2127,7 @@ function auctionTemplate() {
           <div class="media-gradient"></div>
           <span class="auction-lot-tag">${lot.tag} <i>·</i> ${position} de ${auctionLots.length}</span>
           <span class="live-pill media-live"><i></i> AO VIVO</span>
-          <div class="cam-toolbar"><span class="cam-label" id="auction-cam-label"><i></i> ${lot.live ? 'SUA TRANSMISSÃO' : auctionCameraLabels[auctionCamIndex % auctionCameraLabels.length]}</span><span class="cam-clock" id="auction-clock">--:--:--</span></div>
+          <div class="cam-toolbar"><span class="cam-label" id="auction-cam-label"><i></i> ${lot.live ? broadcastCamLabel() : auctionCameraLabels[auctionCamIndex % auctionCameraLabels.length]}</span><span class="cam-clock" id="auction-clock">--:--:--</span>${lot.live ? `<button type="button" class="cam-flip" data-action="flip-camera">${icon('repeat', 14)} Trocar câmera</button>` : ''}</div>
           <div class="media-lower">
             <h1>${escapeHtml(lot.name)}</h1>
             <p>${escapeHtml(lot.desc)}</p>
@@ -2089,6 +2165,7 @@ function bindAuctionEvents() {
   document.querySelector('[data-action="open-broadcast"]')?.addEventListener('click', () => { state.broadcastOpen = true; render(); });
   document.querySelector('[data-action="close-broadcast"]')?.addEventListener('click', () => { state.broadcastOpen = false; render(); });
   document.querySelector('[data-action="stop-broadcast"]')?.addEventListener('click', () => { stopUserBroadcast(); resetAuctionLot(); render(); });
+  document.querySelector('[data-action="flip-camera"]')?.addEventListener('click', flipBroadcastCamera);
   document.querySelector('#broadcast-form')?.addEventListener('submit', (event) => { event.preventDefault(); startUserBroadcast(Object.fromEntries(new FormData(event.currentTarget).entries())); });
   document.querySelectorAll('[data-ficha-toggle]').forEach((el) => el.addEventListener('click', () => { document.querySelector('#ficha-drawer')?.classList.toggle('open'); document.querySelector('#ficha-backdrop')?.classList.toggle('open'); }));
   document.querySelectorAll('[data-bid-raise]').forEach((el) => el.addEventListener('click', () => placeUserAuctionBid(Number(el.dataset.bidRaise))));

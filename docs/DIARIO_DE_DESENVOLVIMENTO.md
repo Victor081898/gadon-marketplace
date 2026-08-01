@@ -696,3 +696,13 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: produção verificada em https://gadon.quaerion.site — build mais recente servido, `/leilao` responde 200 via fallback, vídeos com range requests (206) e headers de cache aplicados.
 - O que falta: push do repositório para o GitHub com as credenciais do Victor.
 - Próximo responsável: Victor publica a branch no GitHub e valida o domínio no celular.
+
+### 2026-08-01 — Câmera dupla na transmissão, perfil no cadastro e painel Minha loja
+- Responsável: IA: Claude, front-end e produto.
+- Objetivo: permitir escolher e alternar entre câmera frontal (vendedor falando) e traseira (animal) na transmissão do leilão; capturar o perfil desejado no cadastro; dar ao vendedor de produtos um painel de gestão da loja.
+- Alterações: modal "Leiloar meu lote" ganhou seleção de câmera inicial (traseira/frontal) e botão "Trocar câmera" durante o pregão (troca de facingMode com espelhamento na frontal); cadastro de conta ganhou a escolha "Como você quer usar o GadOn?" (comprador/vendedor/os dois) — vendedor entra direto no Painel vendedor, o perfil vai no lead e no profile local; nova página "Minha loja" (acessível pela Loja rural) com estatísticas simuladas (visualizações, pedidos, faturamento), lista dos produtos do usuário com editar (modal reaproveitado com pré-preenchimento), pausar/reativar (some da vitrine) e excluir com confirmação.
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: nenhum novo contrato remoto; produtos e perfil seguem em localStorage; lead `cadastro-conta` agora inclui o campo `perfil`.
+- Validação: `npm run build` verde; fluxos validados no navegador (cadastro como vendedor caindo no painel, produto criado/pausado/reativado na Minha loja, modal de transmissão com seleção de câmera); deploy publicado em gadon.quaerion.site.
+- O que falta: validar a troca de câmera em aparelho físico com duas câmeras durante o evento.
+- Próximo responsável: Victor testa a transmissão frontal/traseira no celular.
