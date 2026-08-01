@@ -1,15 +1,112 @@
 import './styles.css';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 const lots = [
-  { id: 1, name: 'Nelore selecionado', meta: '80 machos · 12@', weight: 12, price: 'R$ 28.000', unit: 'R$ 2.333,33 / cabeça', place: 'Campo Verde - MT', category: 'Nelore', sex: 'Machos', age: '18 a 24 meses', ageMonths: 21, purpose: 'Engorda', seller: 'Fazenda Santa Rita', image: 'https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?auto=format&fit=crop&w=900&q=85', accent: 'blue' },
+  { id: 1, name: 'Nelore selecionado', meta: '80 machos · 12@', weight: 12, price: 'R$ 28.000', unit: 'R$ 2.333,33 / cabeça', place: 'Campo Verde - MT', category: 'Nelore', sex: 'Machos', age: '18 a 24 meses', ageMonths: 21, purpose: 'Engorda', seller: 'Fazenda Santa Rita', image: '/home-hero-nelore.png', accent: 'blue' },
   { id: 2, name: 'Angus premium', meta: '50 fêmeas · 10@', weight: 10, price: 'R$ 23.500', unit: 'R$ 2.350,00 / cabeça', place: 'Dourados - MS', category: 'Angus', sex: 'Fêmeas', age: '20 a 28 meses', ageMonths: 24, purpose: 'Reprodução', seller: 'Agro Boa Vista', image: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=900&q=85', accent: 'orange' },
   { id: 3, name: 'Nelore matriz', meta: '120 matrizes · 15@', weight: 15, price: 'R$ 45.600', unit: 'R$ 2.280,00 / cabeça', place: 'Aparecida do Taboado - MS', category: 'Nelore', sex: 'Fêmeas', age: '24 a 36 meses', ageMonths: 30, purpose: 'Reprodução', seller: 'Fazenda JP', image: 'https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?auto=format&fit=crop&w=900&q=85', accent: 'green' },
   { id: 4, name: 'Cruza industrial', meta: '60 machos · 10@', weight: 10, price: 'R$ 19.800', unit: 'R$ 1.980,00 / cabeça', place: 'Goiânia - GO', category: 'Cruza', sex: 'Machos', age: '16 a 22 meses', ageMonths: 19, purpose: 'Engorda', seller: 'Fazenda São Miguel', image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=900&q=85', accent: 'purple' },
   { id: 5, name: 'Bezerros Nelore', meta: '40 machos · 8@', weight: 8, price: 'R$ 11.000', unit: 'R$ 2.750,00 / cabeça', place: 'Rondonópolis - MT', category: 'Bezerros', sex: 'Machos', age: '8 a 12 meses', ageMonths: 10, purpose: 'Recria', seller: 'Fazenda Horizonte', image: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=900&q=85', accent: 'blue' },
   { id: 6, name: 'Lote de reposição', meta: '30 fêmeas · 8@', weight: 8, price: 'R$ 6.900', unit: 'R$ 2.300,00 / cabeça', place: 'Campo Grande - MS', category: 'Outros', sex: 'Fêmeas', age: '12 a 18 meses', ageMonths: 15, purpose: 'Recria', seller: 'Estância Boa Água', image: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=900&q=85', accent: 'orange' },
 ];
+
+const SUPABASE_URL = 'https://fnpstspmhhphrbpycczm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZucHN0c3BtaGhwaHJicHljY3ptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNDg2MzksImV4cCI6MjA5MDkyNDYzOX0.nANm27dc3x_vN8xw-z6OcyEX_zaCc-lVeh0UDJrAtns';
+async function sendLead(source, { name = '', email = '', phone = '', details = {} } = {}) {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/gadon_leads`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, Prefer: 'return=minimal' },
+      body: JSON.stringify({ source, name: name || 'Visitante GadOn', email, phone, details }),
+    });
+    return response.ok;
+  } catch { return false; }
+}
+
+const auctionLots = [
+  { id: 1, name: 'Nelore PO Elite', tag: 'LOTE 01', desc: '45 machos · 20@ média · Genética avaliada', place: 'Campo Verde - MT', seller: 'Fazenda Santa Rita', startBid: 92000, increment: 1000, image: '/home-hero-nelore.png',
+    cameras: [{ type: 'video', src: '/videos/lote-nelore.mp4' }, { type: 'image', src: '/home-hero-nelore.png' }, { type: 'image', src: '/nelore-cadastro.png' }],
+    ficha: { 'Raça': 'Nelore PO', 'Categoria': '45 machos', 'Peso médio': '20@ (≈600 kg)', 'Idade': '24 a 30 meses', 'Procedência': 'Fazenda Santa Rita · Campo Verde/MT', 'Vacinação': 'Em dia · aftosa e clostridiose', 'GTA': 'Emitida para o leilão', 'Regime': 'Pasto + suplementação mineral', 'Avaliação genética': 'Deca 1 · sumário ANCP' } },
+  { id: 2, name: 'Matrizes Angus Prenhes', tag: 'LOTE 02', desc: '30 fêmeas prenhes · 16@ média · Prenhez confirmada', place: 'Dourados - MS', seller: 'Agro Boa Vista', startBid: 78000, increment: 1000, image: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1200&q=85',
+    cameras: [{ type: 'video', src: '/videos/lote-matrizes.mp4' }, { type: 'image', src: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1200&q=85' }, { type: 'image', src: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=1200&q=85' }],
+    ficha: { 'Raça': 'Angus', 'Categoria': '30 fêmeas prenhes', 'Peso médio': '16@ (≈480 kg)', 'Idade': '30 a 36 meses', 'Prenhez': 'Confirmada por ultrassom', 'Procedência': 'Agro Boa Vista · Dourados/MS', 'Vacinação': 'Em dia · aftosa e brucelose', 'GTA': 'Emitida para o leilão', 'Regime': 'Pasto rotacionado' } },
+  { id: 3, name: 'Touro Nelore Reprodutor', tag: 'LOTE 03', desc: '1 touro PO · 32@ · Registro e avaliação genética', place: 'Rondonópolis - MT', seller: 'Fazenda Horizonte', startBid: 46000, increment: 500, image: '/nelore-cadastro.png',
+    cameras: [{ type: 'video', src: '/videos/lote-touro.mp4' }, { type: 'image', src: '/nelore-cadastro.png' }, { type: 'image', src: '/home-hero-nelore.png' }],
+    ficha: { 'Raça': 'Nelore PO', 'Categoria': 'Touro reprodutor', 'Peso': '32@ (≈960 kg)', 'Idade': '48 meses', 'Registro': 'RGD definitivo ABCZ', 'Procedência': 'Fazenda Horizonte · Rondonópolis/MT', 'Exame andrológico': 'Aprovado (últimos 60 dias)', 'Vacinação': 'Em dia', 'Avaliação genética': 'TOP 3% · sumário ANCP' } },
+  { id: 4, name: 'Bezerros Desmama Premium', tag: 'LOTE 04', desc: '60 machos · 9@ média · Desmame recente', place: 'Goiânia - GO', seller: 'Fazenda São Miguel', startBid: 54000, increment: 500, image: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1200&q=85',
+    cameras: [{ type: 'video', src: '/videos/lote-bezerros.mp4' }, { type: 'image', src: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1200&q=85' }, { type: 'image', src: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=1200&q=85' }],
+    ficha: { 'Raça': 'Nelore', 'Categoria': '60 machos desmamados', 'Peso médio': '9@ (≈270 kg)', 'Idade': '10 a 12 meses', 'Procedência': 'Fazenda São Miguel · Goiânia/GO', 'Vacinação': 'Protocolo completo de desmama', 'GTA': 'Emitida para o leilão', 'Regime': 'Creep feeding até a desmama' } },
+];
+const auctionCameraLabels = ['CAM 01 · Ao vivo', 'CAM 02 · Pista', 'CAM 03 · Detalhe'];
+function ensureAuctionFeedPlays() {
+  const video = document.querySelector('#auction-cam video');
+  if (!video) return;
+  if (userAuctionStream && currentAuctionLot().live && !video.srcObject) video.srcObject = userAuctionStream;
+  video.muted = true;
+  video.onpause = () => { if (video.isConnected && state.page === 'auction') video.play().catch(() => { /* autoplay bloqueado */ }); };
+  const playing = video.play();
+  if (playing) playing.catch(() => { /* autoplay bloqueado pelo navegador */ });
+}
+
+const auctionFeedMarkup = (lot, index) => {
+  const camera = lot.cameras[index % lot.cameras.length];
+  if (camera.type === 'live') return `<video class="cam-feed cam-live" autoplay muted playsinline></video>`;
+  if (camera.type === 'video') return `<video class="cam-feed" src="${camera.src}" autoplay muted loop playsinline></video>`;
+  return `<img class="cam-feed" src="${camera.src}" alt="${escapeHtml(lot.name)} ao vivo" />`;
+};
+const auctionBotNames = ['Fazenda Ouro Branco', 'Agro Sete Lagoas', 'Pecuária JLM', 'Haras Boa Sorte', 'Grupo Taboado', 'Fazenda Três Irmãos'];
+
+const shopProducts = [
+  { id: 1, category: 'Rações & Nutrição', name: 'Ração Engorda Premium 40kg', unit: 'saco 40kg', price: 189, image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=700&q=80', badge: 'Mais vendido' },
+  { id: 2, category: 'Rações & Nutrição', name: 'Sal Mineral Bovino 25kg', unit: 'saco 25kg', price: 96, image: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=700&q=80' },
+  { id: 3, category: 'Rações & Nutrição', name: 'Ração Bezerro Desmama 30kg', unit: 'saco 30kg', price: 148, image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=700&q=80' },
+  { id: 4, category: 'Rações & Nutrição', name: 'Suplemento Proteico Seca 30kg', unit: 'saco 30kg', price: 132, image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=80' },
+  { id: 5, category: 'Sementes & Plantio', name: 'Semente Brachiaria Brizantha 20kg', unit: 'saco 20kg', price: 420, image: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=700&q=80', badge: 'Alta procura' },
+  { id: 6, category: 'Sementes & Plantio', name: 'Semente Milho Silagem 60mil', unit: 'saco 60 mil sementes', price: 890, image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=700&q=80' },
+  { id: 7, category: 'Sementes & Plantio', name: 'Capim Mombaça 15kg', unit: 'saco 15kg', price: 385, image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80' },
+  { id: 8, category: 'Terras & Fazendas', name: 'Fazenda 520 hectares', unit: 'Campo Verde - MT · dupla aptidão', price: 18200000, land: true, image: 'https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=700&q=80', badge: 'Oportunidade' },
+  { id: 9, category: 'Terras & Fazendas', name: 'Sítio 85 hectares', unit: 'Jaciara - MT · pasto formado', price: 3400000, land: true, image: 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=700&q=80' },
+  { id: 10, category: 'Terras & Fazendas', name: 'Arrendamento 300 ha/ano', unit: 'Rio Verde - GO · lavoura', price: 540000, land: true, image: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=80' },
+  { id: 11, category: 'Equipamentos', name: 'Balança Digital Bovinos 2t', unit: 'unidade', price: 4890, image: 'https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?auto=format&fit=crop&w=700&q=80' },
+  { id: 12, category: 'Equipamentos', name: 'Kit Cerca Elétrica 5km', unit: 'kit completo', price: 1290, image: 'https://images.unsplash.com/photo-1444858291040-58f756a3bdd6?auto=format&fit=crop&w=700&q=80' },
+  { id: 13, category: 'Equipamentos', name: 'Brinco Eletrônico c/ 100un', unit: 'caixa 100 unidades', price: 780, image: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=700&q=80' },
+  { id: 14, category: 'Queijos & Laticínios', name: 'Queijo Minas Artesanal 1kg', unit: 'peça 1kg', price: 68, image: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=700&q=80', badge: 'Produtor local' },
+  { id: 15, category: 'Queijos & Laticínios', name: 'Leite Fresco da Fazenda 10L', unit: 'galão 10L', price: 55, image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=700&q=80' },
+  { id: 16, category: 'Queijos & Laticínios', name: 'Manteiga de Leite Cru 500g', unit: 'pote 500g', price: 38, image: 'https://images.unsplash.com/photo-1589881133595-a3c085cb731d?auto=format&fit=crop&w=700&q=80' },
+  { id: 17, category: 'Mel & Doces', name: 'Mel Silvestre Puro 1kg', unit: 'pote 1kg', price: 48, image: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=700&q=80', badge: 'Produtor local' },
+  { id: 18, category: 'Mel & Doces', name: 'Doce de Leite Caseiro 800g', unit: 'pote 800g', price: 32, image: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=700&q=80' },
+];
+const shopCategories = ['Todos', 'Rações & Nutrição', 'Sementes & Plantio', 'Queijos & Laticínios', 'Mel & Doces', 'Terras & Fazendas', 'Equipamentos'];
+const radarRoutes = [
+  { id: 1, type: 'ida', origin: 'Campo Verde - MT', dest: 'Goiânia - GO', from: [-55.16, -15.55], to: [-49.25, -16.68], carrier: 'Transportadora Boiadeiro', cargo: '80 cabeças · Nelore', departs: 'Hoje · 06:20', status: 'Em trânsito', progress: 0.45 },
+  { id: 2, type: 'ida', origin: 'Dourados - MS', dest: 'São Paulo - SP', from: [-54.81, -22.22], to: [-46.63, -23.55], carrier: 'AgroFrete Logística', cargo: '50 cabeças · Angus', departs: 'Hoje · 08:00', status: 'Em trânsito', progress: 0.2 },
+  { id: 3, type: 'ida', origin: 'Rondonópolis - MT', dest: 'Campo Grande - MS', from: [-54.64, -16.47], to: [-54.65, -20.47], carrier: 'Boiadeiro Express', cargo: '40 bezerros', departs: 'Hoje · 07:30', status: 'Em trânsito', progress: 0.68 },
+  { id: 4, type: 'volta', origin: 'Goiânia - GO', dest: 'Campo Grande - MS', from: [-49.25, -16.68], to: [-54.65, -20.47], carrier: 'Transportadora Boiadeiro', cargo: 'Espaço para 80 cabeças', departs: 'Hoje · 18:30', status: 'Volta disponível', price: 3850 },
+  { id: 5, type: 'volta', origin: 'Cuiabá - MT', dest: 'Rondonópolis - MT', from: [-56.1, -15.6], to: [-54.64, -16.47], carrier: 'Rota Sul Transportes', cargo: 'Espaço para 12 toneladas', departs: 'Amanhã · 05:00', status: 'Volta disponível', price: 1450 },
+  { id: 6, type: 'volta', origin: 'São Paulo - SP', dest: 'Dourados - MS', from: [-46.63, -23.55], to: [-54.81, -22.22], carrier: 'AgroFrete Logística', cargo: 'Espaço para 55 cabeças', departs: 'Amanhã · 09:30', status: 'Volta disponível', price: 4210 },
+];
+const haversineKm = ([lng1, lat1], [lng2, lat2]) => {
+  const rad = Math.PI / 180;
+  const a = Math.sin(((lat2 - lat1) * rad) / 2) ** 2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(((lng2 - lng1) * rad) / 2) ** 2;
+  return Math.round(6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+};
+const routeArc = (from, to, curvature = 0.18) => {
+  const midX = (from[0] + to[0]) / 2;
+  const midY = (from[1] + to[1]) / 2;
+  const controlX = midX - (to[1] - from[1]) * curvature;
+  const controlY = midY + (to[0] - from[0]) * curvature;
+  return Array.from({ length: 49 }, (_, i) => {
+    const t = i / 48;
+    const a = 1 - t;
+    return [a * a * from[0] + 2 * a * t * controlX + t * t * to[0], a * a * from[1] + 2 * a * t * controlY + t * t * to[1]];
+  });
+};
+const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+const nowTime = () => new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date());
 
 const icon = (name, size = 18) => {
   const paths = {
@@ -56,6 +153,10 @@ const icon = (name, size = 18) => {
     eye: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>',
     moon: '<path d="M20.5 15.3A8.5 8.5 0 0 1 8.7 3.5 8.5 8.5 0 1 0 20.5 15.3Z"/>',
+    gavel: '<path d="m14.5 12.5-8 8a2.1 2.1 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/>',
+    store: '<path d="m2 7 4.4-4.4A2 2 0 0 1 7.8 2h8.4a2 2 0 0 1 1.4.6L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-1.6-.6.7.7 0 0 0-.8 0 2.7 2.7 0 0 1-3.2 0 .7.7 0 0 0-.8 0 2.7 2.7 0 0 1-3.2 0 .7.7 0 0 0-.8 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2Z"/>',
+    leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/>',
+    minus: '<path d="M5 12h14"/>',
   };
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.home}</svg>`;
 };
@@ -140,6 +241,21 @@ const defaultAdvancedFilters = () => ({ region: 'Todos', sex: 'Todos', farm: 'To
 const initialAuthenticated = loadAuth();
 const state = { activeNav: 'Início', query: '', category: 'Todos', collectionView: 'all', mode: loadMode(), favorites: loadFavorites(), selectedLots: new Set(), filterOpen: false, advancedFilters: defaultAdvancedFilters(), sort: 'relevance', lotHistory: loadLotHistory(), profile: loadProfile(), sellerProfile: loadSellerProfile(), authenticated: initialAuthenticated, darkMode: loadDarkMode(), authError: '', modalLot: null, modalTab: 'description', modalMediaIndex: 0, freightSimulationOpen: false, freightSimulationLots: [], freightOrigin: '', freightDestination: '', freightEstimate: null, toast: '', page: initialAuthenticated && loadMode() === 'seller' ? 'sellerMarketplace' : initialAuthenticated ? 'home' : 'login', auditLog: loadAuditLog(), messages: loadMessages(), activeConversationId: 1, messageQuery: '', recording: false, freightTrips: loadFreightTrips(), freightRoutes: loadFreightRoutes(), returnLoads: defaultReturnLoads(), returnRegion: 'Todas', returnCargoType: 'Todos', returnRoutesEnabled: true, returnRegionsEnabled: true, returnSelectedLoad: 1, returnPopupLoad: null, freightCalendarOpen: false, freightDocuments: loadFreightDocuments(), freightDocumentsOpen: false, freightDocumentsFullOpen: false, freightRoutesOpen: false, freightDocumentsView: 'all', calendarYear: 2026, calendarMonth: 6, notifications: loadNotifications(), notificationsOpen: false };
 let returnMapInstance = null;
+const userProductsKey = 'gadon.user-products.v1';
+const loadUserProducts = () => { try { const parsed = JSON.parse(localStorage.getItem(userProductsKey) || '[]'); return Array.isArray(parsed) ? parsed : []; } catch { return []; } };
+const cartStorageKey = 'gadon.cart.v1';
+const loadCart = () => { try { const parsed = JSON.parse(localStorage.getItem(cartStorageKey) || '[]'); return Array.isArray(parsed) ? parsed : []; } catch { return []; } };
+const saveCart = () => { try { localStorage.setItem(cartStorageKey, JSON.stringify(state.cart)); } catch { /* armazenamento local indisponível */ } };
+Object.assign(state, {
+  welcomeOpen: !initialAuthenticated,
+  auctionIndex: 0, auctionBid: 0, auctionLeader: '', auctionHistory: [], auctionEndsAt: null, auctionStatus: 'live', auctionViewers: 214, auctionUserBids: 0,
+  cart: loadCart(), shopCategory: 'Todos', cartOpen: false, checkoutOpen: false, checkoutDone: false,
+  voiceActive: false, voiceFields: {},
+  cameraOpen: false, cattlePhotos: [],
+  userLocation: null, userLocationDemo: false, radarSelected: null, radarAlertShown: false,
+  broadcastOpen: false, userAuctionLot: null,
+  shopQuery: '', userProducts: loadUserProducts(), sellOpen: false, checkoutStep: 1, checkoutData: {}, lastOrderId: '',
+});
 
 function saveMessages() {
   try { localStorage.setItem(messageStorageKey, JSON.stringify(state.messages)); } catch { /* armazenamento local indisponível */ }
@@ -324,7 +440,7 @@ function searchPageTemplate() {
   const results = getFilteredLots();
   const breeds = [...new Set(lots.map((lot) => lot.category))];
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
-  return `<div class="app-shell search-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Buscar gado</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="search-page ${!state.query.trim() && state.category === 'Todos' && activeFilterCount() === 0 ? 'search-page-empty' : ''}"><div class="search-page-heading"><div><p class="eyebrow">PESQUISA DE GADO</p><h1>Encontre a raça ideal para sua compra.</h1><p>Pesquise pelo nome da raça, veja os lotes disponíveis e selecione os animais para iniciar uma negociação.</p></div><span class="search-result-pill">${results.length} ${results.length === 1 ? 'lote encontrado' : 'lotes encontrados'}</span></div><section class="breed-search-panel"><div class="search-empty-hero">${icon('search', 48)}<p class="eyebrow">BUSCAR GADO</p><h2>Qual raça você procura?</h2><p>Digite o nome de uma raça para começar a pesquisa.</p></div><form id="breed-search-form" class="breed-search-form"><div class="breed-search-input">${icon('search', 19)}<input id="breed-search" value="${escapeHtml(state.query)}" placeholder="Digite o nome da raça: Nelore, Angus..." autocomplete="off" /><button type="button" data-action="search-clear" aria-label="Limpar pesquisa">${icon('close', 15)}</button></div><button type="submit" class="primary-button">Buscar gado ${icon('arrow', 15)}</button></form><div class="search-suggestions"><span>Raças populares</span>${breeds.map((breed) => `<button type="button" class="breed-chip ${state.category === breed && !state.query ? 'selected' : ''}" data-search-category="${escapeHtml(breed)}">${escapeHtml(breed)} <small>${lots.filter((lot) => lot.category === breed).length}</small></button>`).join('')}</div></section><div class="search-results-heading"><div><p class="eyebrow">CATÁLOGO DISPONÍVEL</p><h2>${state.query ? `Resultados para “${escapeHtml(state.query)}”` : 'Todos os lotes'}</h2></div><div class="search-results-actions"><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar resultados"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div></div><div class="lots-grid search-results-grid">${results.length ? results.map(lotCard).join('') : `<div class="empty-state search-empty-state">Nenhum lote encontrado para essa pesquisa.<br><button type="button" class="secondary-button" data-action="search-clear">Limpar pesquisa</button></div>`}</div></div></main></div>${selectionBarTemplate()}${state.modalLot ? marketplaceModalTemplate(state.modalLot) : ''}${state.filterOpen ? filterDrawerTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
+  return `<div class="app-shell search-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','gavel','store','route','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Buscar gado</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="search-page ${!state.query.trim() && state.category === 'Todos' && activeFilterCount() === 0 ? 'search-page-empty' : ''}"><div class="search-page-heading"><div><p class="eyebrow">PESQUISA DE GADO</p><h1>Encontre a raça ideal para sua compra.</h1><p>Pesquise pelo nome da raça, veja os lotes disponíveis e selecione os animais para iniciar uma negociação.</p></div><span class="search-result-pill">${results.length} ${results.length === 1 ? 'lote encontrado' : 'lotes encontrados'}</span></div><section class="breed-search-panel"><div class="search-empty-hero">${icon('search', 48)}<p class="eyebrow">BUSCAR GADO</p><h2>Qual raça você procura?</h2><p>Digite o nome de uma raça para começar a pesquisa.</p></div><form id="breed-search-form" class="breed-search-form"><div class="breed-search-input">${icon('search', 19)}<input id="breed-search" value="${escapeHtml(state.query)}" placeholder="Digite o nome da raça: Nelore, Angus..." autocomplete="off" /><button type="button" data-action="search-clear" aria-label="Limpar pesquisa">${icon('close', 15)}</button></div><button type="submit" class="primary-button">Buscar gado ${icon('arrow', 15)}</button></form><div class="search-suggestions"><span>Raças populares</span>${breeds.map((breed) => `<button type="button" class="breed-chip ${state.category === breed && !state.query ? 'selected' : ''}" data-search-category="${escapeHtml(breed)}">${escapeHtml(breed)} <small>${lots.filter((lot) => lot.category === breed).length}</small></button>`).join('')}</div></section><div class="search-results-heading"><div><p class="eyebrow">CATÁLOGO DISPONÍVEL</p><h2>${state.query ? `Resultados para “${escapeHtml(state.query)}”` : 'Todos os lotes'}</h2></div><div class="search-results-actions"><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar resultados"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div></div><div class="lots-grid search-results-grid">${results.length ? results.map(lotCard).join('') : `<div class="empty-state search-empty-state">Nenhum lote encontrado para essa pesquisa.<br><button type="button" class="secondary-button" data-action="search-clear">Limpar pesquisa</button></div>`}</div></div></main></div>${selectionBarTemplate()}${state.modalLot ? marketplaceModalTemplate(state.modalLot) : ''}${state.filterOpen ? filterDrawerTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
 
 function getUserAnnouncements() {
@@ -370,6 +486,10 @@ function registerReferenceDividerTemplate() {
   return `<div class="register-reference-divider" aria-hidden="true"><svg class="register-reference-divider-desktop-svg" viewBox="0 0 220 1000" preserveAspectRatio="none" focusable="false"><path d="M155 0 C65 70 0 130 25 205 C40 265 120 245 137 330 C152 407 70 452 67 570 C65 690 125 770 112 1000"></path></svg><svg class="register-reference-divider-mobile-svg" viewBox="0 0 400 280" preserveAspectRatio="none" focusable="false"><path class="register-reference-divider-mobile-mask" d="M0 34 C46 92 98 102 159 130 C228 162 286 232 400 208 V280 H0 Z"></path><path d="M0 34 C46 92 98 102 159 130 C228 162 286 232 400 208"></path></svg><div class="register-reference-cow-badge">${icon('cow', 30)}</div></div>`;
 }
 
+function welcomePopupTemplate() {
+  return `<div class="welcome-overlay" data-welcome-overlay><div class="welcome-card" role="dialog" aria-modal="true" aria-label="Boas-vindas ao GadOn"><button type="button" class="welcome-close" data-welcome-action="close" aria-label="Fechar">${icon('close', 18)}</button><div class="welcome-art"><img class="welcome-logo" src="/gadon-logo-transparent.png" alt="GadOn — O mercado do Gado" /><span class="welcome-spark one"></span><span class="welcome-spark two"></span><span class="welcome-spark three"></span></div><p class="eyebrow">SEJA BEM-VINDO AO GADON</p><h2>O mercado do gado<br/>chegou<span>.</span></h2><p class="welcome-sub">Compra, venda, leilões ao vivo, loja rural e frete inteligente — tudo em uma única plataforma feita para o pecuarista.</p><ul class="welcome-perks"><li>${icon('gavel', 16)} Leilões ao vivo com lances em tempo real</li><li>${icon('mic', 16)} Cadastre seu gado falando — a plataforma preenche por você</li><li>${icon('store', 16)} Loja rural: rações, sementes, terras e equipamentos</li></ul><div class="welcome-actions"><button type="button" class="welcome-create" data-welcome-action="create">Criar minha conta ${icon('arrow', 17)}</button><button type="button" class="welcome-skip" data-welcome-action="close">Já tenho conta</button></div><small class="welcome-note">${icon('shield', 13)} Cadastro gratuito · lançamento oficial</small></div></div>`;
+}
+
 function loginReferenceTemplate() {
   const heroImage = '/nelore-cadastro.png';
   return `<div class="register-reference-shell"><main class="register-reference-card"><section class="register-reference-form-panel"><header class="register-reference-header"><div class="register-reference-brand"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div><nav><button type="button" class="register-reference-nav active">Início</button><button type="button" class="register-reference-nav active">Entrar</button></nav></header><div class="register-reference-copy"><p>ACESSO SEGURO</p><h1>Entrar na sua conta<span>.</span></h1><span>Ainda não tem uma conta? <button type="button" data-auth-action="register">Criar nova conta</button></span></div>${state.authError ? `<div class="auth-error register-reference-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="login-reference-form" class="register-reference-form"><div class="register-reference-fields"><label class="register-reference-full"><span>E-mail ou nome de usuário</span><div>${icon('user', 17)}<input name="identifier" type="text" autocomplete="username" placeholder="seu@email.com ou seu usuário" required /></div></label><label class="register-reference-full"><span>Senha</span><div class="register-reference-password">${icon('lock', 17)}<input id="reference-login-password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6" required /><button type="button" data-auth-action="toggle-login-password" aria-label="Mostrar senha">${icon('eye', 17)}</button></div></label></div><div class="register-reference-login-options"><label class="register-reference-terms"><input type="checkbox" /> <span>Lembrar de mim</span></label><button type="button" class="register-reference-forgot" data-auth-action="forgot">Esqueci minha senha</button></div><div class="register-reference-actions"><button type="button" class="google-button" data-auth-action="google"><span>G</span> Entrar com Google</button><button type="submit" class="register-reference-submit">Entrar ${icon('arrow', 17)}</button></div><div class="register-reference-security">${icon('shield', 19)} <span>Seus dados estão protegidos com segurança de ponta.</span></div></form></section><section class="register-reference-visual" style="--reference-cattle-image:url('${heroImage}')"><div class="register-reference-curve"></div><div class="register-reference-cow-badge">${icon('cow', 30)}</div><div class="register-reference-visual-logo"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></section></main></div>`;
@@ -385,7 +505,7 @@ function accountRegistrationTemplate() {
 
 function accountRegistrationReferenceTemplate() {
   const heroImage = '/nelore-cadastro.png';
-  return `<div class="register-reference-shell"><main class="register-reference-card"><section class="register-reference-form-panel"><header class="register-reference-header"><div class="register-reference-brand"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div><nav><button type="button" class="register-reference-nav active">Início</button><button type="button" class="register-reference-nav" data-auth-action="back-login">Entrar</button></nav></header><div class="register-reference-copy"><p>COMECE AGORA</p><h1>Criar nova conta<span>.</span></h1><span>Já tem uma conta? <button type="button" data-auth-action="back-login">Entrar</button></span></div>${state.authError ? `<div class="auth-error register-reference-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="account-registration-reference-form" class="register-reference-form"><div class="register-reference-fields"><label><span>Nome</span><div>${icon('user', 17)}<input name="name" autocomplete="given-name" placeholder="Seu nome" required maxlength="60" /></div></label><label><span>Sobrenome</span><div>${icon('user', 17)}<input name="surname" autocomplete="family-name" placeholder="Seu sobrenome" required maxlength="80" /></div></label><label class="register-reference-full"><span>E-mail</span><div>${icon('mail', 17)}<input name="email" type="email" autocomplete="email" placeholder="seu@email.com" required /></div></label><label class="register-reference-full"><span>Senha</span><div class="register-reference-password">${icon('lock', 17)}<input id="reference-password" name="password" type="password" autocomplete="new-password" placeholder="••••••••" minlength="6" required /><button type="button" data-auth-action="toggle-password" aria-label="Mostrar senha">${icon('eye', 17)}</button></div></label></div><label class="register-reference-terms"><input name="terms" type="checkbox" required /><span>Eu concordo com os <a href="#" data-auth-action="terms">Termos de Uso</a> e a <a href="#" data-auth-action="privacy">Política de Privacidade</a>.</span></label><div class="register-reference-actions"><button type="button" class="google-button" data-auth-action="google"><span>G</span> Criar com Google</button><button type="submit" class="register-reference-submit">Criar conta ${icon('arrow', 17)}</button></div><div class="register-reference-security">${icon('shield', 19)} <span>Seus dados estão protegidos com segurança de ponta.</span></div></form></section><section class="register-reference-visual" style="--reference-cattle-image:url('${heroImage}')"><div class="register-reference-curve"></div><div class="register-reference-cow-badge">${icon('cow', 30)}</div><div class="register-reference-visual-logo"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></section></main></div>`;
+  return `<div class="register-reference-shell"><main class="register-reference-card"><section class="register-reference-form-panel"><header class="register-reference-header"><div class="register-reference-brand"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div><nav><button type="button" class="register-reference-nav active">Início</button><button type="button" class="register-reference-nav" data-auth-action="back-login">Entrar</button></nav></header><div class="register-reference-copy"><p>COMECE AGORA</p><h1>Criar nova conta<span>.</span></h1><span>Já tem uma conta? <button type="button" data-auth-action="back-login">Entrar</button></span></div>${state.authError ? `<div class="auth-error register-reference-error" role="alert">${icon('bell', 15)} ${escapeHtml(state.authError)}</div>` : ''}<form id="account-registration-reference-form" class="register-reference-form"><div class="register-reference-fields"><label><span>Nome</span><div>${icon('user', 17)}<input name="name" autocomplete="given-name" placeholder="Seu nome" required maxlength="60" /></div></label><label><span>Sobrenome</span><div>${icon('user', 17)}<input name="surname" autocomplete="family-name" placeholder="Seu sobrenome" required maxlength="80" /></div></label><label class="register-reference-full"><span>E-mail</span><div>${icon('mail', 17)}<input name="email" type="email" autocomplete="email" placeholder="seu@email.com" required /></div></label><label class="register-reference-full"><span>Celular / WhatsApp</span><div>${icon('phone', 17)}<input name="phone" type="tel" autocomplete="tel" placeholder="(00) 00000-0000" /></div></label><label class="register-reference-full"><span>Senha</span><div class="register-reference-password">${icon('lock', 17)}<input id="reference-password" name="password" type="password" autocomplete="new-password" placeholder="••••••••" minlength="6" required /><button type="button" data-auth-action="toggle-password" aria-label="Mostrar senha">${icon('eye', 17)}</button></div></label></div><label class="register-reference-terms"><input name="terms" type="checkbox" required /><span>Eu concordo com os <a href="#" data-auth-action="terms">Termos de Uso</a> e a <a href="#" data-auth-action="privacy">Política de Privacidade</a>.</span></label><div class="register-reference-actions"><button type="button" class="google-button" data-auth-action="google"><span>G</span> Criar com Google</button><button type="submit" class="register-reference-submit">Criar conta ${icon('arrow', 17)}</button></div><div class="register-reference-security">${icon('shield', 19)} <span>Seus dados estão protegidos com segurança de ponta.</span></div></form></section><section class="register-reference-visual" style="--reference-cattle-image:url('${heroImage}')"><div class="register-reference-curve"></div><div class="register-reference-cow-badge">${icon('cow', 30)}</div><div class="register-reference-visual-logo"><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></section></main></div>`;
 }
 
 function logout() {
@@ -404,11 +524,13 @@ function bindLoginEvents() {
   document.querySelector('[data-auth-action="forgot"]')?.addEventListener('click', () => { state.authError = 'A recuperação de senha será conectada ao serviço de autenticação.'; render(); });
   document.querySelector('[data-auth-action="toggle-login-password"]')?.addEventListener('click', (event) => { const input = document.querySelector('#reference-login-password'); if (!input) return; input.type = input.type === 'password' ? 'text' : 'password'; event.currentTarget.setAttribute('aria-label', input.type === 'password' ? 'Mostrar senha' : 'Ocultar senha'); });
   document.querySelector('[data-auth-action="google"]')?.addEventListener('click', () => { state.authError = 'O acesso com Google será conectado ao serviço de autenticação.'; render(); });
+  document.querySelectorAll('[data-welcome-action]').forEach((el) => el.addEventListener('click', () => { const create = el.dataset.welcomeAction === 'create'; state.welcomeOpen = false; if (create) { state.authError = ''; state.page = 'accountRegister'; } render(); }));
+  document.querySelector('[data-welcome-overlay]')?.addEventListener('click', (event) => { if (event.target === event.currentTarget) { state.welcomeOpen = false; render(); } });
 }
 
 function bindAccountRegistrationEvents() {
   document.querySelectorAll('[data-auth-action="back-login"]').forEach((el) => el.addEventListener('click', () => { state.authError = ''; state.page = 'login'; render(); }));
-  document.querySelector('#account-registration-reference-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (data.password.length < 6) { state.authError = 'A senha precisa ter pelo menos 6 caracteres.'; render(); return; } state.profile = { ...state.profile, name: `${data.name.trim()} ${data.surname.trim()}`.trim(), email: data.email.trim(), phone: '', avatar: '', passwordChangedAt: null }; saveProfile(); state.authenticated = true; state.authError = ''; state.page = 'home'; saveAuth(true); render(); });
+  document.querySelector('#account-registration-reference-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); if (data.password.length < 6) { state.authError = 'A senha precisa ter pelo menos 6 caracteres.'; render(); return; } const fullName = `${data.name.trim()} ${data.surname.trim()}`.trim(); sendLead('cadastro-conta', { name: fullName, email: data.email.trim(), phone: (data.phone || '').trim(), details: { origem: 'criar-conta' } }); state.profile = { ...state.profile, name: fullName, email: data.email.trim(), phone: (data.phone || '').trim(), avatar: '', passwordChangedAt: null }; saveProfile(); state.authenticated = true; state.authError = ''; state.page = 'home'; saveAuth(true); render(); showToast(`Bem-vindo ao GadOn, ${data.name.trim()}! Sua conta foi criada.`); });
   document.querySelector('[data-auth-action="toggle-password"]')?.addEventListener('click', (event) => { const input = document.querySelector('#reference-password'); if (!input) return; input.type = input.type === 'password' ? 'text' : 'password'; event.currentTarget.setAttribute('aria-label', input.type === 'password' ? 'Mostrar senha' : 'Ocultar senha'); });
   document.querySelector('[data-auth-action="google"]')?.addEventListener('click', () => { state.authError = 'A criação com Google será conectada ao serviço de autenticação.'; render(); });
   document.querySelectorAll('[data-auth-action="terms"],[data-auth-action="privacy"]').forEach((el) => el.addEventListener('click', (event) => event.preventDefault()));
@@ -417,8 +539,8 @@ function bindAccountRegistrationEvents() {
 function accountSidebarTemplate(activePage) {
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   const isSeller = state.mode === 'seller';
-  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
-  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'gavel', 'store', 'route', 'cow', 'message', 'truck', 'repeat'];
   return `<aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><button class="profile-mini profile-mini-button" data-account-page="${isSeller ? 'sellerProfile' : 'profile'}"><div class="avatar">${escapeHtml(state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase())}</div><div><strong>${escapeHtml(state.profile.name)}</strong><span>${isSeller ? 'Vendedor em preparação' : 'Comprador verificado'}</span></div><span class="icon-button">${icon('chevron', 15)}</span></button><nav class="main-nav"><p class="nav-label">${isSeller ? 'CENTRAL DE VENDAS' : 'MENU PRINCIPAL'}</p>${navItems.map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i])}<span>${item}</span>${!isSeller && item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p>${isSeller ? `<button class="nav-item ${activePage === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user')}<span>Perfil vendedor</span></button>` : `<button class="nav-item ${activePage === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item ${activePage === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user')}<span>Meu perfil</span></button>`}</nav><div class="sidebar-bottom"><button type="button" class="mode-switch-button" data-profile-mode="${isSeller ? 'buyer' : 'seller'}">${icon('repeat', 15)} ${isSeller ? 'Trocar para comprador' : 'Ativar perfil vendedor'}</button><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside>`;
 }
 
@@ -431,8 +553,8 @@ function accountTopbarTemplate(crumb) {
 function mobileMenuTemplate() {
   const initials = state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
   const isSeller = state.mode === 'seller';
-  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
-  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'gavel', 'store', 'route', 'cow', 'message', 'truck', 'repeat'];
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   return `<div class="mobile-drawer-backdrop ${state.mobileMenuOpen ? 'is-open' : ''}" data-mobile-menu-close></div><aside class="mobile-drawer ${state.mobileMenuOpen ? 'is-open' : ''}" aria-label="Menu principal" aria-hidden="${state.mobileMenuOpen ? 'false' : 'true'}"><div class="mobile-drawer-head"><div><p class="eyebrow">NAVEGAÇÃO</p><h2>Menu GadOn</h2></div><button type="button" class="mobile-drawer-close" data-mobile-menu-close aria-label="Fechar menu">${icon('close', 19)}</button></div><button type="button" class="mobile-drawer-profile" data-account-page="${isSeller ? 'sellerProfile' : 'profile'}"><span class="mobile-drawer-avatar">${escapeHtml(initials || 'JP')}</span><span><strong>${escapeHtml(state.profile.name)}</strong><small>${isSeller ? 'Vendedor em preparação' : 'Comprador verificado'}</small></span>${icon('chevron', 16)}</button><nav class="mobile-drawer-nav"><p class="mobile-drawer-label">${isSeller ? 'CENTRAL DE VENDAS' : 'MENU PRINCIPAL'}</p>${navItems.map((item, i) => `<button type="button" class="mobile-drawer-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i], 18)}<span>${item}</span>${!isSeller && item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="mobile-drawer-label">CONTA</p>${isSeller ? `<button type="button" class="mobile-drawer-item ${state.page === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user', 18)}<span>Perfil vendedor</span></button>` : `<button type="button" class="mobile-drawer-item ${state.page === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart', 18)}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button type="button" class="mobile-drawer-item ${state.page === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user', 18)}<span>Meu perfil</span></button>`}<button type="button" class="mobile-drawer-item mode-switch-drawer" data-profile-mode="${isSeller ? 'buyer' : 'seller'}">${icon('repeat', 18)}<span>${isSeller ? 'Trocar para comprador' : 'Ativar perfil vendedor'}</span></button><p class="mobile-drawer-label">PREFERÊNCIAS</p><button type="button" class="mobile-drawer-item mobile-theme-action" data-action="mobile-theme">${icon(state.darkMode ? 'sun' : 'moon', 18)}<span>${state.darkMode ? 'Modo claro' : 'Modo escuro'}</span><i>${state.darkMode ? 'Ativo' : 'Inativo'}</i></button><button type="button" class="mobile-drawer-item mobile-logout-action" data-action="logout">${icon('logout', 18)}<span>Sair da conta</span></button></nav><p class="mobile-drawer-foot">GadOn <span>•</span> O mercado do Gado</p></aside>`;
 }
@@ -458,8 +580,8 @@ function mountMobileMenu() {
 function accountSidebarTemplateV2(activePage) {
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   const isSeller = state.mode === 'seller';
-  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
-  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'gavel', 'store', 'route', 'cow', 'message', 'truck', 'repeat'];
   const accountItems = isSeller
     ? `<button class="nav-item ${activePage === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user')}<span>Perfil vendedor</span></button>`
     : `<button class="nav-item ${activePage === 'favorites' ? 'active' : ''}" data-account-page="favorites">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button><button class="nav-item ${activePage === 'profile' ? 'active' : ''}" data-account-page="profile">${icon('user')}<span>Meu perfil</span></button><button class="nav-item ${activePage === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user')}<span>Perfil vendedor</span></button>`;
@@ -475,8 +597,8 @@ function accountTopbarTemplateV2(crumb) {
 function mobileMenuTemplateV2() {
   const initials = state.profile.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
   const isSeller = state.mode === 'seller';
-  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
-  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const navItems = isSeller ? ['Painel vendedor', 'Meus produtos', 'Anunciar gado', 'Promoções'] : ['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = isSeller ? ['home', 'bag', 'cow', 'chart'] : ['home', 'search', 'gavel', 'store', 'route', 'cow', 'message', 'truck', 'repeat'];
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   const accountItems = isSeller
     ? `<button type="button" class="mobile-drawer-item ${state.page === 'sellerProfile' ? 'active' : ''}" data-account-page="sellerProfile">${icon('user', 18)}<span>Perfil vendedor</span></button>`
@@ -584,11 +706,31 @@ function applyTheme() {
 
 function render() {
   destroyReturnMap();
+  destroyRadarMap();
+  if (state.page !== 'auction' && userAuctionStream) stopUserBroadcast();
   if (!state.authenticated) {
     document.querySelector('#app').innerHTML = state.page === 'accountRegister' ? accountRegistrationReferenceTemplate() : loginReferenceTemplate();
     document.querySelector('.register-reference-card')?.insertAdjacentHTML('beforeend', registerReferenceDividerTemplate());
+    if (state.welcomeOpen && state.page !== 'accountRegister') document.querySelector('#app').insertAdjacentHTML('beforeend', welcomePopupTemplate());
     if (state.page === 'accountRegister') bindAccountRegistrationEvents();
     else bindLoginEvents();
+    return;
+  }
+  if (state.page === 'radar') {
+    document.querySelector('#app').innerHTML = radarTemplate();
+    bindRadarEvents();
+    mountRadarMap();
+    return;
+  }
+  if (state.page === 'auction') {
+    document.querySelector('#app').innerHTML = auctionTemplate();
+    bindAuctionEvents();
+    startAuctionEngine();
+    return;
+  }
+  if (state.page === 'shop') {
+    document.querySelector('#app').innerHTML = shopTemplate();
+    bindShopEvents();
     return;
   }
   if (state.page === 'register') {
@@ -612,7 +754,7 @@ function render() {
     document.querySelector('#app').innerHTML = returnFreightTemplate();
     mountMobileMenu();
     bindReturnFreightEvents();
-    enhanceReturnMap();
+    mountReturnMap();
     return;
   }
   if (state.page === 'search') {
@@ -665,7 +807,7 @@ function render() {
         <div class="profile-mini"><div class="avatar">${escapeHtml(profileInitials)}</div><div><strong>${escapeHtml(state.profile.name)}</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div>
         <nav class="main-nav">
           <p class="nav-label">MENU PRINCIPAL</p>
-          ${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0) ? `<b>${state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0)}</b>` : ''}</button>`).join('')}
+          ${['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','gavel','store','route','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0) ? `<b>${state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0)}</b>` : ''}</button>`).join('')}
           <p class="nav-label nav-spacer">CONTA</p>
           <button class="nav-item ${state.collectionView === 'favorites' ? 'active' : ''}" data-account-view="favorites">${icon('heart')}<span>Favoritos</span>${state.favorites.size ? `<b>${state.favorites.size}</b>` : ''}</button>
           <button class="nav-item">${icon('user')}<span>Meu perfil</span></button>
@@ -679,6 +821,7 @@ function render() {
           <section class="welcome-row"><div><p class="eyebrow">DOMINGO, 26 DE JULHO DE 2026</p><h1>Encontre seu próximo lote.</h1><p class="welcome-sub">Negocie direto com produtores de todo o Brasil.</p></div><div class="location-pill">${icon('pin', 16)} <span>Campo Verde, MT</span><span class="down">⌄</span></div></section>
           <section class="hero-card"><div class="hero-copy"><span class="hero-kicker">GADON MARKETPLACE</span><h2>O gado certo.<br><em>Do seu jeito.</em></h2><p>Compra, venda e frete inteligente em um só lugar.</p><button class="primary-button" data-scroll="lots">Buscar lotes ${icon('arrow', 16)}</button></div><div class="hero-art" role="img" aria-label="Gado Nelore em um pasto ao pôr do sol"><div class="hero-note"><span class="status-dot"></span> 2.351 lotes ativos agora</div></div></section>
           <section class="quick-stats"><div class="quick-stat"><div class="stat-icon blue-bg">${icon('cow', 19)}</div><div><strong>2.351</strong><span>lotes ativos</span></div></div><div class="quick-stat"><div class="stat-icon orange-bg">${icon('message', 19)}</div><div><strong>1.128</strong><span>negociações abertas</span></div></div><div class="quick-stat"><div class="stat-icon green-bg">${icon('truck', 19)}</div><div><strong>843</strong><span>fretes realizados</span></div></div><div class="quick-stat highlight"><div class="stat-icon purple-bg">${icon('repeat', 19)}</div><div><strong>Encontre cargas para a viagem de volta</strong><span>Aproveite a viagem de volta</span></div><button data-nav="Fretes de retorno">${icon('arrow', 15)}</button></div></section>
+          <section class="feature-promos"><button class="promo-card promo-auction" data-nav="Leilão ao vivo"><span class="live-pill"><i></i> AO VIVO</span><div><p class="eyebrow">LEILÃO GADON</p><h3>Nelore PO Elite em pregão agora</h3><p>Lances em tempo real · o martelo bate em minutos</p></div><span class="promo-cta">Dar lance ${icon('gavel', 16)}</span></button><button class="promo-card promo-shop" data-nav="Loja rural"><div><p class="eyebrow">LOJA RURAL</p><h3>Rações, sementes, terras e equipamentos</h3><p>Tudo para a fazenda em um só lugar</p></div><span class="promo-cta">Visitar loja ${icon('store', 16)}</span></button></section>
           <section class="section-block" id="lots"><div class="section-heading"><div><p class="eyebrow">PARA VOCÊ</p><h2>${state.collectionView === 'favorites' ? 'Meus favoritos' : state.collectionView === 'history' ? 'Histórico de visualizações' : 'Lotes em destaque'}</h2></div><button class="text-button" data-nav="Buscar gado">Ver todos ${icon('arrow', 15)}</button></div><div class="filter-row"><div class="search-field">${icon('search', 17)}<input id="search" value="${state.query}" placeholder="Busque por raça, cidade ou categoria..." /></div><div class="category-tabs">${['Todos', 'Nelore', 'Angus', 'Cruza', 'Bezerros'].map(c => `<button class="tab ${state.category === c ? 'selected' : ''}" data-category="${c}">${c}</button>`).join('')}</div><button class="filter-button" data-action="filters">${icon('filter', 16)} Filtros <span>${activeFilterCount()}</span></button><select class="sort-select" id="lot-sort" aria-label="Ordenar lotes"><option value="relevance" ${state.sort === 'relevance' ? 'selected' : ''}>Mais relevantes</option><option value="recent" ${state.sort === 'recent' ? 'selected' : ''}>Mais recentes</option><option value="price-low" ${state.sort === 'price-low' ? 'selected' : ''}>Menor preço</option><option value="weight-high" ${state.sort === 'weight-high' ? 'selected' : ''}>Maior peso</option></select></div><div class="lots-grid">${filtered.length ? filtered.slice(0, 4).map(lotCard).join('') : `<div class="empty-state">Nenhum lote encontrado. Tente outra busca.</div>`}</div></section>
           <section class="operations"><div class="operation-panel freight"><div class="operation-icon">${icon('truck', 22)}</div><div><p class="eyebrow">FRETE PARCEIRO</p><h3>Leve seu gado com segurança.</h3><p>Solicite cotações de transportadoras parceiras para sua rota.</p><button class="primary-button" data-nav="Fretes">Cotar frete ${icon('arrow', 15)}</button></div><div class="route-lines"></div></div><div class="operation-panel return logistics-panel"><div class="operation-icon">${icon('repeat', 22)}</div><div class="logistics-panel-content"><p class="eyebrow">INTELIGÊNCIA LOGÍSTICA</p><h3>Encontre cargas para a viagem de volta</h3><p>Aproveite o trajeto de retorno e reduza o custo do frete.</p><button class="primary-button logistics-opportunity-button" data-nav="Fretes de retorno">Ver oportunidades ${icon('arrow', 15)}</button></div></div></section>
           <section class="trust-row"><div>${icon('heart', 20)}<span><strong>Negociação direta</strong> fale com o anunciante</span></div><div>${icon('truck', 20)}<span><strong>Transportadores parceiros</strong> frete com cotação</span></div><div>${icon('user', 20)}<span><strong>Perfis verificados</strong> mais segurança</span></div><div>${icon('chart', 20)}<span><strong>Gestão completa</strong> para seu negócio</span></div></section>
@@ -872,7 +1015,7 @@ function messagesTemplate() {
   const conversations = state.messages.filter((conversation) => `${conversation.name} ${conversation.role} ${conversation.lastMessage}`.toLowerCase().includes(state.messageQuery.toLowerCase()));
   const unreadCount = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   return `<div class="app-shell messages-shell">
-    <aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unreadCount ? `<b>${unreadCount}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span></button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside>
+    <aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','gavel','store','route','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unreadCount ? `<b>${unreadCount}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span></button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside>
     <main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Mensagens</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="messages-page"><div class="messages-heading"><div><p class="eyebrow">COMUNICAÇÃO DIRETA</p><h1>Mensagens</h1><p>Negocie lotes e combine os próximos passos com segurança.</p></div><div class="message-summary"><span class="summary-dot"></span><strong>${state.messages.length}</strong><span>conversas ativas</span></div></div><div class="messages-layout"><section class="conversation-panel"><div class="conversation-head"><div><h2>Conversas</h2><span>${unreadCount ? `${unreadCount} não lidas` : 'Tudo em dia'}</span></div><button class="new-message-button" data-chat-action="new">${icon('plus', 15)} Nova conversa</button></div><div class="message-search">${icon('search', 16)}<input id="message-search" value="${escapeHtml(state.messageQuery)}" placeholder="Buscar conversa..." /></div><div class="conversation-list">${conversations.length ? conversations.map(conversationListItem).join('') : '<div class="conversation-empty">Nenhuma conversa encontrada.</div>'}</div></section><section class="chat-panel">${active ? `<div class="chat-head"><div class="chat-person"><div class="chat-avatar" style="background:${active.color}">${escapeHtml(active.initials)}</div><div><h2>${escapeHtml(active.name)}</h2><p><span class="${active.online ? 'online-dot' : 'offline-dot'}"></span>${active.online ? 'Online agora' : 'Visto recentemente'} · ${escapeHtml(active.role)}</p></div></div><div class="chat-actions"><button data-chat-action="quote">${icon('file', 16)} Cotar frete</button><button class="icon-button">${icon('dots', 19)}</button></div></div><div class="lot-context">${icon('cow', 15)}<span><b>${escapeHtml(lot?.name || active.role.replace('Vendedor · ', ''))}</b>${lot ? ` · ${escapeHtml(lot.place)} · ${escapeHtml(lot.price)}` : ''}</span><button data-lot="${active.lotId}">Ver lote ${icon('chevron', 13)}</button></div><div class="chat-messages">${active.messages.map(messageBubble).join('')}</div><form id="chat-form" class="chat-composer"><input id="chat-attachment" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" multiple /><button type="button" class="composer-tool" data-chat-action="attach" aria-label="Anexar arquivos">${icon('plus', 18)}</button><button type="button" class="composer-tool ${state.recording ? 'recording' : ''}" data-chat-action="record" aria-label="${state.recording ? 'Parar gravação' : 'Gravar áudio'}">${icon(state.recording ? 'stop' : 'mic', 17)}</button><input id="chat-input" name="message" autocomplete="off" placeholder="${state.recording ? 'Gravando áudio...' : 'Escreva uma mensagem...'}" maxlength="500" ${state.recording ? 'disabled' : ''} /><button type="submit" class="send-button" aria-label="Enviar mensagem" ${state.recording ? 'disabled' : ''}>${icon('send', 17)}</button></form><div class="chat-note">${icon('shield', 13)} Nunca compartilhe senhas ou dados bancários. O pagamento é combinado fora da plataforma.</div>` : '<div class="chat-no-selection">Selecione uma conversa para começar.</div>'}</section></div></div></main>
   </div>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
@@ -972,92 +1115,137 @@ function getReturnLoads() {
   return state.returnLoads.filter((load) => (state.returnRegion === 'Todas' || load.region === state.returnRegion) && (state.returnCargoType === 'Todos' || load.cargoType === state.returnCargoType));
 }
 
-function returnLoadCardTemplate(load) {
-  const selected = state.returnSelectedLoad === load.id;
-  const demandClass = load.demand === 'Alta' ? 'high' : load.demand === 'Média' ? 'medium' : 'low';
-  return `<article class="return-load-card ${selected ? 'selected' : ''}" data-return-load-card="${load.id}"><div class="return-load-card-top"><span class="return-load-type">${icon('repeat', 13)} ${escapeHtml(load.cargoType)}</span><em class="demand-badge ${demandClass}">${escapeHtml(load.demand)} demanda</em></div><button type="button" class="return-load-route" data-return-load-card="${load.id}"><span>${icon('pin', 15)}<strong>${escapeHtml(load.origin)}</strong></span><i>${icon('arrow', 14)}</i><span>${icon('pin', 15)}<strong>${escapeHtml(load.destination)}</strong></span></button><div class="return-load-facts"><div><small>Capacidade</small><b>${escapeHtml(load.capacity)}</b></div><div><small>Disponível</small><b>${escapeHtml(load.availableAt)}</b></div><div><small>Transportadora</small><b>${escapeHtml(load.carrier)}</b></div></div><div class="return-load-card-foot"><div><small>Frete estimado</small><strong>${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(load.price)}</strong><span>${escapeHtml(load.eta)}</span></div><button type="button" class="primary-button" data-return-action="request" data-return-request="${load.id}">Solicitar retorno ${icon('arrow', 14)}</button></div></article>`;
+async function resolveReturnRoute(load) {
+  const cacheKey = `gadon.route.ret.${load.id}`;
+  try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (cached?.points?.length) { load.points = cached.points; load.roadKm = cached.roadKm; return; } } catch { /* sem cache */ }
+  try {
+    const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${load.lng},${load.lat};${load.destinationLng},${load.destinationLat}?overview=full&geometries=geojson`);
+    const data = await response.json();
+    const road = data.routes?.[0];
+    if (road?.geometry?.coordinates?.length) {
+      load.points = road.geometry.coordinates;
+      load.roadKm = Math.round(road.distance / 1000);
+      try { localStorage.setItem(cacheKey, JSON.stringify({ points: load.points, roadKm: load.roadKm })); } catch { /* cache indisponível */ }
+      return;
+    }
+  } catch { /* OSRM indisponível — usa arco aproximado */ }
+  load.points = routeArc([load.lng, load.lat], [load.destinationLng, load.destinationLat], -0.16);
+  load.roadKm = haversineKm([load.lng, load.lat], [load.destinationLng, load.destinationLat]);
 }
 
-function returnMapPopupTemplate(load) {
-  return `<div class="return-map-popup" role="dialog" aria-label="Detalhes da carga selecionada"><button type="button" class="return-map-popup-close" data-return-map-popup-close aria-label="Fechar detalhes">${icon('close', 14)}</button><p class="eyebrow">CARGA PRÓXIMA DE FINALIZAR</p><strong>${escapeHtml(load.origin)} → ${escapeHtml(load.destination)}</strong><span>${escapeHtml(load.cargoType)} · ${escapeHtml(load.capacity)}</span><small>${escapeHtml(load.carrier)} · ${escapeHtml(load.eta)}</small><button type="button" class="primary-button" data-return-action="request" data-return-request="${load.id}">Solicitar retorno ${icon('arrow', 13)}</button></div>`;
+function mountReturnMap() {
+  const container = document.querySelector('#return-map');
+  if (!container) return;
+  returnMapInstance = new maplibregl.Map({ container, style: radarOsmStyle(), center: [-50, -18], zoom: 4.6 });
+  returnMapInstance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+  const map = returnMapInstance;
+  map.on('load', async () => {
+    const loads = state.returnLoads;
+    const seenCities = new Set();
+    loads.forEach((load) => {
+      [[[load.lng, load.lat], load.origin], [[load.destinationLng, load.destinationLat], load.destination]].forEach(([coords, label]) => {
+        if (seenCities.has(label)) return;
+        seenCities.add(label);
+        const cityEl = document.createElement('div');
+        cityEl.className = 'radar-city-dot';
+        cityEl.innerHTML = `<i></i><span>${escapeHtml(label)}</span>`;
+        new maplibregl.Marker({ element: cityEl, anchor: 'left' }).setLngLat(coords).addTo(map);
+      });
+    });
+    const bounds = new maplibregl.LngLatBounds();
+    loads.forEach((load) => { bounds.extend([load.lng, load.lat]); bounds.extend([load.destinationLng, load.destinationLat]); });
+    map.fitBounds(bounds, { padding: window.innerWidth < 860 ? { top: 40, bottom: 40, left: 40, right: 40 } : { top: 60, bottom: 60, left: 380, right: 60 }, duration: 900 });
+    await Promise.all(loads.map(resolveReturnRoute));
+    if (returnMapInstance !== map) return;
+    loads.forEach((load) => {
+      map.addSource(`ret-${load.id}`, { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: load.points } } });
+      map.addLayer({ id: `ret-${load.id}-casing`, type: 'line', source: `ret-${load.id}`, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 6, 'line-opacity': 0.75 } });
+      map.addLayer({ id: `ret-${load.id}`, type: 'line', source: `ret-${load.id}`, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': load.demand === 'Alta' ? '#f47a18' : '#1d6fb8', 'line-width': 3, 'line-opacity': 0.95, 'line-dasharray': [0.5, 1.6] } });
+      const truckEl = document.createElement('div');
+      truckEl.className = 'radar-truck volta';
+      if (load.demand === 'Alta') truckEl.classList.add('alta');
+      truckEl.innerHTML = icon('truck', 15);
+      truckEl.addEventListener('click', () => selectReturnLoad(load.id));
+      new maplibregl.Marker({ element: truckEl }).setLngLat([load.lng, load.lat]).addTo(map);
+    });
+  });
+}
+
+function selectReturnLoad(id) {
+  state.returnSelectedLoad = id;
+  const load = state.returnLoads.find((item) => item.id === id);
+  if (!load) return;
+  document.querySelectorAll('[data-return-load]').forEach((el) => el.classList.toggle('selected', Number(el.dataset.returnLoad) === id));
+  if (returnMapInstance && load.points) {
+    const mid = load.points[Math.floor(load.points.length / 2)];
+    returnMapInstance.flyTo({ center: mid, zoom: 6, duration: 900 });
+  }
+  const detail = document.querySelector('#return-detail');
+  if (detail) {
+    detail.innerHTML = `<div class="radar-detail-card volta"><div class="radar-detail-head"><span class="demand-pill ${load.demand.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}">Demanda ${load.demand}</span><span class="radar-detail-status">${escapeHtml(load.eta)}</span></div><strong>${escapeHtml(load.origin)} → ${escapeHtml(load.destination)}</strong><p>${escapeHtml(load.cargoType)} · ${escapeHtml(load.carrier)}</p><div class="radar-detail-meta"><span>${icon('cow', 13)} ${escapeHtml(load.capacity)}</span><span>${icon('route', 13)} ${load.roadKm || haversineKm([load.lng, load.lat], [load.destinationLng, load.destinationLat])} km pela estrada</span><span>${icon('calendar', 13)} ${escapeHtml(load.availableAt)}</span><span class="radar-price">${formatBRL(load.price)}</span></div><div class="return-checklist"><span>${icon('check', 12)} GTA e seguro conferidos</span><span>${icon('check', 12)} Transportadora verificada</span><span>${icon('check', 12)} Rastreamento em tempo real</span></div><button type="button" class="primary-button radar-request-cta" data-return-request="${load.id}">Solicitar este retorno ${icon('arrow', 14)}</button></div>`;
+    detail.querySelector('[data-return-request]')?.addEventListener('click', () => openReturnRequest(load.id));
+  }
+}
+
+function openReturnRequest(id) {
+  const load = state.returnLoads.find((item) => item.id === id);
+  const slot = document.querySelector('#return-modal-slot');
+  if (!load || !slot) return;
+  slot.innerHTML = `<div class="checkout-overlay"><div class="checkout-card"><div class="checkout-head"><strong>${icon('repeat', 17)} Solicitar frete de retorno</strong><button type="button" data-return-modal-close aria-label="Fechar">${icon('close', 17)}</button></div><div class="radar-request-route"><span class="demand-pill ${load.demand.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}">Demanda ${load.demand}</span><b>${escapeHtml(load.origin)} → ${escapeHtml(load.destination)}</b><small>${escapeHtml(load.carrier)} · ${escapeHtml(load.availableAt)} · ${formatBRL(load.price)}</small></div><form id="return-request-form" class="checkout-form"><label><span>Tipo de carga</span><select name="cargoType">${returnCargoTypes.filter((type) => type !== 'Todos').map((type) => `<option ${type === load.cargoType ? 'selected' : ''}>${type}</option>`).join('')}</select></label><label><span>Quantidade / peso</span><input name="quantity" placeholder="Ex.: 40 cabeças ou 8 toneladas" required /></label><label><span>Celular / WhatsApp</span><input name="phone" type="tel" value="${escapeHtml(state.profile.phone)}" placeholder="(00) 00000-0000" /></label><button type="submit" class="primary-button">Solicitar espaço ${icon('check', 16)}</button></form></div></div>`;
+  const close = () => { slot.innerHTML = ''; };
+  slot.querySelector('[data-return-modal-close]')?.addEventListener('click', close);
+  slot.querySelector('#return-request-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+    sendLead('frete-retorno-solicitacao', { name: state.profile.name, email: state.profile.email, phone: data.phone, details: { rota: `${load.origin} → ${load.destination}`, transportadora: load.carrier, saida: load.availableAt, carga: data.cargoType, quantidade: data.quantity, valor: load.price, origemPagina: 'fretes-de-retorno' } });
+    slot.innerHTML = `<div class="checkout-overlay"><div class="checkout-card checkout-success"><div class="checkout-check">${icon('check', 34)}</div><h2>Solicitação enviada!</h2><p>A <b>${escapeHtml(load.carrier)}</b> foi avisada do seu interesse no retorno <b>${escapeHtml(load.origin)} → ${escapeHtml(load.destination)}</b>. Você receberá o contato para fechar o frete.</p><button type="button" class="primary-button" data-return-modal-close>Fechar</button></div></div>`;
+    slot.querySelector('[data-return-modal-close]')?.addEventListener('click', close);
+  });
+}
+
+function triggerReturnAlert() {
+  const load = getReturnLoads()[0] || state.returnLoads[0];
+  if (!load) return;
+  const body = `${load.cargoType} · ${load.origin} → ${load.destination}, ${load.availableAt.toLowerCase()}. ${load.capacity} por ${formatBRL(load.price)} — demanda ${load.demand.toLowerCase()}.`;
+  state.notifications.unshift({ id: Date.now(), type: 'truck', title: 'Oportunidade de frete de retorno', source: load.origin, body, time: 'agora', unread: true });
+  saveNotifications();
+  try { if (typeof Notification !== 'undefined' && Notification.permission === 'granted') new Notification('GadOn · Frete de retorno disponível', { body, icon: '/gadon.jpeg' }); } catch { /* notificações indisponíveis */ }
+  const slot = document.querySelector('#return-alert-slot');
+  if (!slot) return;
+  slot.innerHTML = `<div class="radar-alert"><span class="radar-alert-icon">${icon('repeat', 20)}</span><div class="radar-alert-copy"><strong>Oportunidade de retorno! 🚛</strong><p>${escapeHtml(body)}</p></div><div class="radar-alert-actions"><button type="button" class="radar-alert-cta" data-return-alert-request="${load.id}">Solicitar retorno</button><button type="button" class="radar-alert-skip" data-return-alert-dismiss>Agora não</button></div></div>`;
+  slot.querySelector('[data-return-alert-request]')?.addEventListener('click', () => { slot.innerHTML = ''; openReturnRequest(load.id); });
+  slot.querySelector('[data-return-alert-dismiss]')?.addEventListener('click', () => { slot.innerHTML = ''; });
+}
+
+function returnLoadCard(load) {
+  return `<button type="button" class="radar-card volta ${state.returnSelectedLoad === load.id ? 'selected' : ''}" data-return-load="${load.id}"><div class="radar-card-top"><span class="demand-pill ${load.demand.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}">Demanda ${load.demand}</span><span class="radar-card-status">${icon('clock', 12)} ${escapeHtml(load.eta)}</span></div><strong>${escapeHtml(load.origin)} <em>→</em> ${escapeHtml(load.destination)}</strong><span class="radar-card-meta">${escapeHtml(load.cargoType)} · ${escapeHtml(load.capacity)} · ${escapeHtml(load.carrier)}</span><div class="radar-card-foot"><small>${icon('calendar', 12)} ${escapeHtml(load.availableAt)}</small><b>${formatBRL(load.price)}</b></div></button>`;
 }
 
 function returnFreightTemplate() {
   const loads = getReturnLoads();
-  const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
-  const selectedLoad = loads.find((load) => load.id === state.returnSelectedLoad) || loads[0];
-  const popupLoad = loads.find((load) => load.id === state.returnPopupLoad);
-  const markerTemplate = (load) => `<g class="map-marker ${state.returnSelectedLoad === load.id ? 'selected' : ''}" data-return-marker="${load.id}" role="button" tabindex="0" aria-label="${escapeHtml(`${load.origin} para ${load.destination}`)}" transform="translate(${load.x} ${load.y})"><circle class="marker-shadow" cx="0" cy="8" r="14"/><path class="marker-pin" d="M0-17c-8 0-14 6-14 14 0 10 14 23 14 23S14 7 14-3C14-11 8-17 0-17Z"/><circle class="marker-core" cx="0" cy="-3" r="5"/><text x="18" y="1">${escapeHtml(load.origin.split(' - ')[0])}</text></g>`;
-  return `<div class="app-shell return-freight-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'].map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(['home','search','cow','message','truck','repeat'][i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span></button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Fretes de retorno</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="return-freight-page"><div class="return-freight-heading"><div><p class="eyebrow">INTELIGÊNCIA LOGÍSTICA</p><h1>Encontre cargas para a viagem de volta</h1><p>Veja no mapa cargas próximas de finalizar e aproveite o trajeto de retorno.</p></div><span class="return-opportunity-count">${loads.length} oportunidade${loads.length === 1 ? '' : 's'} próxima${loads.length === 1 ? '' : 's'}</span></div><div class="return-freight-layout"><aside class="return-filter-panel"><div class="return-filter-head"><span>${icon('filter', 18)}</span><div><strong>Filtros</strong><small>Encontre uma carga compatível</small></div></div><label><span>Região</span><select id="return-region-filter">${returnRegions.map((region) => `<option value="${escapeHtml(region)}" ${state.returnRegion === region ? 'selected' : ''}>${escapeHtml(region)}</option>`).join('')}</select></label><label><span>Tipo de carga</span><select id="return-cargo-filter">${returnCargoTypes.map((cargo) => `<option value="${escapeHtml(cargo)}" ${state.returnCargoType === cargo ? 'selected' : ''}>${escapeHtml(cargo)}</option>`).join('')}</select></label><div class="return-filter-divider"></div><button type="button" class="return-toggle ${state.returnRoutesEnabled ? 'active' : ''}" data-return-toggle="routes"><span>Exibir rotas</span><i></i></button><button type="button" class="return-toggle ${state.returnRegionsEnabled ? 'active' : ''}" data-return-toggle="regions"><span>Exibir regiões</span><i></i></button><div class="return-map-legend"><strong>Demanda na região</strong><span><i class="legend-demand high"></i>Alta demanda</span><span><i class="legend-demand medium"></i>Média demanda</span><span><i class="legend-demand low"></i>Baixa demanda</span></div></aside><section class="return-map-panel"><div class="return-map-heading"><div><p class="eyebrow">MAPA DE ROTAS E REGIÕES</p><h2>Oportunidades próximas do retorno</h2></div><span class="map-updated">${icon('repeat', 13)} Atualizado agora</span></div><div class="return-map-stage"><svg class="return-brazil-map" viewBox="0 0 700 470" role="img" aria-label="Mapa do Brasil com cargas disponíveis para frete de retorno"><defs><linearGradient id="brazilMapGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#eee9ff"/><stop offset="100%" stop-color="#c9bcfa"/></linearGradient><filter id="mapShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#6b4be8" flood-opacity=".16"/></filter><clipPath id="brazilMapClip"><path d="${brazilMapPath}"/></clipPath></defs><path class="brazil-map-outline" d="${brazilMapPath}"/>${brazilMapBoundaries}<g class="map-region-labels"><text x="230" y="125">NORTE</text><text x="320" y="215">CENTRO-OESTE</text><text x="500" y="185">NORDESTE</text><text x="472" y="290">SUDESTE</text><text x="390" y="370">SUL</text></g>${state.returnRegionsEnabled ? '<g class="map-heat-regions" clip-path="url(#brazilMapClip)"><circle class="map-heat high" cx="425" cy="172" r="66"/><circle class="map-heat medium" cx="505" cy="242" r="62"/><circle class="map-heat low" cx="370" cy="350" r="55"/></g>' : ''}${state.returnRoutesEnabled ? '<g class="map-routes"><path d="M435 165C421 204 403 230 385 274C367 315 405 344 435 355"/><path d="M435 165C465 189 480 215 508 244"/><path d="M355 218C379 211 403 188 435 165"/><path d="M365 126C389 136 412 149 435 165"/></g>' : ''}<g class="map-markers">${loads.map(markerTemplate).join('')}</g></svg><div class="return-map-zoom"><button type="button" aria-label="Centralizar mapa">${icon('target', 17)}</button><button type="button" aria-label="Aumentar zoom">+</button><button type="button" aria-label="Diminuir zoom">−</button></div><div class="return-map-caption"><span><i class="map-route-dot"></i> Rota disponível para aproveitamento</span><span><i class="map-load-dot"></i> Carga próxima de finalizar</span></div></div><div class="selected-return-summary">${selectedLoad ? `<div><span class="selected-return-icon">${icon('repeat', 17)}</span><div><strong>${escapeHtml(selectedLoad.origin)} → ${escapeHtml(selectedLoad.destination)}</strong><small>${escapeHtml(selectedLoad.cargoType)} · ${escapeHtml(selectedLoad.capacity)} · ${escapeHtml(selectedLoad.eta)}</small></div></div><b>${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedLoad.price)}</b>` : '<p>Nenhuma oportunidade corresponde aos filtros selecionados.</p>'}</div></section></div><section class="return-loads-section"><div class="return-section-heading"><div><p class="eyebrow">CARGAS DISPONÍVEIS NO RETORNO</p><h2>Fretes perto de finalizar</h2><p>Selecione uma oportunidade para conferir os detalhes e solicitar o retorno.</p></div><span>${loads.length} resultado${loads.length === 1 ? '' : 's'}</span></div><div class="return-load-grid">${loads.length ? loads.map(returnLoadCardTemplate).join('') : '<div class="return-empty-state">Nenhuma carga encontrada para os filtros selecionados.</div>'}</div></section></div></main></div>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
+  const highDemand = state.returnLoads.filter((load) => load.demand === 'Alta').length;
+  return `<div class="radar-shell return-shell">
+    <header class="radar-topbar"><button class="back-link" data-action="return-back">${icon('back', 16)} Voltar</button><div class="radar-title"><strong>${icon('repeat', 19)} Fretes de retorno</strong><span class="live-pill"><i></i> OPORTUNIDADES</span></div><div class="radar-actions"><button type="button" id="return-alert-button" class="radar-action-button ghost">${icon('bell', 15)} Alerta de oportunidade</button></div></header>
+    <div class="return-filterbar"><div class="return-chips">${returnRegions.map((region) => `<button type="button" class="tab ${state.returnRegion === region ? 'selected' : ''}" data-return-region="${region}">${region}</button>`).join('')}</div><select id="return-cargo-select" class="sort-select" aria-label="Tipo de carga">${returnCargoTypes.map((type) => `<option ${state.returnCargoType === type ? 'selected' : ''}>${type}</option>`).join('')}</select><div class="return-summary"><span><b>${loads.length}</b> disponíveis</span><span class="demand-pill alta">${highDemand} alta demanda</span></div></div>
+    <div class="radar-body">
+      <aside class="radar-panel">
+        <div class="radar-panel-head"><p class="eyebrow">CARGAS DE RETORNO</p><div class="radar-legend"><span><i class="legend-volta" style="border-color:#f47a18"></i> Alta demanda</span><span><i class="legend-volta"></i> Demais rotas</span></div></div>
+        <div class="radar-cards">${loads.length ? loads.map(returnLoadCard).join('') : `<div class="radar-detail-empty">${icon('search', 22)}<p>Nenhuma carga com esses filtros.</p></div>`}</div>
+        <div class="radar-detail" id="return-detail"><div class="radar-detail-empty">${icon('repeat', 22)}<p>Selecione uma carga para ver a ficha completa e solicitar o retorno.</p></div></div>
+      </aside>
+      <div id="return-map" class="radar-map"></div>
+    </div>
+    <div id="return-alert-slot"></div>
+    <div id="return-modal-slot"></div>
+  </div>`;
 }
 
 function bindReturnFreightEvents() {
-  document.querySelectorAll('[data-nav]').forEach((el) => el.addEventListener('click', () => { state.activeNav = el.dataset.nav; state.page = el.dataset.nav === 'Mensagens' ? 'messages' : el.dataset.nav === 'Fretes' ? 'freight' : el.dataset.nav === 'Buscar gado' ? 'search' : el.dataset.nav === 'Fretes de retorno' ? 'returnFreight' : 'home'; if (el.dataset.nav === 'Buscar gado') { state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); } render(); }));
-  document.querySelector('[data-action="register"]')?.addEventListener('click', () => { state.page = 'register'; state.toast = ''; render(); });
-  document.querySelector('#return-region-filter')?.addEventListener('change', (event) => { state.returnRegion = event.target.value; state.returnSelectedLoad = null; render(); });
-  document.querySelector('#return-cargo-filter')?.addEventListener('change', (event) => { state.returnCargoType = event.target.value; state.returnSelectedLoad = null; render(); });
-  document.querySelectorAll('[data-return-toggle]').forEach((el) => el.addEventListener('click', () => { if (el.dataset.returnToggle === 'routes') state.returnRoutesEnabled = !state.returnRoutesEnabled; if (el.dataset.returnToggle === 'regions') state.returnRegionsEnabled = !state.returnRegionsEnabled; render(); }));
-  document.querySelectorAll('[data-return-marker], [data-return-load-card]').forEach((el) => el.addEventListener('click', () => { state.returnSelectedLoad = Number(el.dataset.returnMarker || el.dataset.returnLoadCard); render(); }));
-  document.querySelectorAll('[data-return-action="request"]').forEach((el) => el.addEventListener('click', (event) => { event.stopPropagation(); const load = state.returnLoads.find((item) => item.id === Number(el.dataset.returnRequest)); if (load) showToast(`Solicitação enviada para ${load.carrier}.`); }));
-  bindNotificationEvents();
-}
-
-function enhanceReturnMap() {
-  const stage = document.querySelector('.return-map-stage');
-  if (!stage) return;
-  const loads = getReturnLoads();
-  stage.innerHTML = '<div id="return-map-canvas" class="return-map-canvas" aria-label="Mapa interativo de rotas e regiões do Brasil"></div><div class="return-map-zoom"><button type="button" aria-label="Centralizar mapa">' + icon('target', 17) + '</button><button type="button" aria-label="Aumentar zoom">+</button><button type="button" aria-label="Diminuir zoom">−</button></div><div class="return-map-caption"><span><i class="map-route-dot"></i> Rota disponível para aproveitamento</span><span><i class="map-load-dot"></i> Carga próxima de finalizar</span></div>';
-
-  const map = new maplibregl.Map({
-    container: 'return-map-canvas',
-    style: brazilMapStyle,
-    center: [-53.5, -15.5],
-    zoom: 3.25,
-    minZoom: 2.3,
-    maxZoom: 9,
-    renderWorldCopies: false,
-    attributionControl: { compact: true },
-  });
-  returnMapInstance = map;
-
-  const [locateButton, zoomInButton, zoomOutButton] = stage.querySelectorAll('.return-map-zoom button');
-  locateButton?.addEventListener('click', () => map.easeTo({ center: [-53.5, -15.5], zoom: 3.25 }));
-  zoomInButton?.addEventListener('click', () => map.zoomIn());
-  zoomOutButton?.addEventListener('click', () => map.zoomOut());
-
-  map.on('load', () => {
-    map.addSource('brazil-country', { type: 'geojson', data: { type: 'Feature', properties: { name: 'Brasil' }, geometry: { type: 'Polygon', coordinates: [brazilMapCoordinates] } } });
-    map.addLayer({ id: 'brazil-country-fill', type: 'fill', source: 'brazil-country', paint: { 'fill-color': '#e8e5ff', 'fill-opacity': .92 } });
-    map.addLayer({ id: 'brazil-country-line', type: 'line', source: 'brazil-country', paint: { 'line-color': '#7661cf', 'line-width': 2, 'line-opacity': .95 } });
-    map.addSource('brazil-region-lines', { type: 'geojson', data: { type: 'FeatureCollection', features: brazilRegionLines.map((coordinates, index) => ({ type: 'Feature', properties: { id: index }, geometry: { type: 'LineString', coordinates } })) } });
-    map.addLayer({ id: 'brazil-region-lines', type: 'line', source: 'brazil-region-lines', paint: { 'line-color': '#ffffff', 'line-width': 1.4, 'line-opacity': .95, 'line-dasharray': [1, 0] }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
-    const routeFeatures = loads.map((load) => ({ type: 'Feature', properties: { id: load.id, demand: load.demand }, geometry: { type: 'LineString', coordinates: [[load.lng, load.lat], [load.destinationLng, load.destinationLat]] } }));
-    map.addSource('return-routes', { type: 'geojson', data: { type: 'FeatureCollection', features: routeFeatures } });
-    map.addLayer({ id: 'return-routes-line', type: 'line', source: 'return-routes', paint: { 'line-color': '#43b58d', 'line-width': 3, 'line-opacity': .86, 'line-dasharray': [2, 1.5] }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
-    map.addSource('return-load-points', { type: 'geojson', data: { type: 'FeatureCollection', features: loads.map((load) => ({ type: 'Feature', properties: { id: load.id, demand: load.demand }, geometry: { type: 'Point', coordinates: [load.lng, load.lat] } })) } });
-    map.addLayer({ id: 'return-load-points-circle', type: 'circle', source: 'return-load-points', paint: { 'circle-color': ['match', ['get', 'demand'], 'Alta', '#5b2de1', 'Média', '#8d77e9', '#c5bdf5'], 'circle-radius': 13, 'circle-opacity': .3, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1 } });
-  });
-
-  loads.forEach((load) => {
-    const marker = document.createElement('button');
-    marker.type = 'button';
-    marker.className = `maplibre-return-marker ${state.returnSelectedLoad === load.id ? 'selected' : ''}`;
-    marker.setAttribute('aria-label', `${load.origin} para ${load.destination}`);
-    marker.innerHTML = '<span></span>';
-    marker.addEventListener('click', () => {
-      state.returnSelectedLoad = load.id;
-      state.returnPopupLoad = load.id;
-      const popup = new maplibregl.Popup({ closeButton: false, offset: 18, maxWidth: '260px' }).setLngLat([load.lng, load.lat]).setHTML(returnMapPopupTemplate(load)).addTo(map);
-      popup.getElement()?.querySelector('[data-return-map-popup-close]')?.addEventListener('click', () => popup.remove());
-      popup.getElement()?.querySelector('[data-return-action="request"]')?.addEventListener('click', () => showToast(`Solicitação enviada para ${load.carrier}.`));
-    });
-    new maplibregl.Marker({ element: marker, anchor: 'bottom' }).setLngLat([load.lng, load.lat]).addTo(map);
-  });
-
-  const popupLoad = loads.find((load) => load.id === state.returnPopupLoad);
-  if (popupLoad) {
-    map.once('load', () => new maplibregl.Popup({ closeButton: false, offset: 18, maxWidth: '260px' }).setLngLat([popupLoad.lng, popupLoad.lat]).setHTML(returnMapPopupTemplate(popupLoad)).addTo(map));
-  }
+  document.querySelector('[data-action="return-back"]')?.addEventListener('click', () => { state.page = 'home'; state.activeNav = 'Início'; render(); });
+  document.querySelectorAll('[data-return-region]').forEach((el) => el.addEventListener('click', () => { state.returnRegion = el.dataset.returnRegion; render(); }));
+  document.querySelector('#return-cargo-select')?.addEventListener('change', (event) => { state.returnCargoType = event.target.value; render(); });
+  document.querySelectorAll('[data-return-load]').forEach((el) => el.addEventListener('click', () => selectReturnLoad(Number(el.dataset.returnLoad))));
+  document.querySelector('#return-alert-button')?.addEventListener('click', () => { if (typeof Notification !== 'undefined' && Notification.permission === 'default') Notification.requestPermission(); triggerReturnAlert(); });
 }
 
 function freightDocumentListTemplate() {
@@ -1133,8 +1321,8 @@ function downloadFreightReport() {
 }
 
 function freightTemplate() {
-  const navItems = ['Início', 'Buscar gado', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
-  const navIcons = ['home', 'search', 'cow', 'message', 'truck', 'repeat'];
+  const navItems = ['Início', 'Buscar gado', 'Leilão ao vivo', 'Loja rural', 'Radar de fretes', 'Meus anúncios', 'Mensagens', 'Fretes', 'Fretes de retorno'];
+  const navIcons = ['home', 'search', 'gavel', 'store', 'route', 'cow', 'message', 'truck', 'repeat'];
   const unread = state.messages.reduce((sum, conversation) => sum + (conversation.unread || 0), 0);
   return `<div class="app-shell freight-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="profile-mini"><div class="avatar">JP</div><div><strong>João Pecuarista</strong><span>Comprador verificado</span></div><button class="icon-button">${icon('chevron', 15)}</button></div><nav class="main-nav"><p class="nav-label">MENU PRINCIPAL</p>${navItems.map((item, i) => `<button class="nav-item ${state.activeNav === item ? 'active' : ''}" data-nav="${item}">${icon(navIcons[i])}<span>${item}</span>${item === 'Mensagens' && unread ? `<b>${unread}</b>` : ''}</button>`).join('')}<p class="nav-label nav-spacer">CONTA</p><button class="nav-item">${icon('heart')}<span>Favoritos</span></button><button class="nav-item">${icon('user')}<span>Meu perfil</span></button></nav><div class="sidebar-bottom"><div class="help-card"><div class="help-icon">?</div><div><strong>Precisa de ajuda?</strong><span>Fale com nosso suporte</span></div>${icon('chevron', 15)}</div><div class="sidebar-foot">GadOn <span>•</span> versão 1.0 MVP</div></div></aside><main class="main-content"><header class="topbar"><button class="mobile-menu icon-button">${icon('menu', 21)}</button><div class="crumb">Marketplace <span>/</span> Fretes</div><div class="top-actions"><button class="announce-button" data-action="register">${icon('plus', 15)} Habilitar lote</button><div class="notification-wrap"><button class="circle-action" data-action="notifications" aria-label="Abrir notificações">${icon('bell', 18)}${getNotificationCount() ? '<i></i>' : ''}</button>${notificationPopover()}</div><div class="top-avatar">JP</div><button class="top-user">João Pecuarista <span>⌄</span></button></div></header><div class="freight-page"><div class="freight-heading"><div><p class="eyebrow">OPERAÇÃO DE FRETE</p><h1>Frete parceiro</h1><p>Organize cotações, viagens e documentos em um único lugar.</p></div><button class="primary-button" data-freight-action="new-quote">${icon('plus', 16)} Nova cotação</button></div><section class="freight-stats"><div><span class="freight-stat-icon blue-bg">${icon('truck', 18)}</span><span><b>12</b><small>Viagens em andamento</small></span></div><div><span class="freight-stat-icon orange-bg">${icon('file', 18)}</span><span><b>6</b><small>Cotações pendentes</small></span></div><div><span class="freight-stat-icon green-bg">${icon('repeat', 18)}</span><span><b>8</b><small>Retornos disponíveis</small></span></div><div><span class="freight-stat-icon purple-bg">${icon('chart', 18)}</span><span><b>72%</b><small>Taxa de ocupação</small></span></div></section><section class="freight-modules">${[['quote','file','Painel da Cotação','Crie e compare solicitações'],['distance','route','Tabela de Distância','Rotas, km e estimativas'],['schedule','calendar','Agenda de Viagens','Coletas e entregas'],['documents','file','Gestão de Documentos','GTA, CT-e e comprovantes'],['status','pin','Status da Viagem','Acompanhe cada etapa'],['reports','chart','Relatórios','Indicadores da operação']].map(([id, ico, title, desc]) => `<button class="freight-module-card" data-freight-scroll="${id}"><span class="module-icon blue-bg">${icon(ico, 21)}</span><span><b>${title}</b><small>${desc}</small></span>${icon('chevron', 15)}</button>`).join('')}</section><div class="freight-grid"><section class="freight-panel quote-panel" id="freight-quote"><div class="freight-panel-heading"><div><p class="eyebrow">PAINEL DA COTAÇÃO</p><h2>Solicite um frete</h2></div><span class="panel-status">Nova solicitação</span></div><form id="freight-quote-form" class="quote-form"><label><span>Origem</span><input name="origin" value="Campo Verde - MT" required /></label><label><span>Destino</span><input name="destination" placeholder="Goiânia - GO" required /></label><label><span>Quantidade</span><div class="freight-unit"><input name="animals" type="number" min="1" placeholder="80" required /><em>cabeças</em></div></label><label><span>Data da coleta</span><input name="pickup" type="date" required /></label><label class="quote-full"><span>Finalidade</span><select name="purpose"><option>Engorda</option><option>Abate</option><option>Reprodução</option><option>Recria</option></select></label><button type="submit" class="primary-button quote-full">Solicitar cotações ${icon('arrow', 15)}</button></form><div class="quote-note">${icon('shield', 14)} A solicitação será encaminhada para transportadoras parceiras habilitadas.</div></section><section class="freight-panel" id="freight-distance"><div class="freight-panel-heading"><div><p class="eyebrow">TABELA DE DISTÂNCIA</p><h2>Rotas recentes</h2></div><button class="panel-link" data-freight-action="all-routes">Ver tabela completa ${icon('arrow', 14)}</button></div><div class="route-table"><div class="route-row route-head"><span>Origem → destino</span><span>Distância</span><span>Estimativa</span></div><div class="route-row"><span>${icon('route', 14)} Campo Verde - MT → Goiânia - GO</span><b>1.065 km</b><strong>R$ 6.480</strong></div><div class="route-row"><span>${icon('route', 14)} Dourados - MS → São Paulo - SP</span><b>1.020 km</b><strong>R$ 6.120</strong></div><div class="route-row"><span>${icon('route', 14)} Rondonópolis - MT → Cuiabá - MT</span><b>215 km</b><strong>R$ 2.150</strong></div></div></section><section class="freight-panel" id="freight-schedule"><div class="freight-panel-heading"><div><p class="eyebrow">AGENDA DE VIAGENS</p><h2>Próximas operações</h2></div><button class="panel-link" data-freight-action="calendar">Ver calendário ${icon('arrow', 14)}</button></div><div class="trip-list"><div class="trip-item"><div class="date-box"><b>28</b><small>JUL</small></div><div><strong>Campo Verde - MT → Goiânia - GO</strong><span>80 cabeças · Transportadora Boiadeiro</span></div><em class="trip-badge underway">Em andamento</em></div><div class="trip-item"><div class="date-box"><b>30</b><small>JUL</small></div><div><strong>Dourados - MS → São Paulo - SP</strong><span>50 cabeças · AgroFrete Logística</span></div><em class="trip-badge scheduled">Programada</em></div><div class="trip-item"><div class="date-box"><b>02</b><small>AGO</small></div><div><strong>Rondonópolis - MT → Campo Grande - MS</strong><span>40 cabeças · Boiadeiro Express</span></div><em class="trip-badge scheduled">Programada</em></div></div></section><section class="freight-panel" id="freight-documents"><div class="freight-panel-heading"><div><p class="eyebrow">GESTÃO DE DOCUMENTOS</p><h2>Documentos recentes</h2></div><div class="document-panel-actions"><button class="panel-link" data-freight-action="all-documents">Ver todos ${icon('arrow', 14)}</button><button class="panel-link" data-freight-action="documents">${icon('plus', 14)} Adicionar documento</button></div></div><div class="document-list">${freightDocumentListTemplate()}</div></section><section class="freight-panel status-panel" id="freight-status"><div class="freight-panel-heading"><div><p class="eyebrow">STATUS DA VIAGEM</p><h2>VIA-1024 em andamento</h2></div><span class="panel-status green-status"><span class="online-dot"></span> Em rota</span></div><div class="status-route"><div class="status-point done"><i>${icon('pin', 14)}</i><span><b>Campo Verde - MT</b><small>Saída registrada · 28 jul, 06:20</small></span></div><div class="status-line"><i></i></div><div class="status-point current"><i>${icon('truck', 14)}</i><span><b>Rondonópolis - MT</b><small>Última atualização · há 18 min</small></span></div><div class="status-line muted-line"><i></i></div><div class="status-point pending"><i>${icon('pin', 14)}</i><span><b>Goiânia - GO</b><small>Previsão de chegada · 29 jul, 16:00</small></span></div></div></section><section class="freight-panel reports-panel" id="freight-reports"><div class="freight-panel-heading"><div><p class="eyebrow">RELATÓRIOS</p><h2>Indicadores da operação</h2></div><button class="panel-link" data-freight-action="report">${icon('download', 14)} Exportar</button></div><div class="report-grid"><div><span>Fretes realizados</span><b>843</b><small class="positive">+10,1% este mês</small></div><div><span>Custo médio / cabeça</span><b>R$ 82,40</b><small class="positive">-8,4% com retorno</small></div><div><span>Prazo médio</span><b>1,8 dias</b><small>12 rotas avaliadas</small></div><div><span>Documentos pendentes</span><b>06</b><small class="warning">Requer atenção</small></div></div></section></div></div></main></div>${state.freightCalendarOpen ? calendarModalTemplate() : ''}${state.freightDocumentsOpen ? freightDocumentModalTemplate() : ''}${state.freightDocumentsFullOpen ? freightDocumentsFullTemplate() : ''}${state.freightRoutesOpen ? freightRoutesFullTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}`;
 }
@@ -1188,25 +1376,158 @@ function stopAudioRecording() {
   if (audioRecorder?.state === 'recording') audioRecorder.stop();
 }
 
+let speechRec = null;
+let cameraStream = null;
+const voiceFieldLabels = { lotName: 'Nome do lote', species: 'Espécie', purpose: 'Finalidade', breed: 'Raça', quantity: 'Quantidade', sex: 'Sexo', age: 'Idade média', weight: 'Peso (@)', price: 'Preço', farm: 'Fazenda', city: 'Município', state: 'UF', healthStatus: 'Sanidade' };
+const voiceStateNames = [['mato grosso do sul', 'MS'], ['mato grosso', 'MT'], ['goias', 'GO'], ['minas gerais', 'MG'], ['sao paulo', 'SP'], ['parana', 'PR'], ['bahia', 'BA']];
+const titleCase = (value) => value.replace(/\S+/g, (word) => ['de', 'da', 'do', 'dos', 'das', 'e'].includes(word) ? word : word[0].toUpperCase() + word.slice(1));
+
+function parseVoiceTranscript(raw) {
+  const text = ` ${raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')} `;
+  const found = {};
+  const qty = text.match(/(\d+)\s*(?:cabecas?|animais|bois|vacas|machos|femeas|bezerros?|novilhas?|garrotes?|matrizes)/);
+  if (qty) found.quantity = qty[1];
+  const hasMale = /\bmachos?\b/.test(text);
+  const hasFemale = /\bfemeas?\b|\bmatriz(es)?\b|\bnovilhas?\b|\bvacas?\b/.test(text);
+  if (hasMale && hasFemale) found.sex = 'Misto'; else if (hasMale) found.sex = 'Machos'; else if (hasFemale) found.sex = 'Fêmeas';
+  if (text.includes('nelore')) found.breed = 'Nelore'; else if (text.includes('brangus')) found.breed = 'Brangus'; else if (text.includes('angus')) found.breed = 'Angus'; else if (text.includes('guzera')) found.breed = 'Guzerá'; else if (text.includes('cruza')) found.breed = 'Cruza industrial';
+  if (found.breed || found.quantity) found.species = /bufal|bubalin/.test(text) ? 'Bubalino' : 'Bovino';
+  if (text.includes('recria')) found.purpose = 'Recria'; else if (text.includes('engorda')) found.purpose = 'Engorda'; else if (text.includes('abate')) found.purpose = 'Abate'; else if (text.includes('reproducao')) found.purpose = 'Reprodução'; else if (text.includes('leilao')) found.purpose = 'Leilão'; else if (/\bcria\b/.test(text)) found.purpose = 'Cria';
+  const age = text.match(/(\d+)\s*(?:a\s*\d+\s*)?meses/);
+  if (age) found.age = age[1];
+  const weight = text.match(/(\d+(?:[.,]\d+)?)\s*(?:arrobas?|@)/);
+  if (weight) found.weight = weight[1].replace('.', ',');
+  const thousands = text.match(/(\d+(?:[.,]\d+)?)\s*mil(?:\s*reais)?/);
+  if (thousands) found.price = (parseFloat(thousands[1].replace(',', '.')) * 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  else { const price = text.match(/(\d[\d.]*)\s*reais/); if (price) found.price = price[1]; }
+  const farm = text.match(/(fazenda|sitio|estancia|haras)\s+([a-z0-9 ]{3,32}?)(?=\s+(?:em|no|na|para|com)\b|[,.]|$)/);
+  if (farm) found.farm = titleCase(`${farm[1]} ${farm[2].trim()}`);
+  for (const [stateName, uf] of voiceStateNames) {
+    if (!text.includes(stateName)) continue;
+    found.state = uf;
+    const city = text.match(new RegExp(`\\bem\\s+([a-z ]{3,28}?)[,\\s]+(?:no\\s+|em\\s+)?${stateName}`));
+    if (city) { const cityName = city[1].trim().replace(/^(a|o|as|os|na|no)\s+/, ''); if (cityName && !/^(fazenda|sitio|estancia|haras)/.test(cityName)) found.city = titleCase(cityName); }
+    break;
+  }
+  if (/vacin\w* em dia|vacinado/.test(text)) found.healthStatus = 'Vacinações em dia';
+  if (found.breed && (found.farm || found.city)) found.lotName = `${found.breed}${found.purpose ? ` ${found.purpose.toLowerCase()}` : ' selecionado'} - ${found.farm || found.city}`;
+  return found;
+}
+
+const voiceChipsMarkup = () => Object.entries(state.voiceFields).map(([key, value]) => `<span class="voice-chip">${icon('check', 12)} ${voiceFieldLabels[key] || key}: <b>${escapeHtml(String(value))}</b></span>`).join('');
+
+function applyVoiceData(found) {
+  const form = document.querySelector('#cattle-form');
+  if (!form) return;
+  let changed = false;
+  Object.entries(found).forEach(([key, value]) => {
+    const input = form.elements[key];
+    if (!input || state.voiceFields[key] === value) return;
+    input.value = value;
+    if (input.tagName === 'SELECT' && input.value !== String(value)) return;
+    state.voiceFields[key] = value;
+    changed = true;
+    input.classList.add('voice-filled');
+    setTimeout(() => input.classList.remove('voice-filled'), 1500);
+  });
+  if (changed) {
+    const chips = document.querySelector('#voice-chips');
+    if (chips) chips.innerHTML = voiceChipsMarkup();
+  }
+}
+
+function setVoicePanelState() {
+  document.querySelector('#voice-panel')?.classList.toggle('is-active', state.voiceActive);
+  const toggle = document.querySelector('#voice-toggle');
+  if (toggle) toggle.innerHTML = state.voiceActive ? `${icon('stop', 16)} Parar gravação` : `${icon('mic', 16)} Falar agora`;
+}
+
+function startVoiceFill() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('Reconhecimento de voz indisponível neste navegador. Use o Google Chrome.'); return; }
+  try {
+    speechRec = new SR();
+    speechRec.lang = 'pt-BR';
+    speechRec.continuous = true;
+    speechRec.interimResults = true;
+    speechRec.onresult = (event) => {
+      let transcript = '';
+      for (const result of event.results) transcript += result[0].transcript;
+      const display = document.querySelector('#voice-transcript');
+      if (display) { display.textContent = `“${transcript.trim().slice(-220)}”`; display.classList.add('has-text'); }
+      applyVoiceData(parseVoiceTranscript(transcript));
+    };
+    speechRec.onerror = (event) => { if (event.error === 'not-allowed' || event.error === 'service-not-allowed') { stopVoiceFill(); showToast('Permita o acesso ao microfone para preencher por voz.'); } };
+    speechRec.onend = () => { if (state.voiceActive && speechRec) { try { speechRec.start(); } catch { /* reconhecimento já ativo */ } } };
+    speechRec.start();
+    state.voiceActive = true;
+    setVoicePanelState();
+  } catch { showToast('Não foi possível iniciar o reconhecimento de voz.'); }
+}
+
+function stopVoiceFill() {
+  state.voiceActive = false;
+  if (speechRec) { const recognition = speechRec; speechRec = null; try { recognition.onend = null; recognition.stop(); } catch { /* já parado */ } }
+  setVoicePanelState();
+}
+
+const photoStripMarkup = () => state.cattlePhotos.map((src, index) => `<span class="photo-thumb"><img src="${src}" alt="Foto ${index + 1} do lote" /><button type="button" data-remove-photo="${index}" aria-label="Remover foto">${icon('close', 12)}</button></span>`).join('');
+
+async function openCameraModal() {
+  if (!navigator.mediaDevices?.getUserMedia) { showToast('Seu navegador não permite acesso à câmera.'); return; }
+  state.cameraOpen = true;
+  render();
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    const video = document.querySelector('#camera-video');
+    if (video) video.srcObject = cameraStream;
+  } catch { state.cameraOpen = false; render(); showToast('Não foi possível acessar a câmera. Verifique a permissão do navegador.'); }
+}
+
+function closeCameraModal() {
+  cameraStream?.getTracks().forEach((track) => track.stop());
+  cameraStream = null;
+  state.cameraOpen = false;
+  render();
+}
+
+function captureCameraPhoto() {
+  const video = document.querySelector('#camera-video');
+  if (!video?.videoWidth) return;
+  const canvas = document.createElement('canvas');
+  const scale = Math.min(1, 1280 / video.videoWidth);
+  canvas.width = Math.round(video.videoWidth * scale);
+  canvas.height = Math.round(video.videoHeight * scale);
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  state.cattlePhotos.push(canvas.toDataURL('image/jpeg', 0.82));
+  document.querySelectorAll('[data-photo-strip]').forEach((el) => { el.innerHTML = photoStripMarkup(); });
+  document.querySelectorAll('[data-photo-count]').forEach((el) => { el.textContent = `${state.cattlePhotos.length} foto${state.cattlePhotos.length === 1 ? '' : 's'} capturada${state.cattlePhotos.length === 1 ? '' : 's'}`; });
+}
+
+function cameraModalTemplate() {
+  return `<div class="camera-overlay"><div class="camera-card"><div class="camera-head"><div><strong>${icon('camera', 17)} Fotos do lote</strong><span data-photo-count>${state.cattlePhotos.length} foto${state.cattlePhotos.length === 1 ? '' : 's'} capturada${state.cattlePhotos.length === 1 ? '' : 's'}</span></div><button type="button" class="camera-close" data-camera-action="close" aria-label="Fechar câmera">${icon('close', 18)}</button></div><div class="camera-stage"><video id="camera-video" autoplay playsinline muted></video></div><div class="camera-strip" data-photo-strip>${photoStripMarkup()}</div><div class="camera-actions"><button type="button" class="secondary-button" data-camera-action="close">Concluir</button><button type="button" class="camera-shutter" data-camera-action="capture" aria-label="Tirar foto">${icon('camera', 24)}</button></div></div></div>`;
+}
+
 function registrationTemplate() {
   return `<div class="register-shell">
     <header class="register-topbar"><div class="brand register-brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>O mercado do Gado</small></div></div><div class="register-top-actions"><span class="save-status"><span class="online-dot"></span> Salvo automaticamente</span><button class="register-exit" data-action="back-home">Sair do cadastro ${icon('close', 15)}</button></div></header>
     <main class="register-content">
       <button class="back-link" data-action="back-home">${icon('back', 16)} Voltar para o marketplace</button>
       <div class="register-intro"><div><p class="eyebrow">HABILITAR LOTE · ETAPA 1 DE 1</p><h1>Cadastre os dados do seu gado.</h1><p>Preencha as informações abaixo para publicar seu lote e começar a receber contatos de compradores.</p></div><div class="progress-block"><div class="progress-label"><span>Progresso do cadastro</span><strong>25%</strong></div><div class="progress-track"><i></i></div></div></div>
+      <section class="voice-panel ${state.voiceActive ? 'is-active' : ''}" id="voice-panel"><div class="voice-head"><span class="voice-mic-badge">${icon('mic', 20)}</span><div class="voice-copy"><strong>Preenchimento por voz <em>NOVO</em></strong><span>Fale os dados do lote e o formulário se preenche sozinho, em tempo real.</span></div><button type="button" id="voice-toggle" class="voice-toggle">${state.voiceActive ? `${icon('stop', 16)} Parar gravação` : `${icon('mic', 16)} Falar agora`}</button></div><div class="voice-live"><div class="voice-wave"><i></i><i></i><i></i><i></i><i></i></div><p id="voice-transcript">Ouvindo… pode falar naturalmente.</p></div><div class="voice-chips" id="voice-chips">${voiceChipsMarkup()}</div><p class="voice-example">Exemplo: “Lote de 80 machos nelore, 18 meses, 12 arrobas, 95 mil reais, para engorda, na Fazenda Santa Rita em Campo Verde, Mato Grosso”.</p></section>
       <div class="register-layout">
         <form id="cattle-form" class="registration-form">
           <section class="form-section"><div class="form-section-head"><div class="section-number">01</div><div><h2>Sobre o lote</h2><p>Conte o que está sendo ofertado.</p></div></div><div class="form-grid two"><label class="field full"><span>Nome do lote <b>*</b></span><input name="lotName" placeholder="Ex.: Nelore selecionado - Fazenda Santa Rita" required /></label><label class="field"><span>Espécie <b>*</b></span><select name="species" required><option value="">Selecione</option><option>Bovino</option><option>Bubalino</option></select></label><label class="field"><span>Finalidade do lote <b>*</b></span><select name="purpose" required><option value="">Selecione</option><option>Cria</option><option>Recria</option><option>Engorda</option><option>Abate</option><option>Reprodução</option><option>Leilão</option></select></label><label class="field"><span>Raça predominante <b>*</b></span><select name="breed" required><option value="">Selecione</option><option>Nelore</option><option>Angus</option><option>Brangus</option><option>Guzerá</option><option>Cruza industrial</option><option>Outra</option></select></label><label class="field"><span>Composição racial</span><input name="composition" placeholder="Ex.: 3/4 Nelore, 1/4 Angus" /></label></div></section>
           <section class="form-section"><div class="form-section-head"><div class="section-number">02</div><div><h2>Quantidade e características</h2><p>Use dados médios do lote e informe variações nas observações.</p></div></div><div class="form-grid three"><label class="field"><span>Quantidade de animais <b>*</b></span><div class="unit-input"><input name="quantity" type="number" min="1" placeholder="80" required /><em>cabeças</em></div></label><label class="field"><span>Sexo predominante <b>*</b></span><select name="sex" required><option value="">Selecione</option><option>Machos</option><option>Fêmeas</option><option>Misto</option></select></label><label class="field"><span>Idade média</span><div class="unit-input"><input name="age" type="number" min="0" placeholder="24" /><em>meses</em></div></label><label class="field"><span>Peso médio / arrobas</span><div class="unit-input"><input name="weight" placeholder="18" /><em>@</em></div></label><label class="field"><span>Preço total do lote <b>*</b></span><div class="unit-input"><em>R$</em><input name="price" placeholder="28.000,00" required /></div></label><label class="field"><span>Data disponível para retirada</span><input name="availableAt" type="date" /></label></div><label class="field"><span>Observações sobre os animais</span><textarea name="description" rows="4" placeholder="Manejo, acabamento, condição corporal, prenhez, linhagem ou outros detalhes importantes..."></textarea></label></section>
           <section class="form-section"><div class="form-section-head"><div class="section-number">03</div><div><h2>Origem e propriedade</h2><p>Esses dados ajudam na negociação e na cotação do frete.</p></div></div><div class="form-grid two"><label class="field full"><span>Nome da propriedade / fazenda <b>*</b></span><input name="farm" placeholder="Fazenda Santa Rita" required /></label><label class="field"><span>Município <b>*</b></span><input name="city" placeholder="Campo Verde" required /></label><label class="field"><span>UF <b>*</b></span><select name="state" required><option value="">Selecione</option><option>MT</option><option>MS</option><option>GO</option><option>MG</option><option>SP</option><option>PR</option><option>BA</option><option>Outro estado</option></select></label><label class="field"><span>Cadastro / registro da propriedade</span><input name="propertyCode" placeholder="Código no órgão estadual, se aplicável" /></label><label class="field"><span>Distância aproximada até a rodovia</span><div class="unit-input"><input name="roadDistance" placeholder="12" /><em>km</em></div></label></div></section>
           <section class="form-section"><div class="form-section-head"><div class="section-number">04</div><div><h2>Sanidade e rastreabilidade</h2><p>Informe o status atual. A documentação oficial será validada antes do transporte.</p></div></div><div class="form-grid two"><label class="field"><span>Situação sanitária declarada <b>*</b></span><select name="healthStatus" required><option value="">Selecione</option><option>Vacinações em dia</option><option>Em atualização</option><option>A confirmar com veterinário</option></select></label><label class="field"><span>Rastreabilidade individual</span><select name="traceability"><option value="">Selecione</option><option>Não se aplica ao lote</option><option>Identificação SISBOV</option><option>Identificação própria da fazenda</option><option>Em processo</option></select></label><label class="field"><span>GTA</span><select name="gtaStatus"><option value="">Selecione</option><option>A emitir após a negociação</option><option>Solicitada</option><option>Emitida</option><option>Não se aplica nesta etapa</option></select></label><label class="field"><span>Número do certificado / atestado</span><input name="certificate" placeholder="Se aplicável à finalidade e à UF" /></label></div><div class="health-note">${icon('shield', 17)} <div><strong>Importante para o transporte</strong><span>A GTA é o documento oficial de trânsito animal. Exames, vacinas e certificados podem variar conforme espécie, finalidade, origem, destino e regras da UF.</span></div></div></section>
-          <section class="form-section"><div class="form-section-head"><div class="section-number">05</div><div><h2>Fotos e documentos</h2><p>Adicione evidências para aumentar a confiança dos compradores.</p></div></div><div class="upload-grid"><label class="upload-box"><input type="file" name="photos" accept="image/*" multiple /><div class="upload-icon">${icon('upload', 22)}</div><strong>Adicionar fotos do lote</strong><span>JPG ou PNG · até 10 arquivos</span><em>Escolher arquivos</em></label><label class="upload-box"><input type="file" name="documents" accept=".pdf,image/*" multiple /><div class="upload-icon blue-upload">${icon('file', 22)}</div><strong>Documentos de apoio</strong><span>PDF ou imagem · até 10 MB cada</span><em>Adicionar documentos</em></label></div><div class="doc-hints"><span>${icon('file', 14)} Sugestões: comprovante de vacinação, identificação do lote, certificado ou documento da propriedade.</span><span>${icon('shield', 14)} Não publique CPF, dados bancários ou documentos com informações desnecessárias.</span></div></section>
+          <section class="form-section"><div class="form-section-head"><div class="section-number">05</div><div><h2>Fotos e documentos <i class="optional-tag">Opcional</i></h2><p>Você pode adicionar agora ou depois — nada aqui é obrigatório nesta etapa.</p></div></div><div class="upload-grid"><button type="button" class="upload-box camera-box" data-camera-action="open"><div class="upload-icon camera-upload">${icon('camera', 22)}</div><strong>Tirar fotos agora</strong><span>Use a câmera do dispositivo</span><em>Abrir câmera</em></button><label class="upload-box"><input type="file" name="photos" accept="image/*,video/*" multiple /><div class="upload-icon">${icon('upload', 22)}</div><strong>Fotos e vídeos do lote</strong><span>JPG, PNG ou MP4 · até 10 arquivos</span><em>Escolher arquivos</em></label><label class="upload-box"><input type="file" name="documents" accept=".pdf,image/*" multiple /><div class="upload-icon blue-upload">${icon('file', 22)}</div><strong>Documentos de apoio</strong><span>PDF ou imagem · até 10 MB cada</span><em>Adicionar documentos</em></label></div><div class="doc-hints"><span>${icon('file', 14)} Sugestões: comprovante de vacinação, identificação do lote, certificado ou documento da propriedade.</span><span>${icon('shield', 14)} Não publique CPF, dados bancários ou documentos com informações desnecessárias.</span></div><div class="photo-strip" data-photo-strip>${photoStripMarkup()}</div></section>
           <section class="form-section"><div class="form-section-head"><div class="section-number">06</div><div><h2>Declarações</h2><p>Leia antes de habilitar o anúncio.</p></div></div><label class="check-row"><input type="checkbox" required /><span>Declaro que as informações fornecidas são verdadeiras e que tenho autorização para ofertar este lote.</span></label><label class="check-row"><input type="checkbox" required /><span>Estou ciente de que a emissão de GTA, nota fiscal e demais documentos oficiais deve ser feita pelos responsáveis e órgãos competentes.</span></label><label class="check-row"><input type="checkbox" required /><span>Concordo em não inserir dados pessoais sensíveis de terceiros no anúncio.</span></label></section>
           <div class="register-footer"><span><b>*</b> Campos obrigatórios</span><button type="button" class="secondary-button" data-action="back-home">Cancelar</button><button type="submit" class="primary-button">Habilitar lote ${icon('arrow', 15)}</button></div>
         </form>
         <aside class="register-side"><div class="side-card side-preview"><div class="side-card-head"><span class="side-card-icon">${icon('file', 17)}</span><div><p class="eyebrow">PRÉVIA DO ANÚNCIO</p><h3>O que compradores verão</h3></div></div><div class="preview-placeholder">${icon('cow', 31)}<span>Suas fotos aparecerão aqui</span></div><div class="preview-lines"><i></i><i></i><i></i></div></div><div class="side-card"><div class="side-card-head"><span class="side-card-icon orange-side">${icon('shield', 17)}</span><div><p class="eyebrow">DOCUMENTAÇÃO</p><h3>Checklist de segurança</h3></div></div><ul class="checklist"><li><span>01</span> Dados do lote e origem</li><li><span>02</span> Situação sanitária declarada</li><li><span>03</span> Documentos para conferência</li><li><span>04</span> Revisão antes de publicar</li></ul><div class="side-disclaimer">O anúncio pode ficar pendente de validação do GadOn antes de ser exibido.</div></div>${auditLogCard(state.auditLog[0])}<div class="legal-links"><strong>Consulte fontes oficiais</strong><a href="https://www.gov.br/agricultura/pt-br/assuntos/sanidade-animal-e-vegetal/saude-animal/cgtqa/t_nacional/gta" target="_blank" rel="noreferrer">Informações sobre GTA ${icon('arrow', 13)}</a><a href="https://www.gov.br/agricultura/pt-br/guia-de-servicos/rastreabilidade-animal" target="_blank" rel="noreferrer">Rastreabilidade / SISBOV ${icon('arrow', 13)}</a></div></aside>
       </div>
-    </main>${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}
+    </main>${state.cameraOpen ? cameraModalTemplate() : ''}${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}
   </div>`;
 }
 
@@ -1216,8 +1537,562 @@ function auditLogCard(record) {
 }
 
 function bindRegistrationEvents() {
-  document.querySelectorAll('[data-action="back-home"]').forEach((el) => el.addEventListener('click', () => { state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; state.toast = ''; render(); }));
-  document.querySelector('#cattle-form')?.addEventListener('submit', (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); saveAuditLog(createRegistrationLog(data)); state.toast = 'Lote habilitado e enviado para análise.'; state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; render(); setTimeout(() => { state.toast = ''; render(); }, 3600); });
+  document.querySelectorAll('[data-action="back-home"]').forEach((el) => el.addEventListener('click', () => { stopVoiceFill(); if (state.cameraOpen) { cameraStream?.getTracks().forEach((track) => track.stop()); cameraStream = null; state.cameraOpen = false; } state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; state.toast = ''; render(); }));
+  document.querySelector('#cattle-form')?.addEventListener('submit', (event) => { event.preventDefault(); stopVoiceFill(); const data = Object.fromEntries(new FormData(event.currentTarget).entries()); delete data.photos; delete data.documents; sendLead('cadastro-gado', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { ...data, fotosCapturadas: state.cattlePhotos.length, preenchidoPorVoz: Object.keys(state.voiceFields).length > 0 } }); saveAuditLog(createRegistrationLog(data)); state.voiceFields = {}; state.cattlePhotos = []; state.toast = 'Lote habilitado e enviado para análise.'; state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'home'; render(); setTimeout(() => { state.toast = ''; render(); }, 3600); });
+  document.querySelector('#voice-toggle')?.addEventListener('click', () => { if (state.voiceActive) stopVoiceFill(); else startVoiceFill(); });
+  document.querySelectorAll('[data-camera-action="open"]').forEach((el) => el.addEventListener('click', openCameraModal));
+  document.querySelectorAll('[data-camera-action="close"]').forEach((el) => el.addEventListener('click', closeCameraModal));
+  document.querySelector('[data-camera-action="capture"]')?.addEventListener('click', captureCameraPhoto);
+  if (state.cameraOpen && cameraStream) { const video = document.querySelector('#camera-video'); if (video) video.srcObject = cameraStream; }
+  document.querySelector('.register-shell')?.addEventListener('click', (event) => { const removeButton = event.target.closest('[data-remove-photo]'); if (!removeButton) return; state.cattlePhotos.splice(Number(removeButton.dataset.removePhoto), 1); document.querySelectorAll('[data-photo-strip]').forEach((el) => { el.innerHTML = photoStripMarkup(); }); });
+}
+
+const cartCount = () => state.cart.reduce((sum, item) => sum + item.qty, 0);
+const saveUserProducts = () => { try { localStorage.setItem(userProductsKey, JSON.stringify(state.userProducts)); } catch { /* armazenamento local indisponível */ } };
+const allShopProducts = () => [...state.userProducts, ...shopProducts];
+const findProduct = (id) => allShopProducts().find((product) => product.id === id);
+const cartTotal = () => state.cart.reduce((sum, item) => { const product = findProduct(item.id); return sum + (product ? product.price * item.qty : 0); }, 0);
+const shopDeliveryFee = () => (state.checkoutData.delivery === 'retirada' ? 0 : cartTotal() >= 2000 ? 0 : 120);
+const shopPixDiscount = () => (state.checkoutData.payment === 'pix' ? Math.round(cartTotal() * 0.05) : 0);
+const shopOrderTotal = () => cartTotal() + shopDeliveryFee() - shopPixDiscount();
+const categoryDefaultImages = { 'Rações & Nutrição': 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&w=700&q=80', 'Sementes & Plantio': 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=700&q=80', 'Queijos & Laticínios': 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=700&q=80', 'Mel & Doces': 'https://images.unsplash.com/photo-1555211652-5c6222f971bc?auto=format&fit=crop&w=700&q=80', 'Terras & Fazendas': 'https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=700&q=80', 'Equipamentos': 'https://images.unsplash.com/photo-1444858291040-58f756a3bdd6?auto=format&fit=crop&w=700&q=80', 'Outros': '/home-hero-nelore.png' };
+
+function addToCart(id) {
+  const existing = state.cart.find((item) => item.id === id);
+  if (existing) existing.qty += 1; else state.cart.push({ id, qty: 1 });
+  saveCart();
+  state.cartOpen = true;
+  render();
+}
+
+function changeCartQty(id, delta) {
+  const item = state.cart.find((entry) => entry.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) state.cart = state.cart.filter((entry) => entry.id !== id);
+  saveCart();
+  render();
+}
+
+function shopFilteredProducts() {
+  const query = state.shopQuery.trim().toLowerCase();
+  return allShopProducts().filter((product) => (state.shopCategory === 'Todos' || product.category === state.shopCategory) && (!query || `${product.name} ${product.category} ${product.unit}`.toLowerCase().includes(query)));
+}
+
+function shopProductCard(product) {
+  const badge = product.mine ? 'Seu produto' : product.badge;
+  return `<article class="shop-card"><div class="shop-card-image"><img src="${product.image}" alt="${escapeHtml(product.name)}" loading="lazy" />${badge ? `<span class="shop-badge ${product.mine ? 'mine' : ''}">${badge}</span>` : ''}</div><div class="shop-card-body"><span class="shop-card-category">${product.land ? icon('leaf', 12) : icon('bag', 12)} ${product.category}</span><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.unit)}</p><div class="shop-card-footer"><strong>${formatBRL(product.price)}</strong>${product.land ? `<button type="button" class="shop-interest" data-land-interest="${product.id}">Tenho interesse</button>` : `<button type="button" class="shop-add" data-add-cart="${product.id}">${icon('plus', 15)} Adicionar</button>`}</div></div></article>`;
+}
+
+const shopGridMarkup = () => { const filtered = shopFilteredProducts(); return filtered.length ? filtered.map(shopProductCard).join('') : `<div class="shop-empty">${icon('search', 26)}<p>Nenhum produto encontrado.</p><span>Tente outra busca ou categoria.</span></div>`; };
+
+function cartDrawerTemplate() {
+  const items = state.cart.map((item) => ({ ...item, product: findProduct(item.id) })).filter((item) => item.product);
+  return `<div class="cart-overlay" data-action="close-cart"></div><aside class="cart-drawer"><div class="cart-head"><strong>${icon('cart', 18)} Seu carrinho</strong><button type="button" data-action="close-cart" aria-label="Fechar carrinho">${icon('close', 17)}</button></div>${items.length ? `<div class="cart-items">${items.map((item) => `<div class="cart-item"><img src="${item.product.image}" alt="" /><div class="cart-item-info"><strong>${escapeHtml(item.product.name)}</strong><span>${formatBRL(item.product.price)} · ${escapeHtml(item.product.unit)}</span></div><div class="cart-qty"><button type="button" data-cart-qty="${item.id}" data-delta="-1" aria-label="Diminuir">${icon('minus', 13)}</button><b>${item.qty}</b><button type="button" data-cart-qty="${item.id}" data-delta="1" aria-label="Aumentar">${icon('plus', 13)}</button></div></div>`).join('')}</div><div class="cart-footer"><div class="cart-total"><span>Subtotal</span><strong>${formatBRL(cartTotal())}</strong></div><button type="button" class="primary-button cart-checkout" data-action="open-checkout">Finalizar compra ${icon('arrow', 15)}</button><small>Frete grátis acima de R$ 2.000 · Pix com 5% de desconto</small></div>` : `<div class="cart-empty">${icon('bag', 30)}<p>Seu carrinho está vazio.</p><span>Adicione rações, queijos, mel e muito mais.</span></div>`}</aside>`;
+}
+
+function sellModalTemplate() {
+  const categories = [...shopCategories.filter((category) => category !== 'Todos' && category !== 'Terras & Fazendas'), 'Outros'];
+  return `<div class="checkout-overlay"><div class="checkout-card"><div class="checkout-head"><strong>${icon('store', 17)} Vender na Loja GadOn</strong><button type="button" data-action="close-sell" aria-label="Fechar">${icon('close', 17)}</button></div><p class="sell-note">Cadastre queijos, laticínios, mel, ração e o que mais sua fazenda produz. Seu produto entra na vitrine na hora.</p><form id="sell-form" class="checkout-form"><label><span>Nome do produto</span><input name="name" placeholder="Ex.: Queijo canastra meia cura 1kg" required maxlength="60" /></label><div class="sell-grid"><label><span>Categoria</span><select name="category">${categories.map((category) => `<option>${category}</option>`).join('')}</select></label><label><span>Preço (R$)</span><input name="price" type="number" min="1" step="0.01" placeholder="59,90" required /></label></div><label><span>Unidade de venda</span><input name="unit" placeholder="Ex.: peça 1kg · pote 500g · saco 40kg" required maxlength="40" /></label><label><span>Foto do produto <em class="optional-inline">opcional</em></span><input name="photo" type="file" accept="image/*" class="sell-file" /></label><button type="submit" class="primary-button">Publicar produto ${icon('check', 16)}</button></form></div></div>`;
+}
+
+function checkoutStepperMarkup() {
+  const steps = ['Entrega', 'Pagamento', 'Revisão'];
+  return `<div class="checkout-stepper">${steps.map((label, index) => { const number = index + 1; const stateClass = number < state.checkoutStep ? 'done' : number === state.checkoutStep ? 'active' : ''; return `<span class="checkout-step ${stateClass}"><i>${number < state.checkoutStep ? '✓' : number}</i><b>${label}</b></span>${number < steps.length ? '<em class="step-line"></em>' : ''}`; }).join('')}</div>`;
+}
+
+function checkoutModalTemplate() {
+  if (state.checkoutDone) return `<div class="checkout-overlay"><div class="checkout-card checkout-success"><div class="checkout-check">${icon('check', 34)}</div><h2>Pedido confirmado!</h2><p class="order-id">Pedido <b>${escapeHtml(state.lastOrderId)}</b></p><p>Total de <b>${formatBRL(shopOrderTotal())}</b> via ${state.checkoutData.payment === 'pix' ? 'Pix (5% de desconto aplicado)' : state.checkoutData.payment === 'boleto' ? 'boleto bancário' : 'cartão em até 12x'}. ${state.checkoutData.delivery === 'retirada' ? 'Retirada no parceiro mais próximo.' : 'Entrega na sua propriedade.'} Você receberá a confirmação no e-mail e WhatsApp.</p><button type="button" class="primary-button" data-action="close-checkout">Continuar comprando</button></div></div>`;
+  const data = state.checkoutData;
+  let body = '';
+  if (state.checkoutStep === 1) {
+    body = `<form id="checkout-step1" class="checkout-form"><div class="sell-grid"><label><span>Nome</span><input name="name" value="${escapeHtml(data.name || state.profile.name)}" required /></label><label><span>Celular / WhatsApp</span><input name="phone" type="tel" value="${escapeHtml(data.phone || state.profile.phone)}" required /></label></div><label><span>E-mail</span><input name="email" type="email" value="${escapeHtml(data.email || state.profile.email)}" required /></label><label><span>Endereço da propriedade</span><input name="address" value="${escapeHtml(data.address || '')}" placeholder="Fazenda, rodovia, km..." required /></label><div class="sell-grid"><label><span>Município</span><input name="city" value="${escapeHtml(data.city || '')}" placeholder="Campo Verde" required /></label><label><span>UF</span><select name="uf">${['MT', 'MS', 'GO', 'MG', 'SP', 'PR', 'BA'].map((uf) => `<option ${data.uf === uf ? 'selected' : ''}>${uf}</option>`).join('')}</select></label></div><p class="checkout-group-label">Como quer receber?</p><div class="option-cards"><label class="option-card"><input type="radio" name="delivery" value="entrega" ${data.delivery !== 'retirada' ? 'checked' : ''} /><div>${icon('truck', 17)}<b>Entrega na fazenda</b><span>${cartTotal() >= 2000 ? 'Frete grátis' : 'Frete R$ 120'} · até 5 dias úteis</span></div></label><label class="option-card"><input type="radio" name="delivery" value="retirada" ${data.delivery === 'retirada' ? 'checked' : ''} /><div>${icon('store', 17)}<b>Retirar no parceiro</b><span>Grátis · disponível em 24h</span></div></label></div><button type="submit" class="primary-button">Ir para pagamento ${icon('arrow', 15)}</button></form>`;
+  } else if (state.checkoutStep === 2) {
+    body = `<form id="checkout-step2" class="checkout-form"><p class="checkout-group-label">Forma de pagamento</p><div class="option-cards vertical"><label class="option-card"><input type="radio" name="payment" value="pix" ${data.payment !== 'boleto' && data.payment !== 'cartao' ? 'checked' : ''} /><div>${icon('check', 17)}<b>Pix</b><span>Aprovação imediata · <i class="pix-off">5% de desconto</i></span></div></label><label class="option-card"><input type="radio" name="payment" value="cartao" ${data.payment === 'cartao' ? 'checked' : ''} /><div>${icon('file', 17)}<b>Cartão de crédito</b><span>Em até 12x sem juros</span></div></label><label class="option-card"><input type="radio" name="payment" value="boleto" ${data.payment === 'boleto' ? 'checked' : ''} /><div>${icon('file', 17)}<b>Boleto bancário</b><span>Compensação em até 2 dias úteis</span></div></label></div><div class="checkout-nav"><button type="button" class="secondary-button" data-checkout-back>Voltar</button><button type="submit" class="primary-button">Revisar pedido ${icon('arrow', 15)}</button></div></form>`;
+  } else {
+    const items = state.cart.map((item) => ({ ...item, product: findProduct(item.id) })).filter((item) => item.product);
+    body = `<div class="checkout-review"><div class="review-block"><p class="checkout-group-label">Itens (${cartCount()})</p>${items.map((item) => `<div class="review-item"><span>${item.qty}× ${escapeHtml(item.product.name)}</span><b>${formatBRL(item.product.price * item.qty)}</b></div>`).join('')}</div><div class="review-block"><p class="checkout-group-label">Entrega</p><div class="review-item"><span>${data.delivery === 'retirada' ? 'Retirada no parceiro' : `Entrega · ${escapeHtml(data.address || '')}, ${escapeHtml(data.city || '')}/${escapeHtml(data.uf || '')}`}</span><b>${shopDeliveryFee() ? formatBRL(shopDeliveryFee()) : 'Grátis'}</b></div></div><div class="review-block"><p class="checkout-group-label">Pagamento</p><div class="review-item"><span>${data.payment === 'pix' ? 'Pix (5% off)' : data.payment === 'boleto' ? 'Boleto bancário' : 'Cartão em até 12x'}</span>${shopPixDiscount() ? `<b class="pix-off">− ${formatBRL(shopPixDiscount())}</b>` : ''}</div></div><div class="review-total"><span>Total</span><strong>${formatBRL(shopOrderTotal())}</strong></div><div class="checkout-nav"><button type="button" class="secondary-button" data-checkout-back>Voltar</button><button type="button" class="primary-button" data-action="confirm-order">Confirmar pedido ${icon('check', 16)}</button></div></div>`;
+  }
+  return `<div class="checkout-overlay"><div class="checkout-card checkout-wide"><div class="checkout-head"><strong>Finalizar compra</strong><button type="button" data-action="close-checkout" aria-label="Fechar">${icon('close', 17)}</button></div>${checkoutStepperMarkup()}${body}</div></div>`;
+}
+
+function shopTemplate() {
+  const filtered = shopFilteredProducts();
+  return `<div class="shop-shell">
+    <header class="shop-topbar"><button class="back-link" data-action="shop-back">${icon('back', 16)} Voltar</button><div class="brand register-brand"><div class="brand-mark"><img src="/gadon.jpeg" alt="" /></div><div><strong>GAD<span>O</span>N</strong><small>Loja rural</small></div></div><div class="shop-top-actions"><button type="button" class="shop-sell-button" data-action="open-sell">${icon('store', 16)} Vender</button><button type="button" class="shop-cart-button" data-action="open-cart">${icon('cart', 18)} Carrinho ${cartCount() ? `<b>${cartCount()}</b>` : ''}</button></div></header>
+    <main class="shop-layout">
+      <aside class="shop-sidebar">
+        <div class="shop-search">${icon('search', 16)}<input id="shop-search-input" value="${escapeHtml(state.shopQuery)}" placeholder="Buscar produtos..." /></div>
+        <nav class="shop-cats"><p class="eyebrow">CATEGORIAS</p>${shopCategories.map((category) => { const count = category === 'Todos' ? allShopProducts().length : allShopProducts().filter((product) => product.category === category).length; return `<button type="button" class="shop-cat ${state.shopCategory === category ? 'selected' : ''}" data-shop-category="${category}"><span>${category}</span><b>${count}</b></button>`; }).join('')}</nav>
+        <div class="shop-sell-card"><p class="eyebrow">VENDA NO GADON</p><strong>Tem queijo, mel ou ração da fazenda?</strong><p>Cadastre seus produtos e venda direto para todo o Brasil.</p><button type="button" class="primary-button" data-action="open-sell">Cadastrar produto ${icon('plus', 14)}</button></div>
+      </aside>
+      <section class="shop-main">
+        <section class="shop-hero"><div><p class="eyebrow">LOJA RURAL GADON</p><h1>Tudo para a sua fazenda em um só lugar.</h1><p>Rações, sementes, queijos, mel, terras e equipamentos direto do produtor.</p></div><div class="shop-hero-icon">${icon('store', 42)}</div></section>
+        <div class="shop-result-row"><span id="shop-count">${filtered.length} produto${filtered.length === 1 ? '' : 's'}</span><span class="shop-result-cat">${state.shopCategory}${state.shopQuery ? ` · “${escapeHtml(state.shopQuery)}”` : ''}</span></div>
+        <div class="shop-grid" id="shop-grid">${shopGridMarkup()}</div>
+      </section>
+    </main>
+    ${state.cartOpen ? cartDrawerTemplate() : ''}
+    ${state.sellOpen ? sellModalTemplate() : ''}
+    ${state.checkoutOpen ? checkoutModalTemplate() : ''}
+    ${state.toast ? `<div class="toast">${icon('bell', 17)} ${state.toast}</div>` : ''}
+  </div>`;
+}
+
+function bindShopCardEvents() {
+  document.querySelectorAll('[data-add-cart]').forEach((el) => el.addEventListener('click', () => addToCart(Number(el.dataset.addCart))));
+  document.querySelectorAll('[data-land-interest]').forEach((el) => el.addEventListener('click', () => { const product = findProduct(Number(el.dataset.landInterest)); sendLead('loja-interesse-terra', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { item: product?.name, valor: product?.price } }); showToast(`Interesse registrado! Um corretor parceiro entrará em contato sobre ${product?.name}.`); }));
+}
+
+function bindShopEvents() {
+  document.querySelector('[data-action="shop-back"]')?.addEventListener('click', () => { state.page = 'home'; state.activeNav = 'Início'; render(); });
+  document.querySelectorAll('[data-shop-category]').forEach((el) => el.addEventListener('click', () => { state.shopCategory = el.dataset.shopCategory; render(); }));
+  const searchInput = document.querySelector('#shop-search-input');
+  searchInput?.addEventListener('input', () => {
+    state.shopQuery = searchInput.value;
+    const grid = document.querySelector('#shop-grid');
+    if (grid) grid.innerHTML = shopGridMarkup();
+    const filtered = shopFilteredProducts();
+    const count = document.querySelector('#shop-count');
+    if (count) count.textContent = `${filtered.length} produto${filtered.length === 1 ? '' : 's'}`;
+    const cat = document.querySelector('.shop-result-cat');
+    if (cat) cat.textContent = `${state.shopCategory}${state.shopQuery ? ` · “${state.shopQuery}”` : ''}`;
+    bindShopCardEvents();
+  });
+  bindShopCardEvents();
+  document.querySelector('[data-action="open-cart"]')?.addEventListener('click', () => { state.cartOpen = true; render(); });
+  document.querySelectorAll('[data-action="close-cart"]').forEach((el) => el.addEventListener('click', () => { state.cartOpen = false; render(); }));
+  document.querySelectorAll('[data-cart-qty]').forEach((el) => el.addEventListener('click', () => changeCartQty(Number(el.dataset.cartQty), Number(el.dataset.delta))));
+  document.querySelectorAll('[data-action="open-sell"]').forEach((el) => el.addEventListener('click', () => { state.sellOpen = true; render(); }));
+  document.querySelector('[data-action="close-sell"]')?.addEventListener('click', () => { state.sellOpen = false; render(); });
+  document.querySelector('#sell-form')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    const photoFile = form.querySelector('[name="photo"]').files?.[0];
+    let image = categoryDefaultImages[data.category] || categoryDefaultImages.Outros;
+    if (photoFile && photoFile.type.startsWith('image/') && photoFile.size <= 2.5 * 1024 * 1024) { try { image = await readAsDataUrl(photoFile); } catch { /* usa imagem padrão */ } }
+    const product = { id: Date.now(), category: data.category, name: data.name.trim(), unit: data.unit.trim(), price: Number(data.price) || 0, image, mine: true };
+    state.userProducts = [product, ...state.userProducts];
+    saveUserProducts();
+    sendLead('loja-produto-cadastrado', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { produto: product.name, categoria: product.category, preco: product.price, unidade: product.unit } });
+    state.sellOpen = false;
+    state.shopCategory = data.category;
+    state.shopQuery = '';
+    render();
+    showToast(`“${product.name}” publicado na Loja GadOn!`);
+  });
+  document.querySelector('[data-action="open-checkout"]')?.addEventListener('click', () => { state.checkoutOpen = true; state.checkoutDone = false; state.checkoutStep = 1; render(); });
+  document.querySelectorAll('[data-action="close-checkout"]').forEach((el) => el.addEventListener('click', () => { const finished = state.checkoutDone; state.checkoutOpen = false; if (finished) { state.cart = []; saveCart(); state.cartOpen = false; state.checkoutDone = false; state.checkoutStep = 1; state.checkoutData = {}; } render(); }));
+  document.querySelectorAll('[data-checkout-back]').forEach((el) => el.addEventListener('click', () => { state.checkoutStep = Math.max(1, state.checkoutStep - 1); render(); }));
+  document.querySelector('#checkout-step1')?.addEventListener('submit', (event) => { event.preventDefault(); state.checkoutData = { ...state.checkoutData, ...Object.fromEntries(new FormData(event.currentTarget).entries()) }; state.checkoutStep = 2; render(); });
+  document.querySelector('#checkout-step2')?.addEventListener('submit', (event) => { event.preventDefault(); state.checkoutData = { ...state.checkoutData, ...Object.fromEntries(new FormData(event.currentTarget).entries()) }; state.checkoutStep = 3; render(); });
+  document.querySelector('[data-action="confirm-order"]')?.addEventListener('click', () => {
+    const data = state.checkoutData;
+    state.lastOrderId = `GDN-${String(Date.now()).slice(-6)}`;
+    const items = state.cart.map((item) => { const product = findProduct(item.id); return { produto: product?.name, quantidade: item.qty, valor: product ? product.price * item.qty : 0 }; });
+    sendLead('loja-pedido', { name: data.name, email: data.email, phone: data.phone, details: { pedido: state.lastOrderId, itens: items, subtotal: cartTotal(), frete: shopDeliveryFee(), descontoPix: shopPixDiscount(), total: shopOrderTotal(), pagamento: data.payment || 'pix', entrega: data.delivery || 'entrega', endereco: `${data.address || ''}, ${data.city || ''}/${data.uf || ''}` } });
+    state.profile = { ...state.profile, name: data.name || state.profile.name, email: data.email || state.profile.email, phone: data.phone || state.profile.phone };
+    saveProfile();
+    state.checkoutDone = true;
+    render();
+  });
+}
+
+let radarMapInstance = null;
+let radarAnimationInterval = null;
+let radarAutoAlertTimer = null;
+let radarTruckMarkers = [];
+let radarUserMarker = null;
+
+function destroyRadarMap() {
+  if (radarAnimationInterval) { clearInterval(radarAnimationInterval); radarAnimationInterval = null; }
+  if (radarAutoAlertTimer) { clearTimeout(radarAutoAlertTimer); radarAutoAlertTimer = null; }
+  radarTruckMarkers = [];
+  radarUserMarker = null;
+  if (radarMapInstance) { radarMapInstance.remove(); radarMapInstance = null; }
+}
+
+const radarOsmStyle = () => ({
+  version: 8,
+  sources: { osm: { type: 'raster', tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap' } },
+  layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
+});
+
+async function resolveRoutePoints(route) {
+  const cacheKey = `gadon.route.v2.${route.id}`;
+  try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (cached?.points?.length) { route.points = cached.points; route.roadKm = cached.roadKm; return; } } catch { /* sem cache */ }
+  try {
+    const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${route.from[0]},${route.from[1]};${route.to[0]},${route.to[1]}?overview=full&geometries=geojson`);
+    const data = await response.json();
+    const road = data.routes?.[0];
+    if (road?.geometry?.coordinates?.length) {
+      route.points = road.geometry.coordinates;
+      route.roadKm = Math.round(road.distance / 1000);
+      try { localStorage.setItem(cacheKey, JSON.stringify({ points: route.points, roadKm: route.roadKm })); } catch { /* cache indisponível */ }
+      return;
+    }
+  } catch { /* OSRM indisponível — usa arco aproximado */ }
+  route.points = routeArc(route.from, route.to, route.type === 'volta' ? -0.16 : 0.16);
+  route.roadKm = haversineKm(route.from, route.to);
+}
+
+function mountRadarMap() {
+  const container = document.querySelector('#radar-map');
+  if (!container) return;
+  radarMapInstance = new maplibregl.Map({ container, style: radarOsmStyle(), center: [-52.5, -19], zoom: 4.8 });
+  radarMapInstance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+  const map = radarMapInstance;
+  map.on('load', async () => {
+    const seenCities = new Set();
+    radarRoutes.forEach((route) => {
+      [[route.from, route.origin], [route.to, route.dest]].forEach(([coords, label]) => {
+        if (seenCities.has(label)) return;
+        seenCities.add(label);
+        const cityEl = document.createElement('div');
+        cityEl.className = 'radar-city-dot';
+        cityEl.innerHTML = `<i></i><span>${escapeHtml(label)}</span>`;
+        new maplibregl.Marker({ element: cityEl, anchor: 'left' }).setLngLat(coords).addTo(map);
+      });
+    });
+    const bounds = new maplibregl.LngLatBounds();
+    radarRoutes.forEach((route) => { bounds.extend(route.from); bounds.extend(route.to); });
+    map.fitBounds(bounds, { padding: window.innerWidth < 860 ? { top: 40, bottom: 40, left: 40, right: 40 } : { top: 60, bottom: 60, left: 380, right: 60 }, duration: 900 });
+    await Promise.all(radarRoutes.map(resolveRoutePoints));
+    if (radarMapInstance !== map) return;
+    radarRoutes.forEach((route) => {
+      map.addSource(`route-${route.id}`, { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: route.points } } });
+      map.addLayer({ id: `route-${route.id}-casing`, type: 'line', source: `route-${route.id}`, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': route.type === 'ida' ? 6.5 : 6, 'line-opacity': 0.75, 'line-offset': route.type === 'volta' ? 4 : 0 } });
+      map.addLayer({ id: `route-${route.id}`, type: 'line', source: `route-${route.id}`, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: route.type === 'ida' ? { 'line-color': '#f47a18', 'line-width': 3.5, 'line-opacity': 0.95 } : { 'line-color': '#1d6fb8', 'line-width': 3, 'line-opacity': 0.95, 'line-dasharray': [0.5, 1.6], 'line-offset': 4 } });
+      const truckEl = document.createElement('div');
+      truckEl.className = `radar-truck ${route.type}`;
+      truckEl.innerHTML = icon('truck', 15);
+      truckEl.addEventListener('click', () => selectRadarRoute(route.id));
+      const position = route.type === 'ida' ? route.points[Math.floor((route.progress || 0) * (route.points.length - 1))] : route.from;
+      const marker = new maplibregl.Marker({ element: truckEl }).setLngLat(position).addTo(map);
+      radarTruckMarkers.push({ route, marker });
+    });
+    radarAnimationInterval = setInterval(() => {
+      radarTruckMarkers.forEach((item) => {
+        if (item.route.type !== 'ida' || !item.route.points) return;
+        item.route.progress = (item.route.progress + 0.0009) % 1;
+        item.marker.setLngLat(item.route.points[Math.floor(item.route.progress * (item.route.points.length - 1))]);
+      });
+    }, 120);
+  });
+  radarAutoAlertTimer = setTimeout(() => { if (state.page === 'radar' && !state.radarAlertShown) triggerRadarAlert(); }, 7000);
+}
+
+function selectRadarRoute(id) {
+  state.radarSelected = id;
+  const route = radarRoutes.find((item) => item.id === id);
+  if (!route) return;
+  document.querySelectorAll('[data-radar-route]').forEach((el) => el.classList.toggle('selected', Number(el.dataset.radarRoute) === id));
+  if (radarMapInstance && route.points) {
+    const mid = route.points[Math.floor(route.points.length / 2)];
+    radarMapInstance.flyTo({ center: mid, zoom: 6, duration: 900 });
+  }
+  const detail = document.querySelector('#radar-detail');
+  if (detail) detail.innerHTML = `<div class="radar-detail-card ${route.type}"><div class="radar-detail-head"><span class="radar-type-badge ${route.type}">${route.type === 'ida' ? 'FRETE DE IDA' : 'FRETE DE VOLTA'}</span><span class="radar-detail-status">${escapeHtml(route.status)}</span></div><strong>${escapeHtml(route.origin)} → ${escapeHtml(route.dest)}</strong><p>${escapeHtml(route.cargo)} · ${escapeHtml(route.carrier)}</p><div class="radar-detail-meta"><span>${icon('calendar', 13)} ${escapeHtml(route.departs)}</span><span>${icon('route', 13)} ${route.roadKm || haversineKm(route.from, route.to)} km pela estrada</span>${route.price ? `<span class="radar-price">${formatBRL(route.price)}</span>` : ''}</div>${route.type === 'volta' ? `<button type="button" class="primary-button radar-request-cta" data-radar-request="${route.id}">Enviar carga nesta volta ${icon('arrow', 14)}</button>` : `<div class="radar-progress"><span>Progresso da viagem</span><div class="progress-track"><i style="width:${Math.round((route.progress || 0) * 100)}%"></i></div><b>${Math.round((route.progress || 0) * 100)}%</b></div>`}</div>`;
+  detail?.querySelector('[data-radar-request]')?.addEventListener('click', () => openRadarRequest(route.id));
+}
+
+function activateRadarLocation() {
+  const button = document.querySelector('#radar-locate');
+  if (button) { button.disabled = true; button.innerHTML = `${icon('pin', 15)} Localizando…`; }
+  if (typeof Notification !== 'undefined' && Notification.permission === 'default') Notification.requestPermission();
+  const finish = (coords, demo) => {
+    state.userLocation = coords;
+    state.userLocationDemo = demo;
+    if (radarMapInstance) {
+      if (radarUserMarker) radarUserMarker.remove();
+      const el = document.createElement('div');
+      el.className = 'radar-user-marker';
+      el.innerHTML = '<i></i><span>Você</span>';
+      radarUserMarker = new maplibregl.Marker({ element: el }).setLngLat(coords).addTo(radarMapInstance);
+      radarMapInstance.flyTo({ center: coords, zoom: 6.4, duration: 1100 });
+    }
+    if (button) button.innerHTML = `${icon('check', 15)} Localização ativa${demo ? ' (demo)' : ''}`;
+    setTimeout(() => { if (state.page === 'radar') triggerRadarAlert(); }, 2600);
+  };
+  if (!navigator.geolocation) { finish([-55.16, -15.55], true); return; }
+  navigator.geolocation.getCurrentPosition(
+    (position) => finish([position.coords.longitude, position.coords.latitude], false),
+    () => finish([-55.16, -15.55], true),
+    { enableHighAccuracy: true, timeout: 8000 },
+  );
+}
+
+function triggerRadarAlert() {
+  const reference = state.userLocation || [-55.16, -15.55];
+  const route = [...radarRoutes].filter((item) => item.type === 'volta').sort((a, b) => haversineKm(reference, a.from) - haversineKm(reference, b.from))[0];
+  if (!route) return;
+  const distance = haversineKm(reference, route.from);
+  const body = `Carreta de ${route.carrier} sai de ${route.origin}${state.userLocation ? ` (a ~${distance} km de você)` : ''} → ${route.dest}, ${route.departs.toLowerCase()}. ${route.cargo} na volta por ${formatBRL(route.price)}.`;
+  state.radarAlertShown = true;
+  state.notifications.unshift({ id: Date.now(), type: 'truck', title: 'Carga saindo da sua região', source: route.origin, body, time: 'agora', unread: true });
+  saveNotifications();
+  try { if (typeof Notification !== 'undefined' && Notification.permission === 'granted') new Notification('GadOn · Oportunidade de frete de volta', { body, icon: '/gadon.jpeg' }); } catch { /* notificações indisponíveis */ }
+  const slot = document.querySelector('#radar-alert-slot');
+  if (!slot) return;
+  slot.innerHTML = `<div class="radar-alert"><span class="radar-alert-icon">${icon('truck', 20)}</span><div class="radar-alert-copy"><strong>Carga saindo da sua região! 🚨</strong><p>${escapeHtml(body)}</p></div><div class="radar-alert-actions"><button type="button" class="radar-alert-cta" data-alert-request="${route.id}">Enviar carga na volta</button><button type="button" class="radar-alert-skip" data-alert-dismiss>Agora não</button></div></div>`;
+  slot.querySelector('[data-alert-request]')?.addEventListener('click', () => { slot.innerHTML = ''; openRadarRequest(route.id); });
+  slot.querySelector('[data-alert-dismiss]')?.addEventListener('click', () => { slot.innerHTML = ''; });
+}
+
+function openRadarRequest(routeId) {
+  const route = radarRoutes.find((item) => item.id === routeId);
+  const slot = document.querySelector('#radar-modal-slot');
+  if (!route || !slot) return;
+  slot.innerHTML = `<div class="checkout-overlay"><div class="checkout-card"><div class="checkout-head"><strong>${icon('repeat', 17)} Solicitar frete de volta</strong><button type="button" data-radar-modal-close aria-label="Fechar">${icon('close', 17)}</button></div><div class="radar-request-route"><span class="radar-type-badge volta">VOLTA</span><b>${escapeHtml(route.origin)} → ${escapeHtml(route.dest)}</b><small>${escapeHtml(route.carrier)} · ${escapeHtml(route.departs)} · ${formatBRL(route.price)}</small></div><form id="radar-request-form" class="checkout-form"><label><span>Tipo de carga</span><select name="cargoType"><option>Gado de corte</option><option>Gado leiteiro</option><option>Bezerros</option><option>Insumos agropecuários</option><option>Grãos / ração</option></select></label><label><span>Quantidade / peso</span><input name="quantity" placeholder="Ex.: 40 cabeças ou 8 toneladas" required /></label><label><span>Celular / WhatsApp</span><input name="phone" type="tel" value="${escapeHtml(state.profile.phone)}" placeholder="(00) 00000-0000" /></label><button type="submit" class="primary-button">Solicitar espaço ${icon('check', 16)}</button></form></div></div>`;
+  const close = () => { slot.innerHTML = ''; };
+  slot.querySelector('[data-radar-modal-close]')?.addEventListener('click', close);
+  slot.querySelector('#radar-request-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.currentTarget).entries());
+    sendLead('frete-retorno-solicitacao', { name: state.profile.name, email: state.profile.email, phone: data.phone, details: { rota: `${route.origin} → ${route.dest}`, transportadora: route.carrier, saida: route.departs, carga: data.cargoType, quantidade: data.quantity, valor: route.price } });
+    slot.innerHTML = `<div class="checkout-overlay"><div class="checkout-card checkout-success"><div class="checkout-check">${icon('check', 34)}</div><h2>Solicitação enviada!</h2><p>A <b>${escapeHtml(route.carrier)}</b> foi avisada do seu interesse na volta <b>${escapeHtml(route.origin)} → ${escapeHtml(route.dest)}</b>. Você receberá o contato para fechar o frete.</p><button type="button" class="primary-button" data-radar-modal-close>Fechar</button></div></div>`;
+    slot.querySelector('[data-radar-modal-close]')?.addEventListener('click', close);
+  });
+}
+
+function radarRouteCard(route) {
+  return `<button type="button" class="radar-card ${route.type} ${state.radarSelected === route.id ? 'selected' : ''}" data-radar-route="${route.id}"><div class="radar-card-top"><span class="radar-type-badge ${route.type}">${route.type === 'ida' ? 'IDA' : 'VOLTA'}</span><span class="radar-card-status">${route.type === 'ida' ? `${icon('truck', 12)} ${escapeHtml(route.status)}` : `${icon('repeat', 12)} ${escapeHtml(route.status)}`}</span></div><strong>${escapeHtml(route.origin)} <em>→</em> ${escapeHtml(route.dest)}</strong><span class="radar-card-meta">${escapeHtml(route.cargo)}</span><div class="radar-card-foot"><small>${icon('calendar', 12)} ${escapeHtml(route.departs)}</small>${route.price ? `<b>${formatBRL(route.price)}</b>` : `<small>${Math.round((route.progress || 0) * 100)}% da rota</small>`}</div></button>`;
+}
+
+function radarTemplate() {
+  return `<div class="radar-shell">
+    <header class="radar-topbar"><button class="back-link" data-action="radar-back">${icon('back', 16)} Voltar</button><div class="radar-title"><strong>${icon('route', 19)} Radar de Fretes</strong><span class="live-pill"><i></i> TEMPO REAL</span></div><div class="radar-actions"><button type="button" id="radar-locate" class="radar-action-button">${icon('pin', 15)} Ativar minha localização</button><button type="button" id="radar-simulate" class="radar-action-button ghost">${icon('bell', 15)} Simular alerta</button></div></header>
+    <div class="radar-body">
+      <aside class="radar-panel">
+        <div class="radar-panel-head"><p class="eyebrow">ROTAS ATIVAS AGORA</p><div class="radar-legend"><span><i class="legend-ida"></i> Ida em trânsito</span><span><i class="legend-volta"></i> Volta disponível</span></div></div>
+        <div class="radar-cards">${radarRoutes.map(radarRouteCard).join('')}</div>
+        <div class="radar-detail" id="radar-detail"><div class="radar-detail-empty">${icon('pin', 22)}<p>Selecione uma rota no painel ou clique em um caminhão no mapa.</p></div></div>
+      </aside>
+      <div id="radar-map" class="radar-map"></div>
+    </div>
+    <div id="radar-alert-slot"></div>
+    <div id="radar-modal-slot"></div>
+  </div>`;
+}
+
+function bindRadarEvents() {
+  document.querySelector('[data-action="radar-back"]')?.addEventListener('click', () => { state.page = 'home'; state.activeNav = 'Início'; render(); });
+  document.querySelector('#radar-locate')?.addEventListener('click', activateRadarLocation);
+  document.querySelector('#radar-simulate')?.addEventListener('click', () => { if (typeof Notification !== 'undefined' && Notification.permission === 'default') Notification.requestPermission(); triggerRadarAlert(); });
+  document.querySelectorAll('[data-radar-route]').forEach((el) => el.addEventListener('click', () => selectRadarRoute(Number(el.dataset.radarRoute))));
+}
+
+let auctionInterval = null;
+let auctionCamIndex = 0;
+let auctionTickCount = 0;
+let userAuctionStream = null;
+const currentAuctionLot = () => state.userAuctionLot || auctionLots[state.auctionIndex % auctionLots.length];
+
+function resetAuctionLot() {
+  const lot = currentAuctionLot();
+  state.auctionBid = lot.startBid;
+  state.auctionLeader = 'Lance inicial do leiloeiro';
+  state.auctionHistory = [{ bidder: 'Leiloeiro GadOn', amount: lot.startBid, time: nowTime(), opening: true }];
+  state.auctionEndsAt = Date.now() + 90 * 1000;
+  state.auctionStatus = 'live';
+  state.auctionViewers = 180 + Math.floor(Math.random() * 120);
+  state.auctionUserBids = 0;
+  auctionCamIndex = 0;
+  auctionTickCount = 0;
+}
+
+function startAuctionEngine() {
+  if (!state.auctionEndsAt || state.auctionStatus === 'sold') resetAuctionLot();
+  if (!auctionInterval) auctionInterval = setInterval(auctionTick, 1000);
+  updateAuctionDom();
+  ensureAuctionFeedPlays();
+}
+
+function stopAuctionEngine() {
+  if (auctionInterval) { clearInterval(auctionInterval); auctionInterval = null; }
+}
+
+const auctionRemainingSeconds = () => Math.max(0, Math.round((state.auctionEndsAt - Date.now()) / 1000));
+
+function auctionTick() {
+  if (state.page !== 'auction') { stopAuctionEngine(); return; }
+  auctionTickCount += 1;
+  const clock = document.querySelector('#auction-clock');
+  if (clock) clock.textContent = nowTime();
+  if (auctionTickCount % 8 === 0) {
+    const lot = currentAuctionLot();
+    if (lot.cameras?.length > 1) {
+      auctionCamIndex = (auctionCamIndex + 1) % lot.cameras.length;
+      const feed = document.querySelector('#auction-cam');
+      const label = document.querySelector('#auction-cam-label');
+      if (feed) {
+        feed.classList.add('cam-fade');
+        setTimeout(() => {
+          feed.innerHTML = auctionFeedMarkup(lot, auctionCamIndex);
+          if (label) label.innerHTML = `<i></i> ${auctionCameraLabels[auctionCamIndex % auctionCameraLabels.length]}`;
+          feed.classList.remove('cam-fade');
+          ensureAuctionFeedPlays();
+        }, 260);
+      }
+    }
+  }
+  if (state.auctionStatus !== 'live') return;
+  const remaining = auctionRemainingSeconds();
+  const chance = remaining < 15 ? 0.32 : remaining < 45 ? 0.16 : 0.09;
+  if (remaining > 2 && Math.random() < chance) {
+    const lot = currentAuctionLot();
+    const bot = auctionBotNames[Math.floor(Math.random() * auctionBotNames.length)];
+    placeAuctionBid(bot, lot.increment * (Math.random() < 0.2 ? 2 : 1));
+  }
+  if (Math.random() < 0.25) state.auctionViewers = Math.max(150, state.auctionViewers + Math.floor(Math.random() * 7) - 3);
+  if (remaining <= 0) { finishAuctionLot(); return; }
+  updateAuctionDom();
+}
+
+function placeAuctionBid(bidder, raise) {
+  if (state.auctionStatus !== 'live') return;
+  state.auctionBid += raise;
+  state.auctionLeader = bidder;
+  state.auctionHistory.unshift({ bidder, amount: state.auctionBid, time: nowTime(), you: bidder === 'Você' });
+  state.auctionHistory = state.auctionHistory.slice(0, 25);
+  if (state.auctionEndsAt - Date.now() < 12000) state.auctionEndsAt = Date.now() + 12000;
+  updateAuctionDom(true);
+}
+
+function placeUserAuctionBid(raise) {
+  if (state.auctionStatus !== 'live' || !raise || raise <= 0) return;
+  placeAuctionBid('Você', raise);
+  state.auctionUserBids += 1;
+  if (state.auctionUserBids === 1) sendLead('leilao-lance', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { lote: currentAuctionLot().name, lance: state.auctionBid } });
+}
+
+function finishAuctionLot() {
+  state.auctionStatus = 'sold';
+  updateAuctionDom();
+  const overlay = document.querySelector('#auction-sold');
+  if (overlay) {
+    overlay.hidden = false;
+    const winnerEl = overlay.querySelector('[data-sold-winner]');
+    const amountEl = overlay.querySelector('[data-sold-amount]');
+    if (winnerEl) winnerEl.textContent = state.auctionLeader === 'Você' ? 'Parabéns! Você arrematou o lote! 🎉' : `Arrematado por ${state.auctionLeader}`;
+    if (amountEl) amountEl.textContent = formatBRL(state.auctionBid);
+  }
+  setTimeout(() => { if (state.page !== 'auction') return; if (state.userAuctionLot) stopUserBroadcast(); else state.auctionIndex += 1; resetAuctionLot(); render(); }, 6000);
+}
+
+const bidderColor = (name) => ['#f47a18', '#287ec2', '#2ea56b', '#a855f7', '#e11d48', '#0ea5e9'][name.length % 6];
+const bidderInitials = (name) => name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+const auctionHistoryMarkup = () => state.auctionHistory.map((entry) => `<div class="bid-entry ${entry.you ? 'is-you' : ''} ${entry.opening ? 'is-open' : ''}"><span class="bid-avatar" style="background:${entry.you ? 'var(--green)' : bidderColor(entry.bidder)}">${entry.you ? icon('user', 12) : bidderInitials(entry.bidder)}</span><span class="bid-entry-name">${escapeHtml(entry.bidder)}</span><span class="bid-entry-amount">${formatBRL(entry.amount)}</span><span class="bid-entry-time">${entry.time}</span></div>`).join('');
+
+function updateAuctionDom(bidFlash = false) {
+  const remaining = auctionRemainingSeconds();
+  const timer = document.querySelector('#auction-timer');
+  if (timer) { timer.textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`; timer.classList.toggle('urgent', remaining <= 15 && state.auctionStatus === 'live'); }
+  const ring = document.querySelector('#auction-ring');
+  if (ring) { const circumference = 2 * Math.PI * 34; const ratio = Math.min(1, remaining / 90); ring.style.strokeDasharray = circumference; ring.style.strokeDashoffset = circumference * (1 - ratio); ring.classList.toggle('urgent', remaining <= 15 && state.auctionStatus === 'live'); }
+  const bidCount = document.querySelector('#auction-bidcount');
+  if (bidCount) bidCount.textContent = Math.max(0, state.auctionHistory.length - 1);
+  document.querySelector('#auction-panel')?.classList.toggle('is-leading', state.auctionLeader === 'Você');
+  const bid = document.querySelector('#auction-bid');
+  if (bid) { bid.textContent = formatBRL(state.auctionBid); if (bidFlash) { bid.classList.remove('flash'); void bid.offsetWidth; bid.classList.add('flash'); } }
+  const leader = document.querySelector('#auction-leader');
+  if (leader) { leader.textContent = state.auctionLeader === 'Você' ? 'Você está liderando! 🥇' : state.auctionLeader; leader.classList.toggle('is-you', state.auctionLeader === 'Você'); }
+  const history = document.querySelector('#auction-history');
+  if (history) history.innerHTML = auctionHistoryMarkup();
+  const viewers = document.querySelector('#auction-viewers');
+  if (viewers) viewers.textContent = state.auctionViewers;
+  const fichaBid = document.querySelector('#ficha-bid');
+  if (fichaBid) fichaBid.textContent = formatBRL(state.auctionBid);
+  document.querySelectorAll('[data-bid-raise]').forEach((el) => { const next = el.querySelector('b'); if (next) next.textContent = formatBRL(state.auctionBid + Number(el.dataset.bidRaise)); });
+}
+
+async function startUserBroadcast(form) {
+  if (!navigator.mediaDevices?.getUserMedia) { showToast('Seu navegador não permite acesso à câmera.'); return; }
+  try { userAuctionStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }); }
+  catch { showToast('Não foi possível acessar a câmera. Verifique a permissão do navegador.'); return; }
+  const startBid = Number(String(form.startBid).replace(/\D/g, '')) || 50000;
+  const increment = Number(String(form.increment).replace(/\D/g, '')) || 500;
+  state.userAuctionLot = {
+    id: 990, name: form.name || 'Meu lote de gado', tag: 'SEU LOTE', desc: form.desc || 'Transmissão ao vivo do vendedor', place: 'Sua fazenda', seller: state.profile.name,
+    startBid, increment, live: true, image: '/home-hero-nelore.png',
+    cameras: [{ type: 'live', src: '' }],
+    ficha: { 'Vendedor': state.profile.name, 'Lote': form.name || 'Meu lote de gado', 'Descrição': form.desc || 'Demonstração ao vivo', 'Lance inicial': formatBRL(startBid), 'Incremento mínimo': formatBRL(increment), 'Transmissão': 'Câmera ao vivo do vendedor' },
+  };
+  state.broadcastOpen = false;
+  sendLead('leilao-transmissao', { name: state.profile.name, email: state.profile.email, phone: state.profile.phone, details: { lote: state.userAuctionLot.name, lanceInicial: startBid } });
+  resetAuctionLot();
+  render();
+}
+
+function stopUserBroadcast() {
+  userAuctionStream?.getTracks().forEach((track) => track.stop());
+  userAuctionStream = null;
+  state.userAuctionLot = null;
+}
+
+function broadcastModalTemplate() {
+  return `<div class="checkout-overlay"><div class="checkout-card broadcast-card"><div class="checkout-head"><strong>${icon('camera', 17)} Leiloar meu lote ao vivo</strong><button type="button" data-action="close-broadcast" aria-label="Fechar">${icon('close', 17)}</button></div><p class="broadcast-note">Abra a câmera do seu aparelho, mostre o gado e acompanhe os lances chegando em tempo real — a simulação completa do pregão, com você como vendedor.</p><form id="broadcast-form" class="checkout-form"><label><span>Nome do lote</span><input name="name" placeholder="Ex.: Nelore da minha fazenda" required maxlength="60" /></label><label><span>Descrição curta</span><input name="desc" placeholder="Ex.: 20 machos · 15@ média" maxlength="80" /></label><div class="broadcast-grid"><label><span>Lance inicial (R$)</span><input name="startBid" type="number" min="1000" step="500" value="50000" required /></label><label><span>Incremento (R$)</span><input name="increment" type="number" min="100" step="100" value="500" required /></label></div><button type="submit" class="primary-button">${icon('camera', 16)} Abrir câmera e iniciar pregão</button></form></div></div>`;
+}
+
+function auctionTemplate() {
+  const lot = currentAuctionLot();
+  const position = (state.auctionIndex % auctionLots.length) + 1;
+  const queue = auctionLots.filter((item) => item.id !== lot.id).slice(0, 3);
+  const tickerItems = [...auctionLots, ...auctionLots].map((item) => `<span class="ticker-item">${icon('gavel', 12)} ${escapeHtml(item.tag)} — ${escapeHtml(item.name)} · lance inicial <b>${formatBRL(item.startBid)}</b></span>`).join('<span class="ticker-dot">•</span>');
+  return `<div class="auction-shell">
+    <div class="auction-glow one"></div><div class="auction-glow two"></div>
+    <header class="auction-topbar"><button class="back-link auction-back" data-action="auction-back">${icon('back', 16)} Voltar</button><div class="auction-brand"><img src="/gadon-logo-transparent.png" alt="GadOn" /><span>LEILÃO OFICIAL</span></div><div class="auction-live-meta">${state.userAuctionLot ? `<button type="button" class="broadcast-button is-live" data-action="stop-broadcast">${icon('stop', 14)} Encerrar transmissão</button>` : `<button type="button" class="broadcast-button" data-action="open-broadcast">${icon('camera', 14)} Leiloar meu lote</button>`}<span class="auction-viewers">${icon('eye', 15)} <b id="auction-viewers">${state.auctionViewers}</b> assistindo</span><span class="live-pill"><i></i> AO VIVO</span></div></header>
+    <div class="auction-ticker"><div class="ticker-track">${tickerItems}</div></div>
+    <main class="auction-layout">
+      <section class="auction-stage">
+        <div class="auction-media is-live">
+          <div id="auction-cam" class="cam-feed-wrap">${auctionFeedMarkup(lot, auctionCamIndex)}</div>
+          <div class="media-gradient"></div>
+          <span class="auction-lot-tag">${lot.tag} <i>·</i> ${position} de ${auctionLots.length}</span>
+          <span class="live-pill media-live"><i></i> AO VIVO</span>
+          <div class="cam-toolbar"><span class="cam-label" id="auction-cam-label"><i></i> ${lot.live ? 'SUA TRANSMISSÃO' : auctionCameraLabels[auctionCamIndex % auctionCameraLabels.length]}</span><span class="cam-clock" id="auction-clock">--:--:--</span></div>
+          <div class="media-lower">
+            <h1>${escapeHtml(lot.name)}</h1>
+            <p>${escapeHtml(lot.desc)}</p>
+            <div class="auction-chips"><span>${icon('pin', 14)} ${escapeHtml(lot.place)}</span><span>${icon('user', 14)} ${escapeHtml(lot.seller)}</span><span class="chip-verified">${icon('shield', 14)} Documentação verificada</span><button type="button" class="ficha-button" data-ficha-toggle>${icon('file', 14)} Ver ficha do lote</button></div>
+          </div>
+        </div>
+        <div class="auction-stats">
+          <div class="auction-stat"><span>Lance inicial</span><strong>${formatBRL(lot.startBid)}</strong></div>
+          <div class="auction-stat"><span>Incremento mínimo</span><strong>${formatBRL(lot.increment)}</strong></div>
+          <div class="auction-stat"><span>Lances no lote</span><strong id="auction-bidcount">${Math.max(0, state.auctionHistory.length - 1)}</strong></div>
+          <div class="auction-stat"><span>Condição</span><strong>À vista ou 30/60/90</strong></div>
+        </div>
+        <div class="auction-queue"><div class="auction-queue-head"><p class="eyebrow">A SEGUIR NO PREGÃO</p><span class="queue-line"></span></div><div class="auction-queue-grid">${queue.map((item, index) => `<div class="auction-queue-card"><span class="queue-order">${String(index + 1).padStart(2, '0')}</span><img src="${item.image}" alt="" /><div><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.desc)}</span><small>${icon('gavel', 11)} Inicial ${formatBRL(item.startBid)}</small></div></div>`).join('')}</div></div>
+      </section>
+      <aside class="auction-bid-panel ${state.auctionLeader === 'Você' ? 'is-leading' : ''}" id="auction-panel">
+        <div class="panel-head"><span class="auctioneer-avatar">${icon('gavel', 19)}</span><div><strong>Leiloeiro oficial GadOn</strong><span>Pregão eletrônico · Lote ${position}</span></div></div>
+        <div class="bid-row">
+          <div class="bid-current"><span class="bid-label">LANCE ATUAL</span><strong id="auction-bid">${formatBRL(state.auctionBid)}</strong><small id="auction-leader" class="${state.auctionLeader === 'Você' ? 'is-you' : ''}">${state.auctionLeader === 'Você' ? 'Você está liderando! 🥇' : escapeHtml(state.auctionLeader)}</small></div>
+          <div class="bid-ring"><svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" id="auction-ring" cx="40" cy="40" r="34"/></svg><div class="ring-center"><strong id="auction-timer">--:--</strong><span>martelo</span></div></div>
+        </div>
+        <div class="bid-actions">${[1, 2, 5].map((mult) => `<button type="button" class="bid-button" data-bid-raise="${lot.increment * mult}"><span>+ ${formatBRL(lot.increment * mult)}</span><b>${formatBRL(state.auctionBid + lot.increment * mult)}</b></button>`).join('')}</div>
+        <form id="custom-bid-form" class="bid-custom"><div class="unit-input"><em>R$</em><input name="amount" type="number" min="100" step="100" placeholder="Acréscimo livre" /></div><button type="submit" class="bid-submit">${icon('gavel', 16)} Dar lance</button></form>
+        <div class="bid-history-wrap"><div class="bid-history-head"><p class="eyebrow">HISTÓRICO DE LANCES</p><span class="history-live"><i></i> tempo real</span></div><div class="bid-history" id="auction-history">${auctionHistoryMarkup()}</div></div>
+      </aside>
+    </main>
+    ${state.broadcastOpen ? broadcastModalTemplate() : ''}
+    <div class="ficha-backdrop" id="ficha-backdrop" data-ficha-toggle></div>
+    <aside class="ficha-drawer" id="ficha-drawer" aria-label="Ficha técnica do lote"><div class="ficha-head"><div><p class="eyebrow">FICHA TÉCNICA · ${lot.tag}</p><h3>${escapeHtml(lot.name)}</h3></div><button type="button" class="ficha-close" data-ficha-toggle aria-label="Fechar ficha">${icon('close', 17)}</button></div><div class="ficha-live"><span>Lance atual</span><b id="ficha-bid">${formatBRL(state.auctionBid)}</b><span class="live-pill"><i></i> AO VIVO</span></div><div class="ficha-rows">${Object.entries(lot.ficha).map(([key, value]) => `<div class="ficha-row"><span>${escapeHtml(key)}</span><b>${escapeHtml(value)}</b></div>`).join('')}</div><div class="ficha-foot">${icon('shield', 14)} Documentação conferida pela equipe GadOn antes do pregão.</div></aside>
+    <div class="auction-sold" id="auction-sold" ${state.auctionStatus === 'sold' ? '' : 'hidden'}><div class="sold-confetti">${Array.from({ length: 14 }, (_, index) => `<i style="--i:${index}"></i>`).join('')}</div><div class="auction-sold-card"><div class="sold-hammer">${icon('gavel', 46)}</div><p class="eyebrow">MARTELO BATIDO</p><h2 data-sold-winner>Arrematado!</h2><strong data-sold-amount>${formatBRL(state.auctionBid)}</strong><span>Próximo lote em instantes…</span></div></div>
+  </div>`;
+}
+
+function bindAuctionEvents() {
+  document.querySelector('[data-action="auction-back"]')?.addEventListener('click', () => { stopAuctionEngine(); stopUserBroadcast(); state.page = 'home'; state.activeNav = 'Início'; render(); });
+  document.querySelector('[data-action="open-broadcast"]')?.addEventListener('click', () => { state.broadcastOpen = true; render(); });
+  document.querySelector('[data-action="close-broadcast"]')?.addEventListener('click', () => { state.broadcastOpen = false; render(); });
+  document.querySelector('[data-action="stop-broadcast"]')?.addEventListener('click', () => { stopUserBroadcast(); resetAuctionLot(); render(); });
+  document.querySelector('#broadcast-form')?.addEventListener('submit', (event) => { event.preventDefault(); startUserBroadcast(Object.fromEntries(new FormData(event.currentTarget).entries())); });
+  document.querySelectorAll('[data-ficha-toggle]').forEach((el) => el.addEventListener('click', () => { document.querySelector('#ficha-drawer')?.classList.toggle('open'); document.querySelector('#ficha-backdrop')?.classList.toggle('open'); }));
+  document.querySelectorAll('[data-bid-raise]').forEach((el) => el.addEventListener('click', () => placeUserAuctionBid(Number(el.dataset.bidRaise))));
+  document.querySelector('#custom-bid-form')?.addEventListener('submit', (event) => { event.preventDefault(); const amount = Number(new FormData(event.currentTarget).get('amount')); placeUserAuctionBid(amount); event.currentTarget.reset(); });
 }
 
 function bindLotEvents() {
@@ -1239,6 +2114,9 @@ document.addEventListener('click', (event) => {
     else if (button.dataset.nav === 'Fretes') state.page = 'freight';
     else if (button.dataset.nav === 'Fretes de retorno') state.page = 'returnFreight';
     else if (button.dataset.nav === 'Buscar gado') { state.page = 'search'; state.collectionView = 'all'; state.query = ''; state.category = 'Todos'; state.advancedFilters = defaultAdvancedFilters(); }
+    else if (button.dataset.nav === 'Leilão ao vivo') state.page = 'auction';
+    else if (button.dataset.nav === 'Loja rural') state.page = 'shop';
+    else if (button.dataset.nav === 'Radar de fretes') state.page = 'radar';
     else if (button.dataset.nav === 'Meus anúncios' || button.dataset.nav === 'Meus produtos') state.page = state.mode === 'seller' ? 'sellerMarketplace' : 'announcements';
     else if (button.dataset.nav === 'Anunciar gado') state.page = 'register';
     else if (button.dataset.nav === 'Painel vendedor' || button.dataset.nav === 'Promoções') state.page = 'sellerMarketplace';
