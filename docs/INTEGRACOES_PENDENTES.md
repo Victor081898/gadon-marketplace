@@ -33,5 +33,9 @@ Os itens abaixo dependem de decisão, contrato ou credencial externa.
 - **Hoje:** notificações ficam na conta (sino) e o app avisa pelo navegador enquanto está aberto.
 - **Próximo passo:** Web Push (chaves VAPID + service worker) para avisar o Radar e as mensagens com o app fechado.
 
-## 7. Identidade visual
+## 7. Leilão ao vivo (simulação por decisão do responsável)
+- **Decisão (25/09/2026):** o leilão continua como demonstração por enquanto: lances dos outros participantes simulados, sem cobrança. A tela exibe "Leilão de demonstração" e um aviso fixo.
+- **Para virar real:** lotes de leilão cadastrados e aprovados, sala em tempo real (Durable Objects/WebSocket), regras de lance e arremate, cadastro/caução do licitante e integração com o pagamento.
+
+## 8. Identidade visual
 - Logos oficiais aplicados. As fontes da marca (Snaga Uni Display e Cheddar Gothic Slab) são comerciais; para usá-las no app é preciso enviar os arquivos de fonte com licença para web.

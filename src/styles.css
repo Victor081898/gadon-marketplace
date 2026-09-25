@@ -2822,3 +2822,5 @@ textarea:focus-visible { outline:3px solid rgba(132,217,186,.45); outline-offset
   .trip-row-actions, .trip-row-source, .document-row-actions { padding-left:0; }
 }
 .lot-image .verified.demo-badge { color:var(--brand-graphite); background:#FFF4D6; }
+.auction-demo-note { position:relative; z-index:2; display:flex; align-items:center; justify-content:center; gap:8px; margin:10px 24px 0; padding:9px 14px; border:1px solid rgba(255,214,150,.35); border-radius:10px; color:#FFE2B8; background:rgba(190,97,30,.18); font-size:14px; line-height:1.4; text-align:center; }
+@media (max-width:720px) { .auction-demo-note { margin:8px 12px 0; font-size:13px; } }

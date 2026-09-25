@@ -799,3 +799,11 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
   - Novo projeto Pages `gadon-site` com `site/`, domínios `gadon.com.br` (ativo, `/` → `/pre-cadastro`) e `www.gadon.com.br`.
   - Verificação em produção: 21 checagens públicas da API (saúde, lotes, privacidade, CORS, rotas protegidas, validações), app carregando sem erros e um pré-cadastro de teste enviado pelo site e apagado em seguida. Contas de teste não são criadas em produção; os fluxos logados foram cobertos pelos testes locais.
 - O que falta: itens externos em `docs/INTEGRACOES_PENDENTES.md` (provedor de pagamento, envio de e-mail, GTA, dados reais do parceiro de frete, conteúdo do pesador, fontes da marca).
+
+### 2026-09-25 — Leilão ao vivo sinalizado como demonstração
+- Responsável: IA: Claude, com decisão do responsável pelo GadOn ("simulação por enquanto").
+- Objetivo: manter o leilão simulado sem que visitantes confundam os lances automáticos com um pregão real.
+- Alterações: selo "Leilão de demonstração" no topo, aviso fixo de que os lances dos outros participantes são simulados e nada é cobrado, e "Lote de demonstração" no lugar de "Documentação verificada".
+- Arquivos: `src/main.js`, `src/styles.css`, `docs/INTEGRACOES_PENDENTES.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Validação: `npm run build` verde; tela conferida no navegador em 1280 px e 375 px.
+- O que falta: leilão real quando for prioridade (ver `docs/INTEGRACOES_PENDENTES.md`, item 7).

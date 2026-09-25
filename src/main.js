@@ -2675,8 +2675,9 @@ function auctionTemplate() {
   const tickerItems = [...auctionLots, ...auctionLots].map((item) => `<span class="ticker-item">${icon('gavel', 12)} ${escapeHtml(item.tag)} — ${escapeHtml(item.name)} · lance inicial <b>${formatBRL(item.startBid)}</b></span>`).join('<span class="ticker-dot">•</span>');
   return `<div class="auction-shell">
     <div class="auction-glow one"></div><div class="auction-glow two"></div>
-    <header class="auction-topbar"><button class="back-link auction-back" data-action="auction-back">${icon('back', 16)} Voltar</button><div class="auction-brand"><img src="/brand/logo-horizontal-escuro.png" alt="GadOn" /><span>LEILÃO OFICIAL</span></div><div class="auction-live-meta">${state.userAuctionLot ? `<button type="button" class="broadcast-button is-live" data-action="stop-broadcast">${icon('stop', 14)} Encerrar transmissão</button>` : `<button type="button" class="broadcast-button" data-action="open-broadcast">${icon('camera', 14)} Leiloar meu lote</button>`}<span class="auction-viewers">${icon('eye', 15)} <b id="auction-viewers">${state.auctionViewers}</b> assistindo</span><span class="live-pill"><i></i> AO VIVO</span></div></header>
+    <header class="auction-topbar"><button class="back-link auction-back" data-action="auction-back">${icon('back', 16)} Voltar</button><div class="auction-brand"><img src="/brand/logo-horizontal-escuro.png" alt="GadOn" /><span>LEILÃO DE DEMONSTRAÇÃO</span></div><div class="auction-live-meta">${state.userAuctionLot ? `<button type="button" class="broadcast-button is-live" data-action="stop-broadcast">${icon('stop', 14)} Encerrar transmissão</button>` : `<button type="button" class="broadcast-button" data-action="open-broadcast">${icon('camera', 14)} Leiloar meu lote</button>`}<span class="auction-viewers">${icon('eye', 15)} <b id="auction-viewers">${state.auctionViewers}</b> assistindo</span><span class="live-pill"><i></i> AO VIVO</span></div></header>
     <div class="auction-ticker"><div class="ticker-track">${tickerItems}</div></div>
+    <div class="auction-demo-note" role="note">${icon('bell', 15)} Demonstração do leilão ao vivo: os lances dos outros participantes são simulados e nenhum lance é cobrado.</div>
     <main class="auction-layout">
       <section class="auction-stage">
         <div class="auction-media is-live">
@@ -2688,7 +2689,7 @@ function auctionTemplate() {
           <div class="media-lower">
             <h1>${escapeHtml(lot.name)}</h1>
             <p>${escapeHtml(lot.desc)}</p>
-            <div class="auction-chips"><span>${icon('pin', 14)} ${escapeHtml(lot.place)}</span><span>${icon('user', 14)} ${escapeHtml(lot.seller)}</span><span class="chip-verified">${icon('shield', 14)} Documentação verificada</span><button type="button" class="ficha-button" data-ficha-toggle>${icon('file', 14)} Ver ficha do lote</button></div>
+            <div class="auction-chips"><span>${icon('pin', 14)} ${escapeHtml(lot.place)}</span><span>${icon('user', 14)} ${escapeHtml(lot.seller)}</span><span class="chip-verified">${icon('shield', 14)} Lote de demonstração</span><button type="button" class="ficha-button" data-ficha-toggle>${icon('file', 14)} Ver ficha do lote</button></div>
           </div>
         </div>
         <div class="auction-stats">
