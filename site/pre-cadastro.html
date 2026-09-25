@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0B513A" />
+  <title>Pré-cadastro — GadOn, o mercado do gado</title>
+  <meta name="description" content="Faça seu pré-cadastro no GadOn: compra e venda de gado, leilões ao vivo e frete inteligente. Seja avisado no lançamento." />
+  <meta property="og:title" content="Pré-cadastro GadOn — o mercado do gado" />
+  <meta property="og:description" content="Compra e venda de gado com pagamento protegido, leilões ao vivo e frete inteligente. Garanta seu acesso no lançamento." />
+  <meta property="og:image" content="https://gadon.com.br/hero.jpg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/gadon-icon-32.png" />
+  <link rel="apple-touch-icon" href="/gadon-icon-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" />
+  <style>
+    :root { --green:#0B513A; --green-deep:#073a29; --orange:#BE611E; --orange-action:#B0591B; --orange-light:#E3914F; --graphite:#3B4441; --gray:#E5E4E4; --muted:#646D69; --danger:#B42318; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:var(--green-deep); color:var(--graphite); font:17px/1.55 'DM Sans',Arial,sans-serif; }
+    .page { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); min-height:100vh; }
+    .hero { position:relative; display:flex; flex-direction:column; justify-content:space-between; gap:32px; padding:clamp(24px,4vw,56px); color:#fff; background:linear-gradient(180deg,rgba(7,46,33,.55) 0%,rgba(7,46,33,.2) 40%,rgba(7,46,33,.92) 100%),url('/hero.jpg') center/cover no-repeat; }
+    .hero img.logo { width:clamp(180px,20vw,240px); height:auto; }
+    .hero-copy { max-width:560px; }
+    .kicker { display:inline-block; margin:0 0 12px; padding:6px 12px; border-radius:999px; background:var(--orange-action); color:#fff; font-size:.85rem; font-weight:700; letter-spacing:.08em; }
+    .hero h1 { margin:0 0 12px; font:800 clamp(2.2rem,4.4vw,3.6rem)/1.04 'Plus Jakarta Sans',sans-serif; letter-spacing:-.03em; }
+    .hero h1 em { color:var(--orange-light); font-style:normal; }
+    .hero p { margin:0; color:rgba(255,255,255,.9); font-size:1.15rem; }
+    .perks { display:grid; gap:10px; margin:22px 0 0; padding:0; list-style:none; }
+    .perks li { display:flex; gap:10px; align-items:flex-start; font-size:1.02rem; }
+    .perks li::before { content:''; flex:none; width:22px; height:22px; margin-top:2px; border-radius:50%; background:var(--orange-light) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23073a29' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 4 4L19 6'/%3E%3C/svg%3E") center/14px no-repeat; }
+    .form-side { display:flex; align-items:center; justify-content:center; padding:clamp(20px,4vw,56px); background:#F3F3F2; }
+    .card { width:min(560px,100%); padding:clamp(22px,3vw,36px); border:1px solid var(--gray); border-radius:22px; background:#fff; box-shadow:0 24px 60px rgba(7,46,33,.12); }
+    .card h2 { margin:0 0 4px; color:var(--green); font:800 1.7rem 'Plus Jakarta Sans',sans-serif; }
+    .card > p { margin:0 0 20px; color:var(--muted); }
+    form { display:grid; gap:14px; }
+    .row { display:grid; grid-template-columns:1fr 110px; gap:12px; }
+    label > span, legend { display:block; margin-bottom:6px; color:var(--graphite); font-size:.95rem; font-weight:700; }
+    input[type="text"], input[type="email"], input[type="tel"], select { width:100%; min-height:50px; padding:0 14px; border:1px solid #D6D5D5; border-radius:12px; background:#FBFBFA; color:var(--graphite); font:inherit; }
+    input:focus-visible, select:focus-visible { outline:3px solid rgba(190,97,30,.35); border-color:var(--orange); }
+    fieldset { margin:0; padding:0; border:0; }
+    .choices { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .choice { position:relative; }
+    .choice input { position:absolute; opacity:0; }
+    .choice span { display:flex; align-items:center; min-height:48px; padding:10px 12px; border:1.5px solid #D6D5D5; border-radius:12px; background:#fff; font-weight:600; cursor:pointer; }
+    .choice input:checked + span { border-color:var(--orange); background:#F8ECE2; color:#7A3D12; }
+    .choice input:focus-visible + span { outline:3px solid rgba(190,97,30,.35); }
+    .consent { display:flex; gap:10px; align-items:flex-start; color:var(--muted); font-size:.92rem; line-height:1.45; }
+    .consent input { width:20px; height:20px; margin-top:2px; accent-color:var(--orange); flex:none; }
+    .consent a, .foot a { color:#9E4F17; font-weight:700; }
+    .trap { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+    button { min-height:54px; border:0; border-radius:12px; background:var(--orange-action); color:#fff; font:700 1.1rem 'DM Sans',sans-serif; cursor:pointer; }
+    button:hover { background:#97491A; }
+    button:disabled { opacity:.6; cursor:wait; }
+    .error { margin:0; padding:12px 14px; border-radius:12px; background:#FDECEA; color:var(--danger); font-weight:600; }
+    .success { text-align:center; }
+    .success .check { display:grid; place-items:center; width:72px; height:72px; margin:4px auto 14px; border-radius:50%; background:var(--green); color:#fff; font-size:2rem; }
+    .success h2 { margin-bottom:8px; }
+    .success a.cta { display:inline-block; margin-top:16px; padding:14px 20px; border-radius:12px; background:var(--green); color:#fff; font-weight:700; text-decoration:none; }
+    .foot { margin:16px 0 0; color:var(--muted); font-size:.85rem; text-align:center; }
+    @media (max-width:900px) {
+      .page { grid-template-columns:1fr; }
+      .hero { min-height:auto; padding-bottom:36px; }
+      .perks { display:none; }
+      .form-side { padding:16px 14px 32px; background:var(--green-deep); }
+      .card { box-shadow:none; }
+    }
+    @media (max-width:460px) { .choices { grid-template-columns:1fr; } .row { grid-template-columns:1fr 92px; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <img class="logo" src="/logo-horizontal-escuro.png" alt="GadOn — O mercado do gado" />
+      <div class="hero-copy">
+        <p class="kicker">PRÉ-CADASTRO · LANÇAMENTO</p>
+        <h1>O gado certo.<br /><em>Do seu jeito.</em></h1>
+        <p>Compra e venda de gado com pagamento protegido, leilões ao vivo e frete inteligente, tudo em um só lugar.</p>
+        <ul class="perks">
+          <li>Seja avisado antes de todo mundo no lançamento.</li>
+          <li>Pagamento retido até a entrega e o seu aceite.</li>
+          <li>Radar de Frete: aviso quando um caminhão volta vazio perto da fazenda.</li>
+        </ul>
+      </div>
+    </section>
+    <main class="form-side">
+      <div class="card" id="card">
+        <h2>Faça seu pré-cadastro</h2>
+        <p>Leva menos de 1 minuto. Entraremos em contato no lançamento.</p>
+        <form id="pre-form" novalidate>
+          <label><span>Nome completo</span><input type="text" name="name" autocomplete="name" maxlength="120" required /></label>
+          <label><span>Celular / WhatsApp</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" maxlength="20" required /></label>
+          <label><span>E-mail</span><input type="email" name="email" autocomplete="email" maxlength="254" required /></label>
+          <div class="row">
+            <label><span>Cidade</span><input type="text" name="city" autocomplete="address-level2" maxlength="80" /></label>
+            <label><span>UF</span><select name="state"><option value="">UF</option></select></label>
+          </div>
+          <fieldset>
+            <legend>Como você quer usar o GadOn?</legend>
+            <div class="choices">
+              <label class="choice"><input type="checkbox" name="profiles" value="comprador" /><span>Comprar gado</span></label>
+              <label class="choice"><input type="checkbox" name="profiles" value="vendedor" /><span>Vender gado</span></label>
+              <label class="choice"><input type="checkbox" name="profiles" value="pesador" /><span>Ser pesador</span></label>
+              <label class="choice"><input type="checkbox" name="profiles" value="transportador" /><span>Transportar gado</span></label>
+            </div>
+          </fieldset>
+          <label><span>Tamanho do rebanho (opcional)</span><select name="herdSize"><option value="">Selecione</option><option>Não tenho rebanho</option><option>Até 50 cabeças</option><option>50 a 200 cabeças</option><option>200 a 1.000 cabeças</option><option>Mais de 1.000 cabeças</option></select></label>
+          <label class="trap" aria-hidden="true">Site<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          <label class="consent"><input type="checkbox" name="consent" required /><span>Concordo em receber contato do GadOn sobre o lançamento e com a <a href="https://app.gadon.com.br/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span></label>
+          <p class="error" id="error" role="alert" hidden></p>
+          <button type="submit">Quero meu pré-cadastro</button>
+        </form>
+        <p class="foot">Já quer usar? <a href="https://app.gadon.com.br">Acesse o app</a> · Dúvidas: <a href="mailto:contato@gadon.com.br">contato@gadon.com.br</a></p>
+      </div>
+    </main>
+  </div>
+  <script>
+    const API = ['localhost', '127.0.0.1'].includes(location.hostname) ? 'http://localhost:8787' : 'https://api.gadon.com.br';
+    const form = document.getElementById('pre-form');
+    const errorBox = document.getElementById('error');
+    const ufs = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+    form.state.insertAdjacentHTML('beforeend', ufs.map((uf) => `<option>${uf}</option>`).join(''));
+    const showError = (message) => { errorBox.textContent = message; errorBox.hidden = false; errorBox.scrollIntoView({ block: 'center', behavior: 'smooth' }); };
+    form.phone.addEventListener('input', () => {
+      const digits = form.phone.value.replace(/\D/g, '').slice(0, 11);
+      form.phone.value = digits.length > 10 ? `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}` : digits.length > 6 ? `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}` : digits.length > 2 ? `(${digits.slice(0, 2)}) ${digits.slice(2)}` : digits;
+    });
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      errorBox.hidden = true;
+      const data = new FormData(form);
+      const payload = { name: data.get('name'), phone: data.get('phone'), email: data.get('email'), city: data.get('city'), state: data.get('state'), herdSize: data.get('herdSize'), profiles: data.getAll('profiles'), consent: data.get('consent') === 'on', website: data.get('website'), source: new URLSearchParams(location.search).get('origem') || 'pre-cadastro' };
+      if (String(payload.name).trim().length < 2) return showError('Informe seu nome completo.');
+      if (String(payload.phone).replace(/\D/g, '').length < 10) return showError('Informe seu celular/WhatsApp com DDD.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(payload.email).trim())) return showError('Informe um e-mail válido.');
+      if (!payload.profiles.length) return showError('Escolha como você quer usar o GadOn.');
+      if (!payload.consent) return showError('Marque a concordância para continuar.');
+      const button = form.querySelector('button');
+      button.disabled = true;
+      button.textContent = 'Enviando…';
+      try {
+        const response = await fetch(`${API}/pre-cadastro`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Não foi possível enviar agora. Tente de novo.');
+        const first = String(payload.name).trim().split(' ')[0];
+        document.getElementById('card').innerHTML = `<div class="success"><div class="check" aria-hidden="true">✓</div><h2>Pré-cadastro confirmado!</h2><p>Obrigado, ${first.replace(/[<>&"']/g, '')}. Você será avisado no lançamento do GadOn pelo WhatsApp e e-mail informados.</p><a class="cta" href="https://app.gadon.com.br">Conhecer o app</a></div>`;
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = 'Quero meu pré-cadastro';
+        showError(error.message === 'Failed to fetch' ? 'Sem conexão. Verifique sua internet e tente de novo.' : error.message);
+      }
+    });
+  </script>
+</body>
+</html>
