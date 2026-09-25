@@ -726,3 +726,43 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Validação: viewport 375px sem rolagem lateral, topbar em linha única, grade de 2 colunas íntegra; `npm run build` verde; produção atualizada.
 - O que falta: —
 - Próximo responsável: Victor confere no aparelho.
+
+### 2026-09-25 — Nova marca e alterações da avaliação (documento "Alterações para o Programador")
+- Responsável: IA: Claude, front-end e produto.
+- Objetivo: aplicar a nova identidade (símbolo do boi + paleta verde #0B513A, laranja #BE611E, grafite #3B4441, cinza #E5E4E4) e as 12 áreas do documento de avaliação.
+- Alterações:
+  - Marca: símbolo novo (`public/gadon-mark.png`, versão branca e ícones do app), favicon e `theme-color`; paleta aplicada em todo o CSS (tokens + conversão das cores antigas azul/laranja) nos modos claro e escuro; laranja dos botões ajustado para contraste AA.
+  - Leitura: escala tipográfica aumentada no app inteiro (textos de 8–12 px passaram a 12–16 px, referência Mercado Pago); menu lateral, cards e botões maiores; grade de lotes ocupa melhor telas grandes.
+  - Início: banner grande e rotativo (conceito "O gado certo. Do seu jeito." + menor preço, melhor preço por cabeça e maior lote do momento); saíram "Encontre seu próximo lote", "Negocie direto com produtores do Brasil", a área geral de fretes e o atalho de fretes de retorno; localização foi para a barra superior.
+  - Lote: "Ver lote" abre página própria (galeria, informações do gado, documentos só da carga, sanidade, fazenda e primeiro nome do proprietário; nome completo, CPF/CNPJ e documentos pessoais não aparecem) e perguntas públicas no anúncio (bloqueio de telefone, e-mail e links).
+  - Compra: frete escolhido dentro da negociação (parceiros ordenados por preço; hoje 1 parceiro) e pagamento protegido simulado (valor retido até a entrega e o aceite); a simulação avulsa de frete continua na barra de seleção.
+  - Mensagens: conversa privada só é liberada após o pagamento; estado de pagamento retido/liberado e botão "Confirmar entrega".
+  - Perfis: troca direta no menu da conta e no menu lateral ("Perfil Vendedor" ⇄ "Perfil Comprador"); "Meus anúncios" só no vendedor; novo Perfil Pesador com área "Suporte" (aulas → conclusão → mini treinamento, passo a passo, dicas, documento e FAQ, prontos para o conteúdo do Paulo); opção "Pesador" no cadastro.
+  - Radar de Frete: nome único, "Fretes de retorno" removido; oportunidade quando um caminhão com retorno vazio previsto passa a até 30 km da fazenda de um lote visto nas últimas 48 h (aviso no app, sino e notificação do navegador, com 30% de desconto no frete da compra); fazendas e raio de 30 km no mapa.
+  - GTA: pedidos registram a emissão automática da GTA como "aguardando integração" (confirmação da compra e Fretes → Documentos).
+  - Loja rural: oculta para usuários e mantida para administradores (`?admin=1`).
+  - Entrar com Google: Google Identity Services com `VITE_GOOGLE_CLIENT_ID` (ver `.env.example`).
+  - Dados de demonstração: preço total dos lotes coerente com cabeças × preço por cabeça; fotos erradas trocadas (inclusive uma foto de porco nos bezerros e no leilão).
+  - Código: navegação unificada (`navigateTo`, `appSidebarTemplate`, `appTopbarTemplate`, `bindShellEvents`) no lugar de oito cópias do menu; remoção de templates mortos e da página de fretes de retorno.
+- Arquivos: `index.html`, `src/main.js`, `src/styles.css`, `public/gadon-*.png`, `.env.example`, `docs/INTEGRACOES_PENDENTES.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: nenhum contrato remoto novo. Chaves locais novas: `gadon.messages.v2`, `gadon.notifications.v2`, `gadon.orders.v1`, `gadon.lot-questions.v1`, `gadon.lot-views.v1`, `gadon.radar-notified.v1`, `gadon.radar-following.v1`, `gadon.weigher-progress.v1`, `gadon.admin.v1`. Contratos esperados do back-end descritos em `docs/INTEGRACOES_PENDENTES.md`.
+- Validação: `npm run build` verde; fluxos testados no navegador em 1440, 1280 e 375 px, modo claro e escuro: banner, página do lote, pergunta pública com bloqueio de contato, compra completa (frete pela estrada + opção do Radar, pagamento, conversa liberada), conversa bloqueada, troca de perfis, pesador do início à aprovação, Radar com aviso, Loja rural só com `?admin=1`, botão oficial do Google renderizando com Client ID de teste; nenhum erro no console.
+- O que falta: Client ID do Google; provedor de pagamento com retenção; caminho da GTA com os órgãos estaduais; persistência de perguntas, pedidos, visualizações e progresso do pesador; nome real do parceiro de frete; conteúdo do Paulo.
+- Próximo responsável: `@ecossystem2` (pagamento, GTA, Google, perguntas, Radar); `@ricardopablo1914-create` (testes de compra, bloqueio de mensagens e regra 48 h/30 km); Victor revisa a experiência; Paulo envia o conteúdo do pesador.
+- Tasks/issues a criar: uma por item de `docs/INTEGRACOES_PENDENTES.md`.
+
+### 2026-09-25 — Acabamento do login, autenticação real e API em api.gadon.com.br
+- Responsável: IA: Claude, front-end, back-end e infra (a pedido do usuário).
+- Objetivo: melhorar o acabamento da tela de acesso e configurar toda a autenticação (e-mail/senha e Google) com o domínio `app.gadon.com.br` e a API em `api.gadon.com.br`.
+- Alterações:
+  - Tela de acesso: foto e curva alinhadas à divisão real das colunas (a curva não cobre mais os campos em telas médias), layout próprio entre 781 e 1100 px, links e destaques no laranja da marca, "Início" abre a apresentação.
+  - API (`api/`): Worker `gadon-api` + D1 `gadon-db` com `/auth/register`, `/auth/login`, `/auth/google`, `/auth/me` e `/health`; senhas em PBKDF2; sessão JWT de 7 dias; validação do token do Google no servidor; CORS restrito; limite de tentativas por IP.
+  - Front: login, cadastro e Google passam pela API; sessão guardada em `gadon.session.v1` e confirmada ao abrir o app; senha mínima de 8 caracteres; `.env.production`/`.env.development` com o Client ID e a URL da API (valores públicos).
+  - Google Cloud: projeto "GadOn" (`gadon-509715`), tela de consentimento externa e cliente OAuth "GadOn Web" com as origens do app; usuário de teste cadastrado.
+  - Páginas públicas `/privacidade` e `/termos` (exigidas pelo Google para publicar a tela de consentimento).
+- Arquivos: `api/*`, `src/main.js`, `src/styles.css`, `public/privacidade.html`, `public/termos.html`, `public/legal.css`, `public/_redirects`, `.env.production`, `.env.development`, `.env.example`, `.gitignore`, `docs/INTEGRACOES_PENDENTES.md`, `docs/DIARIO_DE_DESENVOLVIMENTO.md`.
+- Contratos afetados: novos contratos de autenticação descritos em `api/README.md`.
+- Validação: `npm run build` verde; API testada localmente e em produção (cadastro, duplicidade, senha errada, sessão, token adulterado, credencial do Google inválida, CORS bloqueando origem externa); no navegador: cadastro real, sair, entrar de novo, sessão mantida ao recarregar e sessão adulterada derrubada; contas de teste removidas do banco. Tela de acesso conferida em 1440, 1024, 900 e 375 px.
+- E-mail: Email Routing da Cloudflare ativado em `gadon.com.br` (removidos o MX nulo e o SPF `-all`); `contato@gadon.com.br` encaminha para o Gmail da conta, que precisa confirmar o link de verificação enviado pela Cloudflare.
+- O que falta: confirmar a verificação do destino do e-mail; publicar a tela de consentimento do Google depois do deploy (hoje só usuários de teste entram com Google); redefinição de senha por e-mail.
+- Próximo responsável: usuário (e-mail de contato e autorização de publicação); `@ecossystem2` revisa a API e segue com pedidos, perguntas e Radar no mesmo Worker; `@ricardopablo1914-create` automatiza os testes de `/auth/*`.
