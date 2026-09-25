@@ -2,12 +2,10 @@
 
 Descreva o que foi alterado e por quê.
 
-## Responsabilidade e encaminhamento
+## Escopo
 
-- Responsável principal: Victor / Claiton / Pablo / outro:
-- Issue relacionada: #
-- Dependências ou tasks encaminhadas:
-- Camadas afetadas: front-end / back-end / automação / testes / documentação
+- Camadas afetadas: front-end / API / banco (migrações) / testes / documentação
+- Dependências externas (ver `docs/INTEGRACOES_PENDENTES.md`):
 
 ## Alinhamento inicial
 
@@ -16,9 +14,9 @@ Descreva o que foi alterado e por quê.
 ## Checklist
 
 - [ ] Atualizei `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit.
-- [ ] Registrei no diário o que foi feito, o que falta e o próximo responsável.
+- [ ] Registrei no diário o que foi feito e o que falta.
 - [ ] Rodei `npm run build` com sucesso.
-- [ ] Criei ou atualizei as tasks necessárias para back-end, automações e testes.
+- [ ] Rodei `node api/test/e2e.mjs` contra a API local (quando a API mudou).
 - [ ] Não incluí credenciais, dados reais ou arquivos gerados.
 - [ ] Testei os fluxos afetados no navegador.
 

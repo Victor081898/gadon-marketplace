@@ -767,3 +767,29 @@ Este arquivo registra continuamente as decisões, funcionalidades e correções 
 - Publicação: app publicado no Cloudflare Pages (`app.gadon.com.br`, `gadon.quaerion.site`, `gadon-marketplace.pages.dev`); `/privacidade` e `/termos` no ar (o Pages já serve `.html` sem extensão, então as regras extras de `_redirects` foram retiradas por causarem laço); tela de consentimento do Google preenchida e publicada ("Em produção"), então qualquer conta Google pode entrar.
 - O que falta: confirmar o link de verificação do destino do e-mail (Gmail); redefinição de senha por e-mail.
 - Próximo responsável: usuário (e-mail de contato e autorização de publicação); `@ecossystem2` revisa a API e segue com pedidos, perguntas e Radar no mesmo Worker; `@ricardopablo1914-create` automatiza os testes de `/auth/*`.
+
+### 2026-09-25 — Sistema completo sobre a API, identidade visual oficial e pré-cadastro
+- Responsável: IA: Claude (front-end, API, testes e documentação), com o responsável pelo GadOn.
+- Objetivo: deixar todas as funções do sistema completas e funcionando com dados reais, sem depender de dados guardados no navegador.
+- Equipe: a partir desta data o desenvolvimento é feito integralmente pela equipe GadOn com a IA; `AGENTS.md`, `docs/PROCESSO_DE_COLABORACAO.md`, a skill local e o modelo de PR foram atualizados.
+- Alterações na API (`api/`):
+  - Migrações `0002_marketplace` (anúncios, perguntas, favoritos, visitas, Radar, pedidos, conversas, mensagens, notificações, redefinição de senha), `0003_pre_registrations` e `0004_freight` (pedidos de frete, agenda e documentos de transporte); `seeds/demo.sql` com os 6 lotes de demonstração.
+  - Módulos `lots.js`, `commerce.js`, `freight.js`, `radar.js`, `account.js`, `geo.js` e rotas novas de conta (`/me`, `/me/password`, `/auth/forgot`, `/auth/reset`, `/pre-cadastro`). Lista completa em `api/README.md`.
+  - Moderação: anúncios e perfis de vendedor entram "em análise" e são aprovados pela administração (`ADMIN_EMAILS`).
+  - Arquivos no R2 (`gadon-media`): fotos públicas; documentos do vendedor e de transporte em área privada (dono ou administração).
+  - Pagamento com adaptador de provedor (`PAYMENT_PROVIDER = simulado`), reserva do lote na compra e frete recalculado no servidor.
+  - Localização de municípios por busca estruturada (cidade + UF): corrigido o destino "Goiânia - GO" que caía numa "Avenida Goiânia" em Luziânia e aumentava o frete (916 → 721 km).
+- Alterações no app (`src/`):
+  - Lotes, favoritos, página do lote, perguntas e respostas, Radar, compra, mensagens (texto, anexo e áudio), notificações e pedidos usando a API.
+  - Vendedor: "Meus anúncios" com status (em análise, publicado, precisa de ajustes, pausado, vendido), resposta às perguntas, editar, pausar, reativar e remover; cadastro de gado envia fotos e o anúncio para análise (preço total ÷ cabeças = preço por cabeça; todas as UFs); perfil vendedor com documentos privados.
+  - Perfil: nome, telefone e local salvos na conta; troca de senha pedindo a atual; "Esqueci minha senha" e tela "Criar nova senha".
+  - Pesador: progresso e mini treinamento corrigidos no servidor.
+  - Administração (só administradores): indicadores, anúncios e vendedores em análise (com documentos), pré-cadastros com exportação CSV e pedidos de frete com status.
+  - Fretes: cotação avulsa pela estrada e pedido à transportadora, tabela de rotas, agenda (viagens da conta + viagens dos pedidos pagos), documentos com envio seguro, status da viagem com "Confirmar entrega" e relatórios com dados reais; saíram os números fixos de demonstração.
+  - Dados de cada conta não se misturam mais no mesmo aparelho (perfil e perfil vendedor guardados por conta).
+  - Removido o envio de leads ao Supabase provisório do evento.
+- Identidade visual: logos oficiais (horizontal, vertical, versões clara/escura/branca) e ícones do app a partir do pacote "ID VISUAL COMPLETA".
+- Pré-cadastro: página `site/pre-cadastro.html` (para `gadon.com.br/pre-cadastro`) salvando em `/pre-cadastro`.
+- Arquivos: `api/**`, `src/main.js`, `src/styles.css`, `public/brand/*`, `public/gadon-*.png`, `public/privacidade.html`, `public/termos.html`, `public/legal.css`, `site/*`, `docs/*`, `AGENTS.md`, `.agents/skills/gadon-colaboracao/SKILL.md`, `.github/pull_request_template.md`.
+- Validação: `api/test/e2e.mjs` com 70 verificações verdes contra a API local (contas, anúncios, moderação, perguntas, favoritos, compra, conversas, notificações, documentos privados, pesador, pré-cadastro, fretes, permissões); `npm run build` verde; fluxos testados no navegador em 1280 px e 375 px, claro e escuro: anunciar (com foto), editar, aprovar, perguntar/responder, bloquear contato, pausar/reativar, perfil vendedor com documento, aprovação do vendedor, compra com frete e pagamento, conversa, confirmação de entrega, Radar, pesador, redefinição de senha, administração e central de fretes.
+- O que falta: publicar a nova API, as migrações 0002–0004 e o app em produção (aguarda autorização); hospedar `site/` em `gadon.com.br`; itens externos em `docs/INTEGRACOES_PENDENTES.md` (provedor de pagamento, envio de e-mail, GTA, dados reais do parceiro de frete, conteúdo do pesador, fontes da marca).

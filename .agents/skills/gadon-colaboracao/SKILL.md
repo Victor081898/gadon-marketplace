@@ -1,6 +1,6 @@
 ---
 name: gadon-colaboracao
-description: Regras locais do GadOn para alinhar o checkout com o GitHub, encaminhar demandas entre front-end, back-end, automações e testes, e manter o diário atualizado. Aplicar somente dentro deste repositório.
+description: Regras locais do GadOn para alinhar o checkout com o GitHub, manter front-end, API, testes e documentação no mesmo fluxo e atualizar o diário. Aplicar somente dentro deste repositório.
 ---
 
 # Skill local de colaboração do GadOn
@@ -16,13 +16,11 @@ Antes de alterar arquivos:
 3. Revise `AGENTS.md`, `docs/PROCESSO_DE_COLABORACAO.md` e o diário.
 4. Se houver divergência entre local e remoto, pare para revisar o diff e alinhar a branch com segurança.
 
-## Roteamento de demandas
+## Equipe
 
-- Victor cuida do front-end e descreve as necessidades de produto.
-- Claiton (`@ecossystem2`) cuida da arquitetura back-end, APIs, persistência e contratos de comunicação.
-- Pablo (`@ricardopablo1914-create`), em conjunto com Claiton, cuida de automações, testes de API e testes de integração.
+Desde 25/09/2026 o GadOn é desenvolvido integralmente pela equipe GadOn com a IA: a IA faz front-end, back-end (`api/`), testes, infraestrutura e documentação; o responsável pelo GadOn define prioridades e autoriza publicações, custos e contas externas. Não encaminhe demandas para colaboradores externos.
 
-Quando uma mudança atravessar camadas, crie ou atualize uma issue com responsável principal, responsáveis de apoio, contrato de dados, critérios de aceite, dependências e validações.
+Quando uma mudança atravessar camadas, registre o contrato em `api/README.md` e as dependências externas em `docs/INTEGRACOES_PENDENTES.md`.
 
 ## Registro obrigatório
 
@@ -31,9 +29,7 @@ Toda alteração humana ou de IA deve atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.
 - o que foi feito;
 - arquivos e contratos afetados;
 - validações executadas;
-- o que falta;
-- próximo responsável;
-- novas tasks/issues necessárias.
+- o que falta.
 
 ## Publicação obrigatória
 
@@ -41,4 +37,4 @@ Qualquer alteração, inclusive documentação, deve atualizar o diário no mesm
 
 ## Finalização
 
-Antes de concluir, rode o build e os testes aplicáveis, revise o diff, atualize a issue e o pull request e confirme que código, documentação e diário estão no mesmo fluxo de revisão.
+Antes de concluir, rode o build e os testes aplicáveis (`npm run build` e `node api/test/e2e.mjs` com a API local), revise o diff, atualize o pull request e confirme que código, documentação e diário estão no mesmo fluxo de revisão.

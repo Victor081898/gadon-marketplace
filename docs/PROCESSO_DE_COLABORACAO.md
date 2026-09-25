@@ -1,33 +1,29 @@
-# Processo de compartilhamento de trabalho e demandas
+# Processo de trabalho e demandas
 
 > Skill local: `.agents/skills/gadon-colaboracao/SKILL.md`. Ela acompanha este repositório e só deve ser aplicada ao GadOn.
 
-O apoio técnico especializado vem do agente construtor externo `Ecossystem2/agent-mod`, conforme o mapa em `docs/AGENTE_CONSTRUTOR_AGENT_MOD.md`.
-
 ## Objetivo
 
-Manter o front-end, back-end, automações, testes e documentação alinhados desde o planejamento até a entrega.
+Manter front-end, back-end, testes, infraestrutura e documentação alinhados desde o planejamento até a publicação.
 
-## Divisão de responsabilidades
+## Equipe (a partir de 25/09/2026)
 
-| Área | Responsável | GitHub | Entregas principais |
-| --- | --- | --- | --- |
-| Front-end e produto | Victor | A confirmar | Telas, fluxos, estados da interface, regras de interação e necessidades de dados/API. |
-| Back-end | Claiton | `@ecossystem2` | Arquitetura de serviços, APIs, contratos, persistência, autenticação e regras de negócio. |
-| Automações e testes | Pablo, em conjunto com Claiton | `@ricardopablo1914-create` e `@ecossystem2` | Testes de API e integração, automações, validações de comunicação e cobertura dos fluxos críticos. |
+O desenvolvimento do GadOn é feito integralmente pela equipe GadOn com a IA; não há mais divisão de tarefas com colaboradores externos.
+
+| Área | Quem faz |
+| --- | --- |
+| Produto, prioridades e aprovações (publicação, custos, contas externas) | Responsável pelo GadOn |
+| Front-end, back-end (API), testes, infraestrutura e documentação | IA (Claude Code), com revisão do responsável |
 
 ## Ciclo de uma demanda
 
-1. Victor descreve a necessidade do produto e implementa ou prototipa o comportamento do front-end.
-2. Quando a função depender de dados ou serviço, é criada uma issue de integração com entradas, saídas e critérios de aceite; atribua back-end a `@ecossystem2` e automações/testes a `@ricardopablo1914-create`, com `@ecossystem2` como apoio quando houver integração entre camadas.
-3. Claiton define o contrato e a arquitetura do back-end, registrando decisões e dependências na issue.
-4. Pablo e Claiton estruturam os testes e automações da comunicação entre as camadas.
-5. Cada responsável trabalha em sua branch e mantém a issue atualizada com bloqueios e mudanças de contrato.
-6. O pull request referencia a issue e só é finalizado após validação de código, testes, documentação e diário.
+1. O responsável descreve a necessidade.
+2. A IA planeja, implementa em uma branch `feature/...` e cobre a mudança com testes (API: `api/test/e2e.mjs`; telas: navegador em desktop, celular e modo escuro).
+3. Mudanças de contrato da API são registradas em `api/README.md`; dependências externas em `docs/INTEGRACOES_PENDENTES.md`.
+4. O pull request referencia o que foi feito e só é concluído após build, testes, documentação e diário atualizados.
+5. Publicação em produção (API, migrações, app) só com autorização do responsável.
 
 ## Conferência obrigatória ao iniciar o projeto
-
-Sempre que o trabalho for iniciado:
 
 ```bash
 git fetch origin
@@ -36,7 +32,7 @@ git log --oneline --decorate -5
 git diff main...origin/main
 ```
 
-Se houver diferença entre o local e o GitHub, a equipe deve revisar a divergência e alinhar a branch antes de criar novas alterações.
+Se houver diferença entre o local e o GitHub, revise a divergência e alinhe a branch antes de criar novas alterações.
 
 ## Registro e encerramento
 
@@ -45,15 +41,11 @@ O diário em `docs/DIARIO_DE_DESENVOLVIMENTO.md` deve ser atualizado em toda tar
 - o que foi feito;
 - arquivos e APIs afetados;
 - validações executadas;
-- o que ainda falta;
-- próximo responsável;
-- novas tasks/issues necessárias.
-
-Uma tarefa só está concluída quando o GitHub contém o código, o diário e a documentação atualizados, e as tarefas dependentes foram criadas ou vinculadas.
+- o que ainda falta.
 
 ## Regra permanente de publicação
 
-Toda alteração humana ou feita pela IA, incluindo documentação e ajustes de processo, deve:
+Toda alteração, incluindo documentação e ajustes de processo, deve:
 
 1. atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit;
 2. passar pelas validações aplicáveis;

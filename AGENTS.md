@@ -12,11 +12,10 @@ O repositório `https://github.com/Ecossystem2/agent-mod.git` fornece agentes es
 
 ## Responsabilidades
 
-- **Victor — Front-end e produto:** desenha as telas, fluxos e regras de interação do front-end. Sempre que uma função depender de dados, API, autenticação ou persistência, deve abrir uma tarefa de integração.
-- **Claiton — Back-end (`@ecossystem2`):** define a arquitetura de comunicação, contratos de API, serviços, persistência e regras necessárias para o front-end operar de forma funcional.
-- **Pablo — Automações e testes (`@ricardopablo1914-create`):** trabalha com Claiton na automação, testes de integração, testes de API, validações e recursos relacionados à comunicação entre front-end e back-end.
+Desde 25/09/2026 o GadOn é desenvolvido integralmente pela equipe GadOn com a IA; não há divisão de tarefas com colaboradores externos.
 
-Se uma tarefa envolver mais de uma camada, ela deve indicar claramente o responsável principal e os responsáveis de apoio. Ao abrir ou atualizar uma issue, use `@ecossystem2` para demandas de back-end e `@ricardopablo1914-create` para automações e testes.
+- **Responsável pelo GadOn:** define prioridades e autoriza publicações em produção, custos e contas externas.
+- **IA (Claude Code):** front-end, back-end (`api/`), testes, infraestrutura e documentação, com revisão do responsável.
 
 ## Antes de iniciar qualquer trabalho
 
@@ -31,36 +30,27 @@ Se uma tarefa envolver mais de uma camada, ela deve indicar claramente o respons
 
 2. Se a cópia local estiver atrás de `origin/main`, alinhe-a antes de começar. Não sobrescreva alterações locais de outra pessoa sem revisar o diff.
 3. Leia o diário em `docs/DIARIO_DE_DESENVOLVIMENTO.md` e procure tarefas ou pendências relacionadas.
-4. Crie ou atualize uma issue/task no GitHub antes de iniciar uma demanda que atravesse camadas.
 
-## Encaminhamento de tarefas
+## Contratos e dependências
 
-Toda função do front-end que exigir back-end deve conter na issue:
-
-- objetivo e comportamento esperado;
-- telas, eventos e dados de entrada/saída;
-- contrato de API esperado ou dúvidas para Claiton;
-- critérios de aceite;
-- necessidade de automação/teste para Pablo;
-- dependências, riscos e definição de pronto.
-
-Use os marcadores `front-end`, `back-end`, `automação` e `testes` para tornar o encaminhamento visível. Os usuários GitHub de Claiton e Pablo estão confirmados nesta regra e devem ser usados nas atribuições correspondentes.
+- Toda mudança de comunicação entre o app e a API deve atualizar `api/README.md` e, quando mexer em dados, trazer a migração em `api/migrations/`.
+- Dependências de decisões ou serviços externos ficam em `docs/INTEGRACOES_PENDENTES.md`.
+- Mudanças na API devem ter cobertura em `api/test/e2e.mjs`.
 
 ## Durante o desenvolvimento
 
 - Trabalhe em uma branch descritiva, como `feature/...`, `fix/...`, `backend/...` ou `test/...`.
-- Mantenha as alterações pequenas e relacionadas à issue.
-- Atualize a issue quando houver bloqueio, mudança de contrato ou dependência de outra camada.
+- Mantenha as alterações pequenas e relacionadas à demanda.
 - Não faça commit de credenciais, dados reais, `node_modules`, `dist` ou arquivos temporários.
 
 ## Antes de finalizar
 
-1. Execute os testes e/ou `npm run build` aplicáveis.
-2. Atualize o diário com objetivo, alteração, arquivos, validação, pendências e responsáveis pelas próximas tarefas.
+1. Execute `npm run build` e, se a API mudou, `node api/test/e2e.mjs` contra a API local.
+2. Atualize o diário com objetivo, alteração, arquivos, validação e pendências.
 3. Atualize a documentação técnica ou o contrato de API quando houver mudança de comunicação.
-4. Verifique `git diff`, `git status` e se a branch contém apenas o escopo da issue.
-5. Abra ou atualize o pull request referenciando a issue e preenchendo o checklist.
-6. Só considere a demanda concluída quando código, testes, documentação e encaminhamentos estiverem sincronizados no GitHub.
+4. Verifique `git diff`, `git status` e se a branch contém apenas o escopo da demanda.
+5. Abra ou atualize o pull request preenchendo o checklist.
+6. Só considere a demanda concluída quando código, testes e documentação estiverem sincronizados no GitHub.
 
 ## Regra de publicação contínua
 
@@ -68,4 +58,4 @@ Qualquer alteração feita por uma pessoa ou pela IA, inclusive alterações som
 
 ## Regra do diário
 
-Cada mudança humana ou feita pela IA deve atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit. O registro deve informar o que foi feito, o que falta, quem é o próximo responsável e quais tarefas precisam ser criadas.
+Cada mudança humana ou feita pela IA deve atualizar `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit. O registro deve informar o que foi feito e o que falta.

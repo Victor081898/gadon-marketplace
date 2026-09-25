@@ -8,14 +8,24 @@
   "vars": {
     // Client ID público do OAuth (projeto Google Cloud "GadOn" / gadon-509715)
     "GOOGLE_CLIENT_ID": "683256388337-vqts4fqoui7903fj78eppqr4ijttkq3o.apps.googleusercontent.com",
-    "ALLOWED_ORIGINS": "https://app.gadon.com.br,https://gadon.quaerion.site,https://gadon-marketplace.pages.dev,http://localhost:5173,http://127.0.0.1:5173"
+    "ALLOWED_ORIGINS": "https://app.gadon.com.br,https://gadon.com.br,https://www.gadon.com.br,https://gadon.quaerion.site,https://gadon-marketplace.pages.dev,http://localhost:5173,http://127.0.0.1:5173",
+    // Contas com acesso à moderação (anúncios, vendedores, pré-cadastros) e à Loja rural
+    "ADMIN_EMAILS": "ecossistema2.0@gmail.com",
+    "APP_URL": "https://app.gadon.com.br",
+    "PUBLIC_API_URL": "https://api.gadon.com.br",
+    "EMAIL_FROM": "nao-responda@gadon.com.br",
+    // "simulado" confirma e retém o pagamento na hora; troque pelo provedor real quando for integrado
+    "PAYMENT_PROVIDER": "simulado"
   },
   "d1_databases": [
     { "binding": "DB", "database_name": "gadon-db", "database_id": "90638647-ebbd-44ca-a72e-57798905c9e9", "migrations_dir": "migrations" }
   ],
-  // Limite de tentativas de login/cadastro por IP e rota
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "gadon-media" }],
+  // Limite de tentativas nas rotas públicas sensíveis (por IP e rota)
   "ratelimits": [
     { "name": "AUTH_LIMITER", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } }
   ]
   // Segredo (não fica no repositório): SESSION_SECRET — `npx wrangler secret put SESSION_SECRET`
+  // Envio de e-mail (redefinição de senha) exige o plano Workers Paid; depois de ativar o Email Sending
+  // em gadon.com.br, adicione: "send_email": [{ "name": "EMAIL" }]
 }

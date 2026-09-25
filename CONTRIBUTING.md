@@ -5,7 +5,7 @@
 1. Atualize sua cópia local a partir de `main`.
 2. Confira o alinhamento local com `origin/main` usando `git fetch origin`, `git status -sb` e `git diff main...origin/main`.
 3. Leia `AGENTS.md` e `docs/PROCESSO_DE_COLABORACAO.md` antes de iniciar.
-4. Crie ou atualize a issue, encaminhando as partes de front-end, back-end e automação/testes aos responsáveis.
+4. Registre contratos novos da API em `api/README.md` e dependências externas em `docs/INTEGRACOES_PENDENTES.md`.
 5. Crie uma branch com um nome descritivo, por exemplo `feature/gestao-documentos`, `fix/modal-lote` ou `docs/diario`.
 6. Faça alterações pequenas e relacionadas ao mesmo objetivo.
 7. Atualize `docs/DIARIO_DE_DESENVOLVIMENTO.md` no mesmo commit da alteração.
