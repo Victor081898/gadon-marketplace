@@ -5,3 +5,10 @@ tmp/
 .env
 .env.*
 !.env.example
+# Configuração pública do build (Client ID do Google e URL da API — sem segredos)
+!.env.production
+!.env.development
+
+# API (Cloudflare Worker)
+.dev.vars
+api/.wrangler/

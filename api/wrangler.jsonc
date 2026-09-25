@@ -1,0 +1,21 @@
+{
+  // API do GadOn (Cloudflare Worker) — publicada em https://api.gadon.com.br
+  "name": "gadon-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-20",
+  "routes": [{ "pattern": "api.gadon.com.br", "custom_domain": true }],
+  "observability": { "enabled": true },
+  "vars": {
+    // Client ID público do OAuth (projeto Google Cloud "GadOn" / gadon-509715)
+    "GOOGLE_CLIENT_ID": "683256388337-vqts4fqoui7903fj78eppqr4ijttkq3o.apps.googleusercontent.com",
+    "ALLOWED_ORIGINS": "https://app.gadon.com.br,https://gadon.quaerion.site,https://gadon-marketplace.pages.dev,http://localhost:5173,http://127.0.0.1:5173"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "gadon-db", "database_id": "90638647-ebbd-44ca-a72e-57798905c9e9", "migrations_dir": "migrations" }
+  ],
+  // Limite de tentativas de login/cadastro por IP e rota
+  "ratelimits": [
+    { "name": "AUTH_LIMITER", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } }
+  ]
+  // Segredo (não fica no repositório): SESSION_SECRET — `npx wrangler secret put SESSION_SECRET`
+}
